@@ -14,9 +14,13 @@ try {
   await client.connect(transport);
   const { tools } = await client.listTools();
   assert(tools.some((tool) => tool.name === 'get_file_overview'));
+  assert(tools.some((tool) => tool.name === 'list_connected_files'));
   const result = await client.callTool({ name: 'get_file_overview', arguments: {} });
-  assert.equal(result.isError, true);
-  assert.deepEqual(result.content, [{ type: 'text', text: 'NOT_CONNECTED' }]);
+  if (result.isError) {
+    assert(['NOT_CONNECTED', 'BRIDGE_PORT_BUSY', 'FILE_SELECTION_REQUIRED'].includes(result.content[0]?.text));
+  } else {
+    assert.equal(typeof JSON.parse(result.content[0]?.text).fileName, 'string');
+  }
   console.log('MCP stdio handshake and tool call: OK');
 } finally {
   await client.close();

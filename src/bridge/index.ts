@@ -1,20 +1,20 @@
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import { createBridgeServer } from './mcp.js';
-import { startBridgeSocketServer } from './session.js';
+import { BridgeHost } from './host.js';
 import { loadOrCreatePairingCode } from './pairing.js';
 
-const bridge = await startBridgeSocketServer({ token: await loadOrCreatePairingCode() });
+const bridge = new BridgeHost(await loadOrCreatePairingCode());
 void serveStdio(() => {
   const server = createBridgeServer({
-    call: (method, args) => bridge.session.call(method, args),
+    call: (method, args) => bridge.call(method, args),
     pairingCode: bridge.pairingCode,
-    confirmDelete: (node) => bridge.session.confirmDelete(node),
-    listFiles: () => bridge.session.listFiles(),
-    activateFile: (file) => bridge.session.activateFile(file),
-    pinCurrentFile: () => bridge.session.pinCurrentFile(),
+    confirmDelete: (node) => bridge.confirmDelete(node),
+    listFiles: () => bridge.listFiles(),
+    activateFile: (file) => bridge.activateFile(file),
+    pinCurrentFile: () => bridge.pinCurrentFile(),
   });
-  server.server.onclose = () => { void bridge.close(); };
+  server.server.onclose = () => { void bridge.stop(); };
   return server;
 });
 
-console.error(`Figma Codex MCP bridge listening on 127.0.0.1:${bridge.port}`);
+await bridge.start();
