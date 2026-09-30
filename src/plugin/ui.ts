@@ -1,12 +1,18 @@
 import { confirmationRequestSchema, pluginReplySchema, pluginRequestSchema } from '../shared/protocol.js';
 
 const form = document.querySelector<HTMLFormElement>('#pair-form')!;
+const pluginView = document.querySelector<HTMLElement>('#plugin-view')!;
 const codeInput = document.querySelector<HTMLInputElement>('#pairing-code')!;
 const status = document.querySelector<HTMLElement>('#status')!;
 const confirmation = document.querySelector<HTMLElement>('#confirmation')!;
 const confirmTarget = document.querySelector<HTMLElement>('#confirm-target')!;
 let socket: WebSocket | undefined;
 let confirmationId: string | undefined;
+
+function setConnected(connected: boolean) {
+  pluginView.dataset.connected = String(connected);
+  form.hidden = connected;
+}
 
 function answerConfirmation(accepted: boolean) {
   if (!confirmationId) return;
@@ -35,6 +41,7 @@ form.addEventListener('submit', (event) => {
     if (value && typeof value === 'object' && 'type' in value && value.type === 'hello.ok') {
       status.textContent = 'Figma подключена к Codex';
       codeInput.value = '';
+      setConnected(true);
       return;
     }
     const request = pluginRequestSchema.safeParse(value);
@@ -49,7 +56,10 @@ form.addEventListener('submit', (event) => {
   next.addEventListener('close', () => {
     confirmation.hidden = true;
     confirmationId = undefined;
-    if (socket === next) status.textContent = 'Нет соединения. Получите новый код в Codex.';
+    if (socket === next) {
+      setConnected(false);
+      status.textContent = 'Нет соединения. Получите новый код в Codex.';
+    }
   });
   next.addEventListener('error', () => {
     if (socket === next) status.textContent = 'Не удалось подключиться к локальному мосту.';

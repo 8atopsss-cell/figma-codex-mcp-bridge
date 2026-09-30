@@ -5,8 +5,11 @@ body {
   font: 12px/1.5 Inter, sans-serif;
 }
 main { padding: 16px; }
-h1 { font-size: 14px; margin: 0 0 12px; }
+h1 { display: flex; align-items: center; gap: 8px; font-size: 14px; margin: 0 0 12px; }
+.connection-indicator { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--figma-color-icon-tertiary, #6f7785); }
+[data-connected="true"] .connection-indicator { background: #32c766; }
 form { display: grid; gap: 8px; margin-top: 16px; }
+form[hidden] { display: none; }
 input, button { border: 1px solid var(--figma-color-border); border-radius: 4px; padding: 8px; font: inherit; }
 input { background: var(--figma-color-bg); color: var(--figma-color-text); }
 button { background: var(--figma-color-bg-brand); color: var(--figma-color-text-onbrand); cursor: pointer; }
