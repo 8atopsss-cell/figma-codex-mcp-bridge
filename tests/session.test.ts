@@ -67,6 +67,10 @@ describe('local Figma session', () => {
       await new Promise((resolve) => setTimeout(resolve, 20));
       await expect(bridge.session.call('page.create', { name: 'Wrong file' })).rejects.toThrow('FILE_SELECTION_REQUIRED');
 
+      first.send(JSON.stringify({ type: 'file.presence', visible: true, active: false }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      expect(bridge.session.listFiles()[0].active).toBe(true);
+
       first.send(JSON.stringify({ type: 'file.presence', visible: true, active: true }));
       await new Promise((resolve) => setTimeout(resolve, 20));
       const incoming = once(first, 'message');

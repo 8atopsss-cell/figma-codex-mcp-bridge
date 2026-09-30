@@ -131,6 +131,8 @@ export class BridgeSession {
     if (this.connections.size === 1) return this.connections.keys().next().value;
     if (this.manualId && this.connections.has(this.manualId)) return this.manualId;
     if (this.activeId && this.connections.get(this.activeId)?.visible) return this.activeId;
+    const visible = [...this.connections].filter(([, connection]) => connection.visible);
+    if (visible.length === 1) return visible[0][0];
     return undefined;
   }
 
