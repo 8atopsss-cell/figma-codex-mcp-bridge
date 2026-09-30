@@ -6,4 +6,8 @@ body {
 }
 main { padding: 16px; }
 h1 { font-size: 14px; margin: 0 0 12px; }
+form { display: grid; gap: 8px; margin-top: 16px; }
+input, button { border: 1px solid var(--figma-color-border); border-radius: 4px; padding: 8px; font: inherit; }
+input { background: var(--figma-color-bg); color: var(--figma-color-text); }
+button { background: var(--figma-color-bg-brand); color: var(--figma-color-text-onbrand); cursor: pointer; }
 #status { color: var(--figma-color-text-secondary); }

@@ -9,8 +9,13 @@
   <body>
     <main>
       <h1>Figma ↔ Codex</h1>
-      <p id="status" role="status">Запуск…</p>
       <p>Команды вводятся в основном чате Codex.</p>
+      <form id="pair-form">
+        <label for="pairing-code">Код подключения</label>
+        <input id="pairing-code" type="password" autocomplete="off" spellcheck="false" required />
+        <button type="submit">Подключить</button>
+      </form>
+      <p id="status" role="status">Ожидание подключения</p>
     </main>
     <script>/* SCRIPT */</script>
   </body>

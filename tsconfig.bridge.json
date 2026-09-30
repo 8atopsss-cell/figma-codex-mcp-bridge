@@ -5,7 +5,7 @@
     "moduleResolution": "NodeNext",
     "strict": true,
     "noEmit": true,
-    "types": ["node"],
+    "types": ["node", "@figma/plugin-typings"],
     "skipLibCheck": true
   },
   "include": ["src/bridge/**/*.ts", "src/shared/**/*.ts", "tests/**/*.ts"]
