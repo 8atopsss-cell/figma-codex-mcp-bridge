@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  background: var(--figma-color-bg);
+  color: var(--figma-color-text);
+  font: 12px/1.5 Inter, sans-serif;
+}
+main { padding: 16px; }
+h1 { font-size: 14px; margin: 0 0 12px; }
+#status { color: var(--figma-color-text-secondary); }

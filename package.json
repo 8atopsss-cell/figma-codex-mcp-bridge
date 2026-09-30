@@ -1,0 +1,27 @@
+{
+  "name": "figma-codex-mcp-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.bridge.json && tsc --noEmit -p tsconfig.plugin.json",
+    "test": "vitest run",
+    "smoke:mcp": "node scripts/smoke-mcp.mjs",
+    "start": "node dist/bridge/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.2.0",
+    "ws": "^8.22.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.139.0",
+    "@modelcontextprotocol/client": "^2.2.0",
+    "@types/node": "^26.6.3",
+    "@types/ws": "^8.18.2",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

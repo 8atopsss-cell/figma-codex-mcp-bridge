@@ -1,0 +1,12 @@
+{
+  "name": "Figma Codex MCP Bridge",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "main": "dist/plugin/main.js",
+  "ui": "dist/plugin/ui.html",
+  "networkAccess": {
+    "allowedDomains": ["none"],
+    "devAllowedDomains": ["ws://127.0.0.1:3846"]
+  }
+}
