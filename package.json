@@ -8,6 +8,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.bridge.json && tsc --noEmit -p tsconfig.plugin.json",
     "test": "vitest run",
     "smoke:mcp": "node scripts/smoke-mcp.mjs",
+    "live:check": "node scripts/live-check.mjs",
+    "manifest": "node scripts/prepare-manifest.mjs",
     "start": "node dist/bridge/index.js"
   },
   "dependencies": {

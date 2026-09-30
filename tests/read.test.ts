@@ -23,12 +23,12 @@ it('returns a bounded PNG preview', async () => {
 
 it('lists only local paint and text styles', async () => {
   const api = {
-    getLocalPaintStylesAsync: vi.fn(async () => [{ id: 'S:1', name: 'Brand' }]),
-    getLocalTextStylesAsync: vi.fn(async () => [{ id: 'S:2', name: 'Heading' }]),
+    getLocalPaintStylesAsync: vi.fn(async () => [{ id: 'S:1', name: 'Brand', paints: [{ type: 'SOLID', color: { r: 1, g: 0, b: 0 } }] }]),
+    getLocalTextStylesAsync: vi.fn(async () => [{ id: 'S:2', name: 'Heading', fontName: { family: 'Inter', style: 'Bold' }, fontSize: 32 }]),
   } as unknown as Parameters<typeof getLocalStyles>[0];
   expect(await getLocalStyles(api)).toEqual({
-    paints: [{ id: 'S:1', name: 'Brand' }],
-    texts: [{ id: 'S:2', name: 'Heading' }],
+    paints: [{ id: 'S:1', name: 'Brand', colors: ['#ff0000'] }],
+    texts: [{ id: 'S:2', name: 'Heading', fontName: { family: 'Inter', style: 'Bold' }, fontSize: 32 }],
   });
 });
 
@@ -39,11 +39,11 @@ it('loads a requested page before reading its children', async () => {
     loadAsync: vi.fn(async () => { loaded = true; }),
     get children() {
       if (!loaded) throw new Error('page not loaded');
-      return [{ id: '3:1', name: 'Screen', type: 'FRAME', x: 0, y: 0, width: 100, height: 200, children: [] }];
+      return [{ id: '3:1', name: 'Screen', type: 'FRAME', x: 0, y: 0, width: 100, height: 200, fills: [{ type: 'SOLID', color: { r: 0, g: 1, b: 0 } }], children: [] }];
     },
   };
   const api = { getNodeByIdAsync: vi.fn(async () => page) } as unknown as Parameters<typeof getNodeTree>[0];
   const tree = await getNodeTree(api, { nodeId: '0:2', depth: 1, offset: 0, limit: 10 });
   expect(page.loadAsync).toHaveBeenCalledOnce();
-  expect(tree.children).toEqual([expect.objectContaining({ id: '3:1', name: 'Screen' })]);
+  expect(tree.children).toEqual([expect.objectContaining({ id: '3:1', name: 'Screen', fills: ['#00ff00'] })]);
 });

@@ -16,6 +16,13 @@
         <button type="submit">Подключить</button>
       </form>
       <p id="status" role="status">Ожидание подключения</p>
+      <section id="confirmation" role="alertdialog" aria-label="Подтверждение удаления" hidden>
+        <p>Удалить узел <strong id="confirm-target"></strong>?</p>
+        <div class="actions">
+          <button id="cancel-delete" type="button">Отмена</button>
+          <button id="confirm-delete" type="button">Удалить</button>
+        </div>
+      </section>
     </main>
     <script>/* SCRIPT */</script>
   </body>

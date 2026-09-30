@@ -1,9 +1,24 @@
-import { pluginReplySchema, pluginRequestSchema } from '../shared/protocol.js';
+import { confirmationRequestSchema, pluginReplySchema, pluginRequestSchema } from '../shared/protocol.js';
 
 const form = document.querySelector<HTMLFormElement>('#pair-form')!;
 const codeInput = document.querySelector<HTMLInputElement>('#pairing-code')!;
 const status = document.querySelector<HTMLElement>('#status')!;
+const confirmation = document.querySelector<HTMLElement>('#confirmation')!;
+const confirmTarget = document.querySelector<HTMLElement>('#confirm-target')!;
 let socket: WebSocket | undefined;
+let confirmationId: string | undefined;
+
+function answerConfirmation(accepted: boolean) {
+  if (!confirmationId) return;
+  if (socket?.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ type: 'confirmation.reply', confirmationId, accepted }));
+  }
+  confirmationId = undefined;
+  confirmation.hidden = true;
+}
+
+document.querySelector('#cancel-delete')!.addEventListener('click', () => answerConfirmation(false));
+document.querySelector('#confirm-delete')!.addEventListener('click', () => answerConfirmation(true));
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -11,7 +26,7 @@ form.addEventListener('submit', (event) => {
   if (!code) return;
   socket?.close();
   status.textContent = 'Подключение…';
-  const next = new WebSocket('ws://127.0.0.1:3846');
+  const next = new WebSocket('ws://localhost:3846');
   socket = next;
   next.addEventListener('open', () => next.send(JSON.stringify({ type: 'hello', token: code })));
   next.addEventListener('message', (event) => {
@@ -24,8 +39,16 @@ form.addEventListener('submit', (event) => {
     }
     const request = pluginRequestSchema.safeParse(value);
     if (request.success) parent.postMessage({ pluginMessage: request.data }, '*');
+    const prompt = confirmationRequestSchema.safeParse(value);
+    if (prompt.success) {
+      confirmationId = prompt.data.confirmationId;
+      confirmTarget.textContent = `${prompt.data.nodeName} (${prompt.data.nodeType}, ${prompt.data.nodeId})`;
+      confirmation.hidden = false;
+    }
   });
   next.addEventListener('close', () => {
+    confirmation.hidden = true;
+    confirmationId = undefined;
     if (socket === next) status.textContent = 'Нет соединения. Получите новый код в Codex.';
   });
   next.addEventListener('error', () => {

@@ -4,11 +4,11 @@
 
 ## Статус
 
-Реализованы локальное подключение, код сопряжения и инструменты чтения: `get_file_overview`, `get_node_tree`, `get_node_preview`, `get_local_styles`. Без запущенного плагина инструменты чтения возвращают `NOT_CONNECTED`. Создание и изменение экранов — следующий шаг.
+Реализованы локальное подключение, чтение файла, создание и изменение редактируемых экранов. Удаление узла требует подтверждения в окне Figma. Личный ID dev-плагина получен; живая проверка в Figma Starter ещё идёт. Автоматические проверки прошли.
 
 Проверенная среда: Windows, Node.js 24.16.0, npm 11.13.0, Codex CLI 0.141.0, Figma Desktop 126.9.10. Codex CLI уже авторизован через ChatGPT.
 
-## Проверка каркаса
+## Установка и проверка
 
 ```powershell
 npm.cmd ci
@@ -18,8 +18,31 @@ npm.cmd run build
 npm.cmd run smoke:mcp
 ```
 
-Сборка создаёт `dist/plugin/main.js`, `dist/plugin/ui.html`, `dist/bridge/index.js`. `manifest.example.json` — образец: настоящий `manifest.json` создаётся после получения личного ID через Figma → Plugins → Development → New plugin.
+Сборка создаёт `dist/plugin/main.js`, `dist/plugin/ui.html`, `dist/bridge/index.js`. Для локального Codex MCP-сервер уже зарегистрирован как `figma-codex-local`. В другой копии проекта добавьте его командой, указав абсолютный путь к собранному файлу:
 
-Для запуска MCP после сборки: `npm.cmd start`. MCP идёт по stdio; WebSocket для Figma слушает только `127.0.0.1:3846`. В основном чате Codex инструмент `get_pairing_code` выдаёт код, который нужно вставить в окно плагина. Настройка подключения Codex и живая проверка Figma будут добавлены после реализации записей.
+```powershell
+codex.cmd mcp add figma-codex-local -- node "E:\Codex\figma mcp plugin\dist\bridge\index.js"
+codex.cmd mcp get figma-codex-local
+```
 
-Официальные источники: [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp), [Figma manifest](https://developers.figma.com/docs/plugins/manifest/), [Figma UI](https://developers.figma.com/docs/plugins/creating-ui/).
+После настройки перезапустите Codex. Мост запускается им автоматически, говорит с Codex по stdio и слушает Figma только на `127.0.0.1:3846`.
+
+### Подключение Figma Desktop
+
+1. В тестовом Design-файле откройте **Plugins → Development → New plugin → Figma design → Custom UI**. Сохраните новый шаблон в отдельную папку и возьмите `id` из созданного Figma `manifest.json`. ID должен принадлежать именно новому плагину: повторное использование ID другого dev-плагина может запустить его старый код.
+2. В этом проекте выполните `npm.cmd run manifest -- <ID>`. Скрипт создаст локальный `manifest.json` из `manifest.example.json`; файл не попадёт в Git.
+3. В Figma выберите **Plugins → Development → Import new plugin from manifest** и укажите `E:\Codex\figma mcp plugin\manifest.json`. Затем запустите плагин из меню Development. Если Figma пишет про шаблонный `code.js`, проверьте, что ID не совпадает с другим установленным dev-плагином.
+4. В основном чате Codex попросите вызвать `get_pairing_code`; вставьте выданный код в окно плагина и нажмите «Подключить».
+5. Попросите Codex показать страницы, создать экран и изменить текст. Для `delete_node` подтвердите или отмените действие в окне Figma.
+
+Плагин должен оставаться открытым во время работы. Один сеанс моста связан с одним открытым файлом Figma. Если Codex перезапустил MCP-процесс, получите новый код подключения.
+
+Для отдельной живой проверки до перезапуска Codex запустите `npm.cmd run live:check`: команда покажет временный код для окна плагина и затем прочитает обзор открытого файла. После проверки соединение закроется.
+
+### MCP-инструменты
+
+`get_pairing_code`, `get_file_overview`, `get_node_tree`, `get_node_preview`, `get_local_styles`, `create_page`, `create_screen`, `update_node`, `delete_node`.
+
+Первый релиз создаёт фреймы, текст и прямоугольники; не импортирует библиотеки и не создаёт растровые изображения. Отдельные ChatGPT логин и API-ключ в Figma не нужны.
+
+Официальные источники: [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp), [Figma dev-плагины на любом тарифе](https://help.figma.com/hc/en-us/articles/360042786733-Create-a-classic-plugin-for-development), [Figma manifest](https://developers.figma.com/docs/plugins/manifest/), [Figma UI](https://developers.figma.com/docs/plugins/creating-ui/).

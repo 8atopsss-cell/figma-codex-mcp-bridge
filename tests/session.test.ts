@@ -51,4 +51,31 @@ describe('local Figma session', () => {
       await bridge.close();
     }
   });
+
+  it('requires an explicit plugin confirmation before deletion', async () => {
+    const bridge = await startBridgeSocketServer({ port: 0, token });
+    const socket = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    try {
+      await once(socket, 'open');
+      const hello = once(socket, 'message');
+      socket.send(JSON.stringify({ type: 'hello', token }));
+      await hello;
+
+      const prompt = once(socket, 'message');
+      const refused = bridge.session.confirmDelete({ nodeId: '2:2', nodeName: 'Card', nodeType: 'FRAME' });
+      const request = JSON.parse(String((await prompt)[0]));
+      expect(request).toEqual(expect.objectContaining({ type: 'confirmation.request', nodeId: '2:2', nodeName: 'Card' }));
+      socket.send(JSON.stringify({ type: 'confirmation.reply', confirmationId: request.confirmationId, accepted: false }));
+      await expect(refused).rejects.toThrow('CONFIRMATION_REQUIRED');
+
+      const secondPrompt = once(socket, 'message');
+      const accepted = bridge.session.confirmDelete({ nodeId: '2:2', nodeName: 'Card', nodeType: 'FRAME' });
+      const second = JSON.parse(String((await secondPrompt)[0]));
+      socket.send(JSON.stringify({ type: 'confirmation.reply', confirmationId: second.confirmationId, accepted: true }));
+      await expect(accepted).resolves.toBeUndefined();
+    } finally {
+      socket.close();
+      await bridge.close();
+    }
+  });
 });

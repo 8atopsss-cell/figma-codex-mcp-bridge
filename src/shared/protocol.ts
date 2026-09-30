@@ -133,6 +133,20 @@ export const pluginReplySchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('plugin.error'), requestId: id, code: z.string().min(1).max(80), message: z.string().max(500) }).strict(),
 ]);
 
+export const confirmationRequestSchema = z.object({
+  type: z.literal('confirmation.request'),
+  confirmationId: id,
+  nodeId: id,
+  nodeName: name,
+  nodeType: z.string().min(1).max(80),
+}).strict();
+
+export const confirmationReplySchema = z.object({
+  type: z.literal('confirmation.reply'),
+  confirmationId: id,
+  accepted: z.boolean(),
+}).strict();
+
 export type ScreenSpec = z.infer<typeof screenSpecSchema>;
 export type UpdateNodeSpec = z.infer<typeof updateNodeSchema>;
 export type PluginRequest = z.infer<typeof pluginRequestSchema>;

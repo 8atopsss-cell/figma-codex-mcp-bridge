@@ -7,6 +7,6 @@
   "ui": "dist/plugin/ui.html",
   "networkAccess": {
     "allowedDomains": ["none"],
-    "devAllowedDomains": ["ws://127.0.0.1:3846"]
+    "devAllowedDomains": ["ws://localhost:3846"]
   }
 }

@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { WebSocket, WebSocketServer } from 'ws';
-import { pluginReplySchema, pluginRequestSchema } from '../shared/protocol.js';
+import { confirmationReplySchema, confirmationRequestSchema, pluginReplySchema, pluginRequestSchema } from '../shared/protocol.js';
 
 const MAX_MESSAGE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_ORIGINS = new Set(['null', 'https://www.figma.com', 'https://figma.com']);
@@ -10,11 +10,15 @@ type Pending = { resolve(value: unknown): void; reject(error: Error): void; time
 export class BridgeSession {
   private plugin: WebSocket | undefined;
   private readonly pending = new Map<string, Pending>();
+  private readonly confirmations = new Map<string, Pending>();
 
   attach(plugin: WebSocket): boolean {
     if (this.plugin?.readyState === WebSocket.OPEN) return false;
+    if (this.plugin) this.failPending('FIGMA_DISCONNECTED');
     this.plugin = plugin;
-    plugin.on('message', (raw) => this.receive(String(raw)));
+    plugin.on('message', (raw) => {
+      if (this.plugin === plugin) this.receive(String(raw));
+    });
     plugin.on('close', () => {
       if (this.plugin !== plugin) return;
       this.plugin = undefined;
@@ -46,6 +50,29 @@ export class BridgeSession {
     });
   }
 
+  confirmDelete(node: { nodeId: string; nodeName: string; nodeType: string }): Promise<void> {
+    const plugin = this.plugin;
+    if (!plugin || plugin.readyState !== WebSocket.OPEN) return Promise.reject(new Error('NOT_CONNECTED'));
+    if (this.confirmations.size > 0) return Promise.reject(new Error('CONFIRMATION_REQUIRED'));
+    const confirmationId = randomUUID();
+    const request = confirmationRequestSchema.parse({ type: 'confirmation.request', confirmationId, ...node });
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.confirmations.delete(confirmationId);
+        reject(new Error('CONFIRMATION_REQUIRED'));
+      }, 60_000);
+      this.confirmations.set(confirmationId, { resolve: () => resolve(), reject, timer });
+      plugin.send(JSON.stringify(request), (error) => {
+        if (!error) return;
+        const pending = this.confirmations.get(confirmationId);
+        if (!pending) return;
+        clearTimeout(pending.timer);
+        this.confirmations.delete(confirmationId);
+        reject(new Error('FIGMA_DISCONNECTED'));
+      });
+    });
+  }
+
   disconnect(): void {
     this.plugin?.terminate();
     this.plugin = undefined;
@@ -55,6 +82,16 @@ export class BridgeSession {
   private receive(raw: string): void {
     let parsed: unknown;
     try { parsed = JSON.parse(raw); } catch { return; }
+    const confirmation = confirmationReplySchema.safeParse(parsed);
+    if (confirmation.success) {
+      const pending = this.confirmations.get(confirmation.data.confirmationId);
+      if (!pending) return;
+      clearTimeout(pending.timer);
+      this.confirmations.delete(confirmation.data.confirmationId);
+      if (confirmation.data.accepted) pending.resolve(undefined);
+      else pending.reject(new Error('CONFIRMATION_REQUIRED'));
+      return;
+    }
     const reply = pluginReplySchema.safeParse(parsed);
     if (!reply.success) return;
     const pending = this.pending.get(reply.data.requestId);
@@ -70,6 +107,11 @@ export class BridgeSession {
       clearTimeout(pending.timer);
       pending.reject(new Error(code));
       this.pending.delete(requestId);
+    }
+    for (const [confirmationId, pending] of this.confirmations) {
+      clearTimeout(pending.timer);
+      pending.reject(new Error(code));
+      this.confirmations.delete(confirmationId);
     }
   }
 }

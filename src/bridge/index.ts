@@ -7,6 +7,7 @@ void serveStdio(() => {
   const server = createBridgeServer({
     call: (method, args) => bridge.session.call(method, args),
     pairingCode: bridge.pairingCode,
+    confirmDelete: (node) => bridge.session.confirmDelete(node),
   });
   server.server.onclose = () => { void bridge.close(); };
   return server;

@@ -21,6 +21,7 @@ export interface NodeTree {
   width?: number;
   height?: number;
   characters?: string;
+  fills?: string[];
   children?: NodeTree[];
   childCount?: number;
 }
@@ -40,6 +41,9 @@ export async function getNodeTree(
     if ('width' in current) result.width = current.width;
     if ('height' in current) result.height = current.height;
     if (current.type === 'TEXT') result.characters = current.characters;
+    if ('fills' in current && Array.isArray(current.fills)) {
+      result.fills = current.fills.filter((paint) => paint.type === 'SOLID').map((paint) => rgbToHex(paint.color));
+    }
     if (depth > 0 && 'children' in current) {
       const children = current.children;
       result.childCount = children.length;
@@ -73,9 +77,23 @@ export async function getLocalStyles(
 ) {
   const [paints, texts] = await Promise.all([api.getLocalPaintStylesAsync(), api.getLocalTextStylesAsync()]);
   return {
-    paints: paints.slice(0, 500).map((style) => ({ id: style.id, name: style.name })),
-    texts: texts.slice(0, 500).map((style) => ({ id: style.id, name: style.name })),
+    paints: paints.slice(0, 500).map((style) => ({
+      id: style.id,
+      name: style.name,
+      colors: style.paints.filter((paint) => paint.type === 'SOLID').map((paint) => rgbToHex(paint.color)),
+    })),
+    texts: texts.slice(0, 500).map((style) => ({
+      id: style.id,
+      name: style.name,
+      fontName: style.fontName,
+      fontSize: style.fontSize,
+    })),
   };
+}
+
+function rgbToHex(color: RGB): string {
+  const channel = (value: number) => Math.round(value * 255).toString(16).padStart(2, '0');
+  return `#${channel(color.r)}${channel(color.g)}${channel(color.b)}`;
 }
 
 function encodeBase64(bytes: Uint8Array): string {

@@ -50,4 +50,34 @@ describe('MCP bridge', () => {
       await server.close();
     }
   });
+
+  it('deletes only after the plugin confirms the named node', async () => {
+    const calls: string[] = [];
+    let accepted = false;
+    const server = createBridgeServer({
+      call: async (method) => {
+        calls.push(method);
+        return method === 'node.tree' ? { id: '2:2', name: 'Card', type: 'FRAME' } : { nodeId: '2:2' };
+      },
+      confirmDelete: async (node) => {
+        expect(node).toEqual({ nodeId: '2:2', nodeName: 'Card', nodeType: 'FRAME' });
+        if (!accepted) throw new Error('CONFIRMATION_REQUIRED');
+      },
+    });
+    const client = new Client({ name: 'bridge-test', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const rejected = await client.callTool({ name: 'delete_node', arguments: { nodeId: '2:2' } });
+      expect(rejected.isError).toBe(true);
+      expect(calls).toEqual(['node.tree']);
+      accepted = true;
+      const deleted = await client.callTool({ name: 'delete_node', arguments: { nodeId: '2:2' } });
+      expect(deleted.isError).not.toBe(true);
+      expect(calls).toEqual(['node.tree', 'node.tree', 'node.delete']);
+    } finally {
+      await client.close();
+      await server.close();
+    }
+  });
 });
