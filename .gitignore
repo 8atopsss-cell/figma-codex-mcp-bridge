@@ -1,6 +1,7 @@
 node_modules/
 dist/
 manifest.json
+v_2/
 .env
 .env.*
 !.env.example

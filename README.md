@@ -29,9 +29,9 @@ codex.cmd mcp get figma-codex-local
 
 ### Подключение Figma Desktop
 
-1. В тестовом Design-файле откройте **Plugins → Development → New plugin → Figma design → Custom UI**. Сохраните новый шаблон в отдельную папку и возьмите `id` из созданного Figma `manifest.json`. ID должен принадлежать именно новому плагину: повторное использование ID другого dev-плагина может запустить его старый код.
-2. В этом проекте выполните `npm.cmd run manifest -- <ID>`. Скрипт создаст локальный `manifest.json` из `manifest.example.json`; файл не попадёт в Git.
-3. В Figma выберите **Plugins → Development → Import new plugin from manifest** и укажите `E:\Codex\figma mcp plugin\manifest.json`. Затем запустите плагин из меню Development. Если Figma пишет про шаблонный `code.js`, проверьте, что ID не совпадает с другим установленным dev-плагином.
+1. В тестовом Design-файле откройте **Plugins → Development → New plugin → Figma design → Custom UI**. Сохраните новый шаблон в отдельную папку. Figma создаст уникальный `id` и зарегистрирует эту папку. Не используйте ID другого dev-плагина.
+2. Выполните `npm.cmd run build`, затем `npm.cmd run install:figma -- "<папка нового плагина>"`. Скрипт возьмёт ID из её `manifest.json`, положит туда собранные файлы и обновит manifest. Указывайте путь, зарегистрированный в Figma. На текущем компьютере это `E:\Codex\v_2`; копия `v_2` внутри проекта Figma не используется.
+3. Запустите этот плагин из меню **Plugins → Development**. Повторный импорт из другого manifest с тем же ID не нужен. После каждой правки кода повторите сборку и `install:figma`, затем перезапустите плагин.
 4. В основном чате Codex попросите вызвать `get_pairing_code`; вставьте выданный код в окно плагина и нажмите «Подключить».
 5. Попросите Codex показать страницы, создать экран и изменить текст. Для `delete_node` подтвердите или отмените действие в окне Figma.
 
