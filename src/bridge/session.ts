@@ -5,31 +5,70 @@ import { confirmationReplySchema, confirmationRequestSchema, pluginReplySchema, 
 const MAX_MESSAGE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_ORIGINS = new Set(['null', 'https://www.figma.com', 'https://figma.com']);
 
-type Pending = { resolve(value: unknown): void; reject(error: Error): void; timer: ReturnType<typeof setTimeout> };
+type Pending = { connectionId: string; resolve(value: unknown): void; reject(error: Error): void; timer: ReturnType<typeof setTimeout> };
+type Connection = { socket: WebSocket; fileName: string; visible: boolean };
 
 export class BridgeSession {
-  private plugin: WebSocket | undefined;
+  private readonly connections = new Map<string, Connection>();
+  private activeId: string | undefined;
+  private manualId: string | undefined;
   private readonly pending = new Map<string, Pending>();
   private readonly confirmations = new Map<string, Pending>();
 
-  attach(plugin: WebSocket): boolean {
-    if (this.plugin?.readyState === WebSocket.OPEN) return false;
-    if (this.plugin) this.failPending('FIGMA_DISCONNECTED');
-    this.plugin = plugin;
+  get connectionCount(): number { return this.connections.size; }
+
+  attach(plugin: WebSocket, fileName = 'Figma file'): string {
+    const connectionId = randomUUID();
+    this.connections.set(connectionId, { socket: plugin, fileName, visible: true });
+    this.activeId = connectionId;
+    this.manualId = undefined;
     plugin.on('message', (raw) => {
-      if (this.plugin === plugin) this.receive(String(raw));
+      if (this.connections.get(connectionId)?.socket === plugin) this.receive(connectionId, String(raw));
     });
     plugin.on('close', () => {
-      if (this.plugin !== plugin) return;
-      this.plugin = undefined;
-      this.failPending('FIGMA_DISCONNECTED');
+      if (this.connections.get(connectionId)?.socket !== plugin) return;
+      this.connections.delete(connectionId);
+      if (this.activeId === connectionId) this.activeId = undefined;
+      if (this.manualId === connectionId) this.manualId = undefined;
+      this.failPending('FIGMA_DISCONNECTED', connectionId);
     });
     plugin.send(JSON.stringify({ type: 'hello.ok' }));
-    return true;
+    return connectionId;
+  }
+
+  listFiles(): Array<{ id: string; name: string; active: boolean; visible: boolean }> {
+    const activeId = this.effectiveActiveId();
+    return [...this.connections].map(([id, connection]) => ({
+      id, name: connection.fileName, active: id === activeId, visible: connection.visible,
+    }));
+  }
+
+  activateFile(file: string): void {
+    const matches = [...this.connections].filter(([id, connection]) => id === file || connection.fileName === file);
+    if (matches.length > 1) throw new Error('AMBIGUOUS_FILE_NAME');
+    const connectionId = matches[0]?.[0];
+    const connection = this.connections.get(connectionId);
+    if (!connection || connection.socket.readyState !== WebSocket.OPEN) throw new Error('FILE_NOT_CONNECTED');
+    connection.visible = true;
+    this.activeId = connectionId;
+    this.manualId = connectionId;
+  }
+
+  pinCurrentFile() {
+    const connectionId = this.currentId();
+    return {
+      call: (method: string, args: unknown) => this.callOn(connectionId, method, args),
+      confirmDelete: (node: { nodeId: string; nodeName: string; nodeType: string }) => this.confirmDeleteOn(connectionId, node),
+    };
   }
 
   call(method: string, args: unknown, timeoutMs = 30_000): Promise<unknown> {
-    const plugin = this.plugin;
+    try { return this.callOn(this.currentId(), method, args, timeoutMs); }
+    catch (error) { return Promise.reject(error); }
+  }
+
+  callOn(connectionId: string, method: string, args: unknown, timeoutMs = 30_000): Promise<unknown> {
+    const plugin = this.connections.get(connectionId)?.socket;
     if (!plugin || plugin.readyState !== WebSocket.OPEN) return Promise.reject(new Error('NOT_CONNECTED'));
     const requestId = randomUUID();
     const request = pluginRequestSchema.parse({ type: 'plugin.call', requestId, method, args });
@@ -38,7 +77,7 @@ export class BridgeSession {
         this.pending.delete(requestId);
         reject(new Error('TIMEOUT'));
       }, timeoutMs);
-      this.pending.set(requestId, { resolve, reject, timer });
+      this.pending.set(requestId, { connectionId, resolve, reject, timer });
       plugin.send(JSON.stringify(request), (error) => {
         if (!error) return;
         const pending = this.pending.get(requestId);
@@ -51,9 +90,16 @@ export class BridgeSession {
   }
 
   confirmDelete(node: { nodeId: string; nodeName: string; nodeType: string }): Promise<void> {
-    const plugin = this.plugin;
+    try { return this.confirmDeleteOn(this.currentId(), node); }
+    catch (error) { return Promise.reject(error); }
+  }
+
+  confirmDeleteOn(connectionId: string, node: { nodeId: string; nodeName: string; nodeType: string }): Promise<void> {
+    const plugin = this.connections.get(connectionId)?.socket;
     if (!plugin || plugin.readyState !== WebSocket.OPEN) return Promise.reject(new Error('NOT_CONNECTED'));
-    if (this.confirmations.size > 0) return Promise.reject(new Error('CONFIRMATION_REQUIRED'));
+    if ([...this.confirmations.values()].some((pending) => pending.connectionId === connectionId)) {
+      return Promise.reject(new Error('CONFIRMATION_REQUIRED'));
+    }
     const confirmationId = randomUUID();
     const request = confirmationRequestSchema.parse({ type: 'confirmation.request', confirmationId, ...node });
     return new Promise((resolve, reject) => {
@@ -61,7 +107,7 @@ export class BridgeSession {
         this.confirmations.delete(confirmationId);
         reject(new Error('CONFIRMATION_REQUIRED'));
       }, 60_000);
-      this.confirmations.set(confirmationId, { resolve: () => resolve(), reject, timer });
+      this.confirmations.set(confirmationId, { connectionId, resolve: () => resolve(), reject, timer });
       plugin.send(JSON.stringify(request), (error) => {
         if (!error) return;
         const pending = this.confirmations.get(confirmationId);
@@ -74,18 +120,46 @@ export class BridgeSession {
   }
 
   disconnect(): void {
-    this.plugin?.terminate();
-    this.plugin = undefined;
+    for (const connection of this.connections.values()) connection.socket.terminate();
+    this.connections.clear();
+    this.activeId = undefined;
+    this.manualId = undefined;
     this.failPending('FIGMA_DISCONNECTED');
   }
 
-  private receive(raw: string): void {
+  private effectiveActiveId(): string | undefined {
+    if (this.connections.size === 1) return this.connections.keys().next().value;
+    if (this.manualId && this.connections.has(this.manualId)) return this.manualId;
+    if (this.activeId && this.connections.get(this.activeId)?.visible) return this.activeId;
+    return undefined;
+  }
+
+  private currentId(): string {
+    const id = this.effectiveActiveId();
+    if (id) return id;
+    throw new Error(this.connections.size ? 'FILE_SELECTION_REQUIRED' : 'NOT_CONNECTED');
+  }
+
+  private receive(connectionId: string, raw: string): void {
     let parsed: unknown;
     try { parsed = JSON.parse(raw); } catch { return; }
+    if (parsed && typeof parsed === 'object' && 'type' in parsed) {
+      if (parsed.type === 'file.presence' && 'visible' in parsed && typeof parsed.visible === 'boolean'
+        && 'active' in parsed && typeof parsed.active === 'boolean') {
+        const connection = this.connections.get(connectionId)!;
+        connection.visible = parsed.visible;
+        if (parsed.visible && parsed.active) {
+          this.activeId = connectionId;
+          this.manualId = undefined;
+        }
+        else if (!parsed.visible && this.activeId === connectionId) this.activeId = undefined;
+        return;
+      }
+    }
     const confirmation = confirmationReplySchema.safeParse(parsed);
     if (confirmation.success) {
       const pending = this.confirmations.get(confirmation.data.confirmationId);
-      if (!pending) return;
+      if (!pending || pending.connectionId !== connectionId) return;
       clearTimeout(pending.timer);
       this.confirmations.delete(confirmation.data.confirmationId);
       if (confirmation.data.accepted) pending.resolve(undefined);
@@ -95,20 +169,22 @@ export class BridgeSession {
     const reply = pluginReplySchema.safeParse(parsed);
     if (!reply.success) return;
     const pending = this.pending.get(reply.data.requestId);
-    if (!pending) return;
+    if (!pending || pending.connectionId !== connectionId) return;
     clearTimeout(pending.timer);
     this.pending.delete(reply.data.requestId);
     if (reply.data.type === 'plugin.error') pending.reject(new Error(reply.data.code));
     else pending.resolve(reply.data.value);
   }
 
-  private failPending(code: string): void {
+  private failPending(code: string, connectionId?: string): void {
     for (const [requestId, pending] of this.pending) {
+      if (connectionId && pending.connectionId !== connectionId) continue;
       clearTimeout(pending.timer);
       pending.reject(new Error(code));
       this.pending.delete(requestId);
     }
     for (const [confirmationId, pending] of this.confirmations) {
+      if (connectionId && pending.connectionId !== connectionId) continue;
       clearTimeout(pending.timer);
       pending.reject(new Error(code));
       this.confirmations.delete(confirmationId);
@@ -138,7 +214,9 @@ export async function startBridgeSocketServer(options: SocketServerOptions = {})
       let hello: unknown;
       try { hello = JSON.parse(String(raw)); } catch { socket.close(1008, 'Invalid hello'); return; }
       if (!isValidHello(hello, pairingCode)) { socket.close(1008, 'Invalid pairing code'); return; }
-      if (!session.attach(socket)) socket.close(1013, 'Another Figma file is connected');
+      const fileName = hello && typeof hello === 'object' && 'fileName' in hello && typeof hello.fileName === 'string'
+        ? hello.fileName.slice(0, 200) : 'Figma file';
+      session.attach(socket, fileName);
     });
     socket.once('close', () => clearTimeout(timer));
   });

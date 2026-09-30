@@ -9,6 +9,9 @@ void serveStdio(() => {
     call: (method, args) => bridge.session.call(method, args),
     pairingCode: bridge.pairingCode,
     confirmDelete: (node) => bridge.session.confirmDelete(node),
+    listFiles: () => bridge.session.listFiles(),
+    activateFile: (file) => bridge.session.activateFile(file),
+    pinCurrentFile: () => bridge.session.pinCurrentFile(),
   });
   server.server.onclose = () => { void bridge.close(); };
   return server;

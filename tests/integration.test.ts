@@ -40,3 +40,46 @@ it('routes MCP reads and screen creation through one paired Figma session', asyn
     await bridge.close();
   }
 });
+
+it('lists named files and lets Codex choose the target without dropping either connection', async () => {
+  const bridge = await startBridgeSocketServer({ port: 0, token: 'a'.repeat(64) });
+  const sockets = ['First file', 'Second file'].map(() => new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' }));
+  const opened = sockets.map((socket) => once(socket, 'open'));
+  const server = createBridgeServer({
+    call: (method, args) => bridge.session.call(method, args),
+    listFiles: () => bridge.session.listFiles(),
+    activateFile: (file) => bridge.session.activateFile(file),
+    pinCurrentFile: () => bridge.session.pinCurrentFile(),
+  });
+  const client = new Client({ name: 'multi-file-test', version: '1.0.0' });
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  try {
+    for (const [index, socket] of sockets.entries()) {
+      await opened[index];
+      const hello = once(socket, 'message');
+      socket.send(JSON.stringify({ type: 'hello', token: 'a'.repeat(64), fileName: ['First file', 'Second file'][index] }));
+      await hello;
+      socket.on('message', (raw) => {
+        const request = JSON.parse(String(raw));
+        if (request.type !== 'plugin.call') return;
+        socket.send(JSON.stringify({ type: 'plugin.result', requestId: request.requestId, value: { fileName: ['First file', 'Second file'][index] } }));
+      });
+    }
+    await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+    const listed = await client.callTool({ name: 'list_connected_files', arguments: {} });
+    expect(listed.isError).not.toBe(true);
+    const files = JSON.parse((listed.content[0] as { text: string }).text);
+    expect(files.map((file: { name: string }) => file.name)).toEqual(['First file', 'Second file']);
+
+    const selected = await client.callTool({ name: 'select_file', arguments: { file: 'First file' } });
+    expect(selected.isError).not.toBe(true);
+    const overview = await client.callTool({ name: 'get_file_overview', arguments: {} });
+    expect(JSON.parse((overview.content[0] as { text: string }).text).fileName).toBe('First file');
+    expect(bridge.session.connectionCount).toBe(2);
+  } finally {
+    await client.close();
+    await server.close();
+    for (const socket of sockets) socket.close();
+    await bridge.close();
+  }
+});

@@ -6,6 +6,9 @@ export interface BridgeCaller {
   call(method: string, args: unknown): Promise<unknown>;
   pairingCode?: string;
   confirmDelete?(node: { nodeId: string; nodeName: string; nodeType: string }): Promise<void>;
+  listFiles?(): Array<{ id: string; name: string; active: boolean; visible: boolean }>;
+  activateFile?(file: string): void;
+  pinCurrentFile?(): Pick<BridgeCaller, 'call' | 'confirmDelete'>;
 }
 
 export function createBridgeServer(bridge: BridgeCaller): McpServer {
@@ -27,6 +30,30 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
         annotations: { readOnlyHint: true },
       },
       async () => ({ content: [{ type: 'text', text: bridge.pairingCode! }] }),
+    );
+  }
+
+  if (bridge.listFiles && bridge.activateFile) {
+    server.registerTool(
+      'list_connected_files',
+      {
+        description: 'List every Figma file currently connected to this bridge, including its name and active status.',
+        inputSchema: z.object({}),
+        annotations: { readOnlyHint: true },
+      },
+      async () => textResult(async () => bridge.listFiles!()),
+    );
+    server.registerTool(
+      'select_file',
+      {
+        description: 'Select a connected Figma file by its exact name or connection ID when the foreground tab cannot be detected. Use list_connected_files first.',
+        inputSchema: z.object({ file: z.string().min(1).max(200) }),
+        annotations: { readOnlyHint: false, destructiveHint: false },
+      },
+      async ({ file }) => textResult(async () => {
+        bridge.activateFile!(file);
+        return bridge.listFiles!();
+      }),
     );
   }
 
@@ -129,12 +156,13 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ nodeId: id }) => textResult(() => serializeWrite(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
       const node = z.object({ id: z.string(), name: z.string(), type: z.string() }).passthrough()
-        .parse(await bridge.call('node.tree', { nodeId: id, depth: 0, offset: 0, limit: 1 }));
+        .parse(await target.call('node.tree', { nodeId: id, depth: 0, offset: 0, limit: 1 }));
       if (node.id !== id || node.type === 'PAGE' || node.type === 'DOCUMENT') throw new Error('UNSUPPORTED_NODE');
-      if (!bridge.confirmDelete) throw new Error('CONFIRMATION_REQUIRED');
-      await bridge.confirmDelete({ nodeId: id, nodeName: node.name || '(без имени)', nodeType: node.type });
-      return bridge.call('node.delete', { nodeId: id });
+      if (!target.confirmDelete) throw new Error('CONFIRMATION_REQUIRED');
+      await target.confirmDelete({ nodeId: id, nodeName: node.name || '(без имени)', nodeType: node.type });
+      return target.call('node.delete', { nodeId: id });
     })),
   );
 

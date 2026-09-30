@@ -41,7 +41,8 @@ it('loads saved pairing, connects automatically, saves successful pairing and re
   }
   const messages: unknown[] = [];
   const fakeWindow = new EventTarget();
-  vi.stubGlobal('document', { querySelector: (id: string) => elements.get(id) });
+  const fakeDocument = Object.assign(new EventTarget(), { querySelector: (id: string) => elements.get(id), visibilityState: 'visible' });
+  vi.stubGlobal('document', fakeDocument);
   vi.stubGlobal('window', fakeWindow);
   vi.stubGlobal('parent', { postMessage: (message: unknown) => messages.push(message) });
   vi.stubGlobal('WebSocket', FakeSocket);
@@ -49,12 +50,16 @@ it('loads saved pairing, connects automatically, saves successful pairing and re
 
   expect(messages).toContainEqual({ pluginMessage: { type: 'pairing.load' } });
   const token = 'a'.repeat(64);
-  fakeWindow.dispatchEvent(Object.assign(new Event('message'), { data: { pluginMessage: { type: 'pairing.saved', token } } }));
+  fakeWindow.dispatchEvent(Object.assign(new Event('message'), { data: { pluginMessage: { type: 'pairing.saved', token, fileName: 'First file' } } }));
   expect(FakeSocket.sockets).toHaveLength(1);
   const first = FakeSocket.sockets[0];
   first.open();
-  expect(first.sent).toContainEqual({ type: 'hello', token });
+  expect(first.sent).toContainEqual({ type: 'hello', token, fileName: 'First file' });
   first.receive({ type: 'hello.ok' });
+  expect(first.sent).toContainEqual({ type: 'file.presence', visible: true, active: true });
+  fakeDocument.visibilityState = 'hidden';
+  fakeDocument.dispatchEvent(new Event('visibilitychange'));
+  expect(first.sent).toContainEqual({ type: 'file.presence', visible: false, active: false });
   expect(elements.get('#pair-form')!.hidden).toBe(true);
   expect(messages).toContainEqual({ pluginMessage: { type: 'pairing.save', token } });
 
@@ -63,7 +68,7 @@ it('loads saved pairing, connects automatically, saves successful pairing and re
   await vi.advanceTimersByTimeAsync(2_100);
   expect(FakeSocket.sockets).toHaveLength(2);
   FakeSocket.sockets[1].open();
-  expect(FakeSocket.sockets[1].sent).toContainEqual({ type: 'hello', token });
+  expect(FakeSocket.sockets[1].sent).toContainEqual({ type: 'hello', token, fileName: 'First file' });
 });
 
 it('exposes the code form when the saved pairing is rejected', async () => {
@@ -73,7 +78,8 @@ it('exposes the code form when the saved pairing is rejected', async () => {
   }
   const messages: unknown[] = [];
   const fakeWindow = new EventTarget();
-  vi.stubGlobal('document', { querySelector: (id: string) => elements.get(id) });
+  const fakeDocument = Object.assign(new EventTarget(), { querySelector: (id: string) => elements.get(id), visibilityState: 'visible' });
+  vi.stubGlobal('document', fakeDocument);
   vi.stubGlobal('window', fakeWindow);
   vi.stubGlobal('parent', { postMessage: (message: unknown) => messages.push(message) });
   vi.stubGlobal('WebSocket', FakeSocket);

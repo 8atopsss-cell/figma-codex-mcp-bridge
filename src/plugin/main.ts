@@ -9,9 +9,9 @@ figma.ui.onmessage = async (message: unknown) => {
     if (message.type === 'pairing.load') {
       try {
         const token: unknown = await figma.clientStorage.getAsync('bridge-pairing-token');
-        figma.ui.postMessage({ type: 'pairing.saved', token: typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null });
+        figma.ui.postMessage({ type: 'pairing.saved', token: typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null, fileName: figma.root.name });
       } catch {
-        figma.ui.postMessage({ type: 'pairing.saved', token: null });
+        figma.ui.postMessage({ type: 'pairing.saved', token: null, fileName: figma.root.name });
       }
       return;
     }

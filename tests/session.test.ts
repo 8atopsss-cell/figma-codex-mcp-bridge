@@ -6,6 +6,100 @@ import { startBridgeSocketServer } from '../src/bridge/session.js';
 const token = 'a'.repeat(64);
 
 describe('local Figma session', () => {
+  it('keeps two files connected and routes commands to the visible tab', async () => {
+    const bridge = await startBridgeSocketServer({ port: 0, token });
+    const first = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    const second = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    const opened = [once(first, 'open'), once(second, 'open')];
+    try {
+      for (const [index, socket] of [first, second].entries()) {
+        await opened[index];
+        const hello = Promise.race([
+          once(socket, 'message').then(() => true),
+          once(socket, 'close').then(() => false),
+        ]);
+        socket.send(JSON.stringify({ type: 'hello', token }));
+        expect(await hello).toBe(true);
+      }
+      expect(bridge.session.connectionCount).toBe(2);
+
+      first.send(JSON.stringify({ type: 'file.presence', visible: true, active: true }));
+      second.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      const firstMessage = once(first, 'message');
+      const firstResult = bridge.session.call('file.overview', {});
+      const firstRequest = JSON.parse(String((await firstMessage)[0]));
+      first.send(JSON.stringify({ type: 'plugin.result', requestId: firstRequest.requestId, value: { fileName: 'First' } }));
+      await expect(firstResult).resolves.toEqual({ fileName: 'First' });
+
+      first.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
+      second.send(JSON.stringify({ type: 'file.presence', visible: true, active: true }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      const secondMessage = once(second, 'message');
+      const secondResult = bridge.session.call('file.overview', {});
+      const secondRequest = JSON.parse(String((await secondMessage)[0]));
+      second.send(JSON.stringify({ type: 'plugin.result', requestId: secondRequest.requestId, value: { fileName: 'Second' } }));
+      await expect(secondResult).resolves.toEqual({ fileName: 'Second' });
+    } finally {
+      first.close();
+      second.close();
+      await bridge.close();
+    }
+  });
+
+  it('fails closed when active tab is unknown and keeps requests isolated by file', async () => {
+    const bridge = await startBridgeSocketServer({ port: 0, token });
+    const first = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    const second = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    const opened = [once(first, 'open'), once(second, 'open')];
+    try {
+      for (const [index, socket] of [first, second].entries()) {
+        await opened[index];
+        const hello = Promise.race([
+          once(socket, 'message').then(() => true),
+          once(socket, 'close').then(() => false),
+        ]);
+        socket.send(JSON.stringify({ type: 'hello', token }));
+        expect(await hello).toBe(true);
+      }
+      first.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
+      second.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      await expect(bridge.session.call('page.create', { name: 'Wrong file' })).rejects.toThrow('FILE_SELECTION_REQUIRED');
+
+      first.send(JSON.stringify({ type: 'file.presence', visible: true, active: true }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      const incoming = once(first, 'message');
+      const result = bridge.session.call('file.overview', {});
+      const request = JSON.parse(String((await incoming)[0]));
+      second.send(JSON.stringify({ type: 'plugin.result', requestId: request.requestId, value: { fileName: 'Wrong' } }));
+      first.send(JSON.stringify({ type: 'plugin.result', requestId: request.requestId, value: { fileName: 'Right' } }));
+      await expect(result).resolves.toEqual({ fileName: 'Right' });
+
+      bridge.session.activateFile(bridge.session.listFiles()[1].id);
+      second.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      expect(bridge.session.listFiles()[1].active).toBe(true);
+      const selectedMessage = once(second, 'message');
+      const selectedResult = bridge.session.call('file.overview', {});
+      const selectedRequest = JSON.parse(String((await selectedMessage)[0]));
+      second.send(JSON.stringify({ type: 'plugin.result', requestId: selectedRequest.requestId, value: { fileName: 'Selected' } }));
+      await expect(selectedResult).resolves.toEqual({ fileName: 'Selected' });
+
+      const pinned = bridge.session.pinCurrentFile();
+      bridge.session.activateFile(bridge.session.listFiles()[0].id);
+      const pinnedMessage = once(second, 'message');
+      const pinnedResult = pinned.call('file.overview', {});
+      const pinnedRequest = JSON.parse(String((await pinnedMessage)[0]));
+      second.send(JSON.stringify({ type: 'plugin.result', requestId: pinnedRequest.requestId, value: { fileName: 'Still second' } }));
+      await expect(pinnedResult).resolves.toEqual({ fileName: 'Still second' });
+    } finally {
+      first.close();
+      second.close();
+      await bridge.close();
+    }
+  });
+
   it('pairs one plugin and correlates replies by request ID', async () => {
     const bridge = await startBridgeSocketServer({ port: 0, token });
     const socket = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });

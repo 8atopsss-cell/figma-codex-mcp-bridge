@@ -10,6 +10,7 @@ it('stores an accepted pairing for the next plugin launch and clears a rejected 
   const posted: unknown[] = [];
   const plugin = {
     showUI: vi.fn(),
+    root: { name: 'First file' },
     ui: { onmessage: undefined as ((value: unknown) => Promise<void>) | undefined, postMessage: (value: unknown) => posted.push(value) },
     clientStorage: {
       getAsync: async (key: string) => storage.get(key),
@@ -24,11 +25,11 @@ it('stores an accepted pairing for the next plugin launch and clears a rejected 
   const token = 'b'.repeat(64);
 
   await send({ type: 'pairing.load' });
-  expect(posted.pop()).toEqual({ type: 'pairing.saved', token: null });
+  expect(posted.pop()).toEqual({ type: 'pairing.saved', token: null, fileName: 'First file' });
   await send({ type: 'pairing.save', token });
   await send({ type: 'pairing.load' });
-  expect(posted.pop()).toEqual({ type: 'pairing.saved', token });
+  expect(posted.pop()).toEqual({ type: 'pairing.saved', token, fileName: 'First file' });
   await send({ type: 'pairing.clear' });
   await send({ type: 'pairing.load' });
-  expect(posted.pop()).toEqual({ type: 'pairing.saved', token: null });
+  expect(posted.pop()).toEqual({ type: 'pairing.saved', token: null, fileName: 'First file' });
 });
