@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Кнопка питания VPN">
+  <circle cx="64" cy="64" r="64" fill="#071722"/>
+  <circle cx="64" cy="64" r="58" fill="#0d2b3a"/>
+  <circle cx="64" cy="64" r="50" fill="#28d4af"/>
+  <circle cx="64" cy="64" r="48" fill="#103242"/>
+  <path d="M51.5 45.9a22 22 0 1 0 25 0" fill="none" stroke="#4de8c5" stroke-width="6" stroke-linecap="round"/>
+  <path d="M64 36v23" fill="none" stroke="#4de8c5" stroke-width="6" stroke-linecap="round"/>
+</svg>
