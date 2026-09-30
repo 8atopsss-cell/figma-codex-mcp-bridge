@@ -11,8 +11,19 @@ input, button { border: 1px solid var(--figma-color-border); border-radius: 4px;
 input { background: var(--figma-color-bg); color: var(--figma-color-text); }
 button { background: var(--figma-color-bg-brand); color: var(--figma-color-text-onbrand); cursor: pointer; }
 #status { color: var(--figma-color-text-secondary); }
-#confirmation { border-top: 1px solid var(--figma-color-border); margin-top: 12px; }
+#confirmation {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--figma-color-bg);
+}
 #confirmation[hidden] { display: none; }
+#confirmation p { margin: 0; overflow-wrap: anywhere; }
 .actions { display: flex; gap: 8px; }
 .actions button { flex: 1; }
 #cancel-delete { background: var(--figma-color-bg); color: var(--figma-color-text); }

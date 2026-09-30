@@ -26,6 +26,8 @@ export async function createScreen(api: WriteApi, input: unknown) {
     applyCommon(root, spec);
     applyFrameLayout(root, spec);
     for (const child of spec.children) await createChild(api, root, child, created, childIds);
+    root.x = spec.x;
+    root.y = spec.y;
     return { screenId: root.id, childIds };
   } catch (error) {
     for (const node of created.reverse()) {
