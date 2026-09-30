@@ -8,6 +8,10 @@ const confirmation = document.querySelector<HTMLElement>('#confirmation')!;
 const confirmTarget = document.querySelector<HTMLElement>('#confirm-target')!;
 let socket: WebSocket | undefined;
 let confirmationId: string | undefined;
+let savedToken: string | undefined;
+let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
+form.hidden = true;
 
 function setConnected(connected: boolean) {
   pluginView.dataset.connected = String(connected);
@@ -26,11 +30,9 @@ function answerConfirmation(accepted: boolean) {
 document.querySelector('#cancel-delete')!.addEventListener('click', () => answerConfirmation(false));
 document.querySelector('#confirm-delete')!.addEventListener('click', () => answerConfirmation(true));
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const code = codeInput.value.trim();
-  if (!code) return;
-  socket?.close();
+function connect(code: string) {
+  if (retryTimer) clearTimeout(retryTimer);
+  retryTimer = undefined;
   status.textContent = 'Подключение…';
   const next = new WebSocket('ws://localhost:3846');
   socket = next;
@@ -40,6 +42,8 @@ form.addEventListener('submit', (event) => {
     try { value = JSON.parse(String(event.data)); } catch { return; }
     if (value && typeof value === 'object' && 'type' in value && value.type === 'hello.ok') {
       status.textContent = 'Figma подключена к Codex';
+      savedToken = code;
+      parent.postMessage({ pluginMessage: { type: 'pairing.save', token: code } }, '*');
       codeInput.value = '';
       setConnected(true);
       return;
@@ -53,20 +57,62 @@ form.addEventListener('submit', (event) => {
       confirmation.hidden = false;
     }
   });
-  next.addEventListener('close', () => {
+  next.addEventListener('close', (event) => {
     confirmation.hidden = true;
     confirmationId = undefined;
-    if (socket === next) {
-      setConnected(false);
-      status.textContent = 'Нет соединения. Получите новый код в Codex.';
+    if (socket !== next) return;
+    socket = undefined;
+    setConnected(false);
+    if (event.code === 1008 && event.reason === 'Invalid pairing code') {
+      savedToken = undefined;
+      parent.postMessage({ pluginMessage: { type: 'pairing.clear' } }, '*');
+      form.hidden = false;
+      status.textContent = 'Код недействителен. Получите код в Codex.';
+      return;
     }
+    if (savedToken) {
+      form.hidden = true;
+      status.textContent = event.code === 1013
+        ? 'Другой файл Figma подключён. Ожидание…'
+        : 'Нет соединения. Ожидание Codex…';
+      retryTimer = setTimeout(() => connect(savedToken!), 2_000);
+      return;
+    }
+    form.hidden = false;
+    status.textContent = 'Нет соединения. Проверьте, запущен ли Codex.';
   });
   next.addEventListener('error', () => {
     if (socket === next) status.textContent = 'Не удалось подключиться к локальному мосту.';
   });
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const code = codeInput.value.trim();
+  if (!/^[a-f0-9]{64}$/.test(code)) {
+    status.textContent = 'Нужен код из 64 символов.';
+    return;
+  }
+  savedToken = undefined;
+  socket?.close();
+  connect(code);
 });
 
 window.addEventListener('message', (event) => {
-  const reply = pluginReplySchema.safeParse(event.data?.pluginMessage);
+  const message = event.data?.pluginMessage;
+  if (message?.type === 'pairing.saved') {
+    if (typeof message.token === 'string' && /^[a-f0-9]{64}$/.test(message.token)) {
+      savedToken = message.token;
+      form.hidden = true;
+      connect(message.token);
+    } else {
+      form.hidden = false;
+      status.textContent = 'Нет соединения. Получите код в Codex.';
+    }
+    return;
+  }
+  const reply = pluginReplySchema.safeParse(message);
   if (reply.success && socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(reply.data));
 });
+
+parent.postMessage({ pluginMessage: { type: 'pairing.load' } }, '*');

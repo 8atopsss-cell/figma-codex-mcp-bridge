@@ -5,6 +5,25 @@ import { createPage, createScreen, deleteNode, updateNode } from './write.js';
 figma.showUI(__html__, { width: 320, height: 300, themeColors: true });
 
 figma.ui.onmessage = async (message: unknown) => {
+  if (message && typeof message === 'object' && 'type' in message) {
+    if (message.type === 'pairing.load') {
+      try {
+        const token: unknown = await figma.clientStorage.getAsync('bridge-pairing-token');
+        figma.ui.postMessage({ type: 'pairing.saved', token: typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null });
+      } catch {
+        figma.ui.postMessage({ type: 'pairing.saved', token: null });
+      }
+      return;
+    }
+    if (message.type === 'pairing.save' && 'token' in message && typeof message.token === 'string' && /^[a-f0-9]{64}$/.test(message.token)) {
+      await figma.clientStorage.setAsync('bridge-pairing-token', message.token);
+      return;
+    }
+    if (message.type === 'pairing.clear') {
+      await figma.clientStorage.deleteAsync('bridge-pairing-token');
+      return;
+    }
+  }
   const request = pluginRequestSchema.safeParse(message);
   if (!request.success) return;
   try {

@@ -22,7 +22,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
     server.registerTool(
       'get_pairing_code',
       {
-        description: 'Show the session code that the user enters in the Figma plugin to connect this local bridge.',
+        description: 'Show the local pairing code used once to connect the Figma plugin to this bridge.',
         inputSchema: z.object({}),
         annotations: { readOnlyHint: true },
       },

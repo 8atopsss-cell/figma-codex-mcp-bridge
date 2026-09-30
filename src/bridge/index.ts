@@ -1,8 +1,9 @@
 import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import { createBridgeServer } from './mcp.js';
 import { startBridgeSocketServer } from './session.js';
+import { loadOrCreatePairingCode } from './pairing.js';
 
-const bridge = await startBridgeSocketServer();
+const bridge = await startBridgeSocketServer({ token: await loadOrCreatePairingCode() });
 void serveStdio(() => {
   const server = createBridgeServer({
     call: (method, args) => bridge.session.call(method, args),
