@@ -6,6 +6,15 @@ const position = z.number().finite().min(-100_000).max(100_000);
 const size = z.number().finite().min(1).max(10_000);
 const fill = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 
+export const variableReadSchema = z.object({
+  nodeId: id.optional(),
+  collectionId: id.optional(),
+  variableIds: z.array(id).min(1).max(100).optional(),
+  offset: z.number().int().min(0).default(0),
+  limit: z.number().int().min(1).max(100).default(100),
+}).strict();
+export type VariableReadArgs = z.infer<typeof variableReadSchema>;
+
 const nodeBase = {
   name,
   x: position,
@@ -121,7 +130,9 @@ export const pluginRequestSchema = z.discriminatedUnion('method', [
   call('file.overview', z.object({}).strict()),
   call('node.tree', z.object({ nodeId: id, depth: z.number().int().min(0).max(8), offset: z.number().int().min(0), limit: z.number().int().min(1).max(100) }).strict()),
   call('node.preview', z.object({ nodeId: id, scale: z.number().min(0.1).max(4) }).strict()),
+  call('node.svg', z.object({ nodeId: id }).strict()),
   call('styles.list', z.object({}).strict()),
+  call('variables.list', variableReadSchema),
   call('page.create', z.object({ name }).strict()),
   call('screen.create', screenSpecSchema),
   call('node.update', updateNodeSchema),

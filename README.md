@@ -47,13 +47,23 @@ codex.cmd mcp get figma-codex-local
 
 Для указаний «эта иконка», «этот блок» и «выделенное» Codex сначала проверяет активный файл и выделение. Если ничего не выделено, нужен выбор объекта в Figma; прошлый файл не считается источником. Правило сохранено в [навыке figma-bridge](skills/figma-bridge/SKILL.md).
 
+Перед изменением готовых компонентов Figma, их наборов, вариантов, экземпляров и вложенных слоёв Codex всегда показывает точные правки и запрашивает подтверждение. Правило включает переименование и исправление конфликтов. Уже подтверждённые правки выполняются без повторного вопроса. `update_node` поддерживает переименование COMPONENT и COMPONENT_SET только отдельной правкой `name`.
+
 Если другой сеанс Codex уже занял порт `3846`, новый MCP-процесс остаётся доступным в чате и ждёт освобождения порта. Пока он ждёт, команды возвращают `BRIDGE_PORT_BUSY`. Закройте лишний сеанс; мост поднимется сам, а плагины переподключатся. Для обновления уже запущенного MCP-процесса после сборки требуется заново открыть чат Codex.
 
 Для отдельной живой проверки до перезапуска Codex запустите `npm.cmd run live:check`: команда покажет временный код для окна плагина и затем прочитает обзор открытого файла. После проверки соединение закроется, а код перестанет действовать. Для постоянной работы используйте код MCP-сервера, запущенного самим Codex.
 
 ### MCP-инструменты
 
-`get_pairing_code`, `list_connected_files`, `select_file`, `get_file_overview`, `get_node_tree`, `get_node_preview`, `get_local_styles`, `create_page`, `create_screen`, `update_node`, `delete_node`.
+`get_pairing_code`, `list_connected_files`, `select_file`, `get_file_overview`, `get_node_tree`, `get_node_preview`, `get_node_svg`, `get_local_styles`, `get_variables`, `create_page`, `create_screen`, `update_node`, `delete_node`.
+
+`get_node_tree` includes code-handoff properties under `properties`: structured fills and strokes, per-corner radii, effects, opacity, transforms, auto layout, constraints, typography, and component properties. Mixed text styling is returned as `textSegments`. Read `warnings` before generating code: truncated children or assets and effects that need special handling are reported explicitly. Use `get_node_svg` to export vector layers as SVG assets. `get_local_styles` returns full paint, text, and effect style details. Use `get_node_preview` and compare it with the Storybook render; transferred values alone do not prove visual parity.
+
+Для переноса системы токенов `get_node_tree` возвращает `properties.boundVariables`, `explicitVariableModes` и `resolvedVariableModes`. Схема настроек — `componentPropertyDefinitions` с источником `componentPropertyDefinitionsSource`; выбранные значения — `componentProperties` и `variantProperties`. У экземпляра схема читается из основного компонента или его набора вариантов, а не из названия слоя.
+
+Ошибка отдельного свойства Figma больше не прерывает чтение всего узла: остальные значения возвращаются, а `warnings` содержит имя поля, ID источника и исходное исключение. Отсутствующее поле не заменяется догадкой. Ошибки запроса также передают исходное сообщение вместе с кодом; после обновления перезапустите мост в Codex, чтобы загрузить новый обработчик. Если Figma сообщает `Component set has existing errors`, сначала устраните конфликты вариантов в самом наборе.
+
+`get_variables` читает переменные, коллекции, режимы, значения всех режимов и зависимости алиасов. Передайте `variableIds` из привязок и `nodeId` потребителя: получите цепочки и нативный результат Figma `resolvedForConsumer`. Без `nodeId` другие коллекции используют явно отмеченные режимы по умолчанию; одинаковые названия Light/Dark не связываются автоматически. Список локальных переменных поддерживает `offset`/`limit`; удалённые токены доступны по ID без импорта. Проверяйте `warnings` и `pagination.nextOffset`. [Контракт инструмента и правила переноса](skills/figma-bridge/references/variables.md).
 
 Первый релиз создаёт фреймы, текст и прямоугольники; не импортирует библиотеки и не создаёт растровые изображения. Отдельные ChatGPT логин и API-ключ в Figma не нужны.
 

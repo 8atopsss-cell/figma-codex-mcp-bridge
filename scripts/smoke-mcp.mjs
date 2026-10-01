@@ -15,6 +15,7 @@ try {
   const { tools } = await client.listTools();
   assert(tools.some((tool) => tool.name === 'get_file_overview'));
   assert(tools.some((tool) => tool.name === 'list_connected_files'));
+  assert(tools.some((tool) => tool.name === 'get_variables' && tool.annotations?.readOnlyHint === true));
   const result = await client.callTool({ name: 'get_file_overview', arguments: {} });
   if (result.isError) {
     assert(['NOT_CONNECTED', 'BRIDGE_PORT_BUSY', 'FILE_SELECTION_REQUIRED'].includes(result.content[0]?.text));

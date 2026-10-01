@@ -70,6 +70,10 @@ export async function updateNode(api: WriteApi, input: unknown) {
   const { nodeId, patch } = updateNodeSchema.parse(input);
   const node = await api.getNodeByIdAsync(nodeId);
   if (!node) throw new Error('NODE_NOT_FOUND');
+  if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && patch.name !== undefined && Object.keys(patch).length === 1) {
+    node.name = patch.name;
+    return { nodeId: node.id, name: node.name };
+  }
   if (node.type !== 'FRAME' && node.type !== 'TEXT' && node.type !== 'RECTANGLE') throw new Error('UNSUPPORTED_NODE');
   if ((patch.characters !== undefined || patch.fontSize !== undefined) && node.type !== 'TEXT') throw new Error('UNSUPPORTED_NODE');
   if ((patch.layoutMode !== undefined || patch.itemSpacing !== undefined) && node.type !== 'FRAME') throw new Error('UNSUPPORTED_NODE');

@@ -24,4 +24,11 @@ describe('bridge protocol', () => {
     expect(updateNodeSchema.safeParse({ nodeId: '1:2', patch: { name: 'New' } }).success).toBe(true);
     expect(pluginRequestSchema.safeParse({ type: 'plugin.call', requestId: 'r1', method: 'shell.exec', args: {} }).success).toBe(false);
   });
+
+  it('validates bounded variable reads and rejects mutation fields', () => {
+    const request = { type: 'plugin.call', requestId: 'r1', method: 'variables.list', args: { nodeId: '3:1', variableIds: ['V:1'], offset: 0, limit: 100 } };
+    expect(pluginRequestSchema.safeParse(request).success).toBe(true);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, limit: 501 } }).success).toBe(false);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, setValue: 20 } }).success).toBe(false);
+  });
 });

@@ -6,6 +6,26 @@ import { startBridgeSocketServer } from '../src/bridge/session.js';
 const token = 'a'.repeat(64);
 
 describe('local Figma session', () => {
+  it('preserves plugin error details for the MCP caller', async () => {
+    const bridge = await startBridgeSocketServer({ port: 0, token });
+    const socket = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    try {
+      await once(socket, 'open');
+      const hello = once(socket, 'message');
+      socket.send(JSON.stringify({ type: 'hello', token }));
+      await hello;
+      const message = once(socket, 'message');
+      const result = bridge.session.call('node.tree', { nodeId: '4391:92046', depth: 0, offset: 0, limit: 1 });
+      const rejected = expect(result).rejects.toThrow('FIGMA_API_ERROR: node.tree 4391:92046: Component set has existing errors');
+      const request = JSON.parse(String((await message)[0]));
+      socket.send(JSON.stringify({ type: 'plugin.error', requestId: request.requestId, code: 'FIGMA_API_ERROR', message: 'node.tree 4391:92046: Component set has existing errors' }));
+      await rejected;
+    } finally {
+      socket.close();
+      await bridge.close();
+    }
+  });
+
   it('keeps two files connected and routes commands to the visible tab', async () => {
     const bridge = await startBridgeSocketServer({ port: 0, token });
     const first = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });

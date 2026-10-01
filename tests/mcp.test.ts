@@ -34,7 +34,9 @@ describe('MCP bridge', () => {
     const server = createBridgeServer({
       call: async (method, args) => {
         calls.push({ method, args });
-        return method === 'node.preview' ? { mimeType: 'image/png', data: 'iVBORw==' } : { id: '3:1', name: 'Screen' };
+        if (method === 'node.preview') return { mimeType: 'image/png', data: 'iVBORw==' };
+        if (method === 'node.svg') return '<svg><path /></svg>';
+        return { id: '3:1', name: 'Screen' };
       },
     });
     const client = new Client({ name: 'bridge-test', version: '1.0.0' });
@@ -45,6 +47,12 @@ describe('MCP bridge', () => {
       expect(calls[0]).toEqual({ method: 'node.tree', args: { nodeId: '3:1', depth: 2, offset: 0, limit: 50 } });
       const image = await client.callTool({ name: 'get_node_preview', arguments: { nodeId: '3:1' } });
       expect(image.content).toEqual([{ type: 'image', mimeType: 'image/png', data: 'iVBORw==' }]);
+      const svg = await client.callTool({ name: 'get_node_svg', arguments: { nodeId: '3:2' } });
+      expect(svg.content).toEqual([{ type: 'text', text: '<svg><path /></svg>' }]);
+      expect(calls[2]).toEqual({ method: 'node.svg', args: { nodeId: '3:2' } });
+      const variableResult = await client.callTool({ name: 'get_variables', arguments: { nodeId: '3:1', variableIds: ['V:primary'] } });
+      expect(variableResult.isError).not.toBe(true);
+      expect(calls[3]).toEqual({ method: 'variables.list', args: { nodeId: '3:1', variableIds: ['V:primary'], offset: 0, limit: 100 } });
     } finally {
       await client.close();
       await server.close();

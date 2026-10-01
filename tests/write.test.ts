@@ -20,6 +20,21 @@ function fakeApi() {
 }
 
 describe('Figma writes', () => {
+  it.each(['COMPONENT', 'COMPONENT_SET'])('renames an approved %s without changing its geometry or appearance', async (type) => {
+    const node = { id: '14853:131178', type, name: 'type=ghost, state=active, size=32', x: 20, width: 112, fills: [] };
+    const api = { getNodeByIdAsync: vi.fn(async () => node) } as unknown as Parameters<typeof updateNode>[0];
+    const name = 'type=ghost orange, state=active, size=32';
+    expect(await updateNode(api, { nodeId: node.id, patch: { name } })).toEqual({ nodeId: node.id, name });
+    expect(node).toMatchObject({ name, x: 20, width: 112, fills: [] });
+  });
+
+  it('rejects broader component patches before applying a rename', async () => {
+    const node = { id: '14853:131178', type: 'COMPONENT', name: 'Original', x: 20 };
+    const api = { getNodeByIdAsync: vi.fn(async () => node) } as unknown as Parameters<typeof updateNode>[0];
+    await expect(updateNode(api, { nodeId: node.id, patch: { name: 'Changed', x: 50 } })).rejects.toThrow('UNSUPPORTED_NODE');
+    expect(node).toMatchObject({ name: 'Original', x: 20 });
+  });
+
   it('creates an editable frame and text after loading the font', async () => {
     const { api, page, frame, text } = fakeApi();
     const result = await createScreen(api as unknown as Parameters<typeof createScreen>[0], screen);

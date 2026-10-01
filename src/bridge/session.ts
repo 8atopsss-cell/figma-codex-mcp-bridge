@@ -185,7 +185,10 @@ export class BridgeSession {
     if (!pending || pending.connectionId !== connectionId) return;
     clearTimeout(pending.timer);
     this.pending.delete(reply.data.requestId);
-    if (reply.data.type === 'plugin.error') pending.reject(new Error(reply.data.code));
+    if (reply.data.type === 'plugin.error') {
+      const { code, message } = reply.data;
+      pending.reject(new Error(message && message !== code ? `${code}: ${message}` : code));
+    }
     else pending.resolve(reply.data.value);
   }
 

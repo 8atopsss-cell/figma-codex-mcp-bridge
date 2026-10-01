@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
-import { screenSpecSchema, updateNodeSchema } from '../shared/protocol.js';
+import { screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
 
 export interface BridgeCaller {
   call(method: string, args: unknown): Promise<unknown>;
@@ -78,7 +78,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   server.registerTool(
     'get_node_tree',
     {
-      description: 'Read a bounded tree of editable nodes from the connected Figma file.',
+      description: 'Read a bounded Figma node tree for code handoff. Includes exact paint, corner, stroke, effect, layout, typography, node boundVariables, explicitVariableModes, resolvedVariableModes, componentPropertyDefinitions with their source, componentProperties, and variantProperties under properties; mixed text styles under textSegments; and warnings for truncated trees or unavailable data. Read get_variables with referenced variableIds and nodeId to preserve tokens and effective themes. Never infer omitted values.',
       inputSchema: z.object({
         nodeId,
         depth: z.number().int().min(0).max(8).default(2),
@@ -109,13 +109,41 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   );
 
   server.registerTool(
+    'get_node_svg',
+    {
+      description: 'Export a vector-capable Figma node as SVG text for reuse as a code asset. Call for VECTOR or BOOLEAN_OPERATION nodes when get_node_tree reports an asset warning.',
+      inputSchema: z.object({ nodeId }),
+      annotations: { readOnlyHint: true },
+    },
+    async ({ nodeId: id }) => {
+      try {
+        const svg = await bridge.call('node.svg', { nodeId: id });
+        if (typeof svg !== 'string') throw new Error('INVALID_ARGUMENT');
+        return { content: [{ type: 'text' as const, text: svg }] };
+      } catch (error) {
+        return errorResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
     'get_local_styles',
     {
-      description: 'Read local paint and text styles from the connected Figma file.',
+      description: 'Read local paint, text, and effect styles with full paint and typography properties for code handoff.',
       inputSchema: z.object({}),
       annotations: { readOnlyHint: true },
     },
     async () => textResult(() => bridge.call('styles.list', {})),
+  );
+
+  server.registerTool(
+    'get_variables',
+    {
+      description: 'Read variables, collections, modes, raw valuesByMode and alias dependencies from the active file without importing or changing them. Optional variableIds can include accessible remote tokens; collectionId filters roots; offset/limit paginate roots while including their dependencies. nodeId supplies consumer context, explicit/resolved modes, native resolveForConsumer values, and alias chains. Without nodeId, cross-collection aliases use labelled collection defaults; modes with matching names are never equated. Inspect warnings, unresolved statuses and pagination; raw values for all modes remain available.',
+      inputSchema: variableReadSchema,
+      annotations: { readOnlyHint: true },
+    },
+    async (args) => textResult(() => bridge.call('variables.list', args)),
   );
 
   server.registerTool(
@@ -141,7 +169,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   server.registerTool(
     'update_node',
     {
-      description: 'Change explicitly listed properties of one editable Figma node.',
+      description: 'Change explicitly listed properties of one editable Figma node. COMPONENT and COMPONENT_SET support name-only patches. Before modifying finished components, variants, instances or their sublayers, inspect the live source and ask the user to confirm the exact changes. Reuse existing confirmation only for those same objects and changes.',
       inputSchema: updateNodeSchema,
       annotations: { readOnlyHint: false, destructiveHint: false },
     },
