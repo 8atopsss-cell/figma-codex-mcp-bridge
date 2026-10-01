@@ -21,7 +21,7 @@ export async function packageTransfer() {
   }
   await rm(target, { recursive: true, force: true });
   await mkdir(target, { recursive: true });
-  for (const path of ['dist', 'skills', 'assets', 'manifest.example.json', 'package-lock.json']) {
+  for (const path of ['dist', 'skills', 'assets', 'manifest.example.json', 'package-lock.json', 'INSTALL-BRIDGE.md']) {
     await cp(join(projectRoot, path), join(target, path), { recursive: true });
   }
   for (const path of ['install-local-plugin.mjs', 'install-skills.mjs']) {
