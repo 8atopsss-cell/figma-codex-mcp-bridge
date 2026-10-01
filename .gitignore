@@ -1,5 +1,6 @@
 node_modules/
 dist/
+transfer/
 manifest.json
 v_2/
 .env

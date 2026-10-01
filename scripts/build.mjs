@@ -1,6 +1,7 @@
 import { build } from 'esbuild';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { Script } from 'node:vm';
+import { packageTransfer } from './package-transfer.mjs';
 
 await mkdir('dist/plugin', { recursive: true });
 await mkdir('dist/bridge', { recursive: true });
@@ -42,3 +43,5 @@ await build({
   format: 'esm',
   target: 'node24',
 });
+
+await packageTransfer();

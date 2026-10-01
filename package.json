@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "package:transfer": "npm run build",
+    "install:skills": "node scripts/install-skills.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.bridge.json && tsc --noEmit -p tsconfig.plugin.json",
     "test": "vitest run",
     "smoke:mcp": "node scripts/smoke-mcp.mjs",
