@@ -24,9 +24,8 @@ const ui = await build({
 });
 const html = await readFile('src/plugin/ui.html', 'utf8');
 const css = await readFile('src/plugin/ui.css', 'utf8');
-const icon = await readFile('assets/plugin-icon.svg', 'utf8');
 const script = ui.outputFiles[0].text.replaceAll('</script', '<\\/script');
-const renderedHtml = html.replace('/* STYLE */', () => css).replace('/* ICON */', () => icon).replace('/* SCRIPT */', () => script);
+const renderedHtml = html.replace('/* STYLE */', () => css).replace('/* SCRIPT */', () => script);
 const inlineScript = renderedHtml.match(/<script>([\s\S]*)<\/script>/)?.[1];
 if (!inlineScript || renderedHtml.match(/<!doctype html>/g)?.length !== 1) {
   throw new Error('Invalid generated plugin UI HTML');

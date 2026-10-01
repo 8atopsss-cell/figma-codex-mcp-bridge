@@ -80,10 +80,15 @@ describe('local Figma session', () => {
       first.send(JSON.stringify({ type: 'plugin.result', requestId: request.requestId, value: { fileName: 'Right' } }));
       await expect(result).resolves.toEqual({ fileName: 'Right' });
 
-      bridge.session.activateFile(bridge.session.listFiles()[1].id);
+      expect(() => bridge.session.activateFile(bridge.session.listFiles()[0].id)).not.toThrow();
+      expect(() => bridge.session.activateFile(bridge.session.listFiles()[1].id)).toThrow('ACTIVE_FILE_ALREADY_DETECTED');
+      expect(bridge.session.listFiles()[0].active).toBe(true);
+      first.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
       second.send(JSON.stringify({ type: 'file.presence', visible: false, active: false }));
       await new Promise((resolve) => setTimeout(resolve, 20));
+      bridge.session.activateFile(bridge.session.listFiles()[1].id);
       expect(bridge.session.listFiles()[1].active).toBe(true);
+      expect(bridge.session.listFiles()[1].visible).toBe(false);
       const selectedMessage = once(second, 'message');
       const selectedResult = bridge.session.call('file.overview', {});
       const selectedRequest = JSON.parse(String((await selectedMessage)[0]));

@@ -46,7 +46,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
     server.registerTool(
       'select_file',
       {
-        description: 'Select a connected Figma file by its exact name or connection ID when the foreground tab cannot be detected. Use list_connected_files first.',
+        description: 'Select a connected Figma file by exact name or connection ID only when no foreground tab is detected. Returns ACTIVE_FILE_ALREADY_DETECTED if another file is active. Use list_connected_files first.',
         inputSchema: z.object({ file: z.string().min(1).max(200) }),
         annotations: { readOnlyHint: false, destructiveHint: false },
       },
@@ -60,7 +60,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   server.registerTool(
     'get_file_overview',
     {
-      description: 'Read pages, current page, and selection from the connected Figma file.',
+      description: 'Read pages, current page, and selection from the active Figma file. For "this" or "selected" design requests, call this first; if selection is empty, ask the user to select the source node.',
       inputSchema: z.object({}),
       annotations: { readOnlyHint: true },
     },

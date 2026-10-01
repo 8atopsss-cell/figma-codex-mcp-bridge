@@ -11,6 +11,7 @@ type Connection = { socket: WebSocket; fileName: string; visible: boolean };
 export class BridgeSession {
   private readonly connections = new Map<string, Connection>();
   private activeId: string | undefined;
+  private foregroundId: string | undefined;
   private manualId: string | undefined;
   private readonly pending = new Map<string, Pending>();
   private readonly confirmations = new Map<string, Pending>();
@@ -29,6 +30,7 @@ export class BridgeSession {
       if (this.connections.get(connectionId)?.socket !== plugin) return;
       this.connections.delete(connectionId);
       if (this.activeId === connectionId) this.activeId = undefined;
+      if (this.foregroundId === connectionId) this.foregroundId = undefined;
       if (this.manualId === connectionId) this.manualId = undefined;
       this.failPending('FIGMA_DISCONNECTED', connectionId);
     });
@@ -49,7 +51,10 @@ export class BridgeSession {
     const connectionId = matches[0]?.[0];
     const connection = this.connections.get(connectionId);
     if (!connection || connection.socket.readyState !== WebSocket.OPEN) throw new Error('FILE_NOT_CONNECTED');
-    connection.visible = true;
+    if (this.foregroundId && this.connections.get(this.foregroundId)?.visible) {
+      if (this.foregroundId !== connectionId) throw new Error('ACTIVE_FILE_ALREADY_DETECTED');
+      return;
+    }
     this.activeId = connectionId;
     this.manualId = connectionId;
   }
@@ -123,12 +128,14 @@ export class BridgeSession {
     for (const connection of this.connections.values()) connection.socket.terminate();
     this.connections.clear();
     this.activeId = undefined;
+    this.foregroundId = undefined;
     this.manualId = undefined;
     this.failPending('FIGMA_DISCONNECTED');
   }
 
   private effectiveActiveId(): string | undefined {
     if (this.connections.size === 1) return this.connections.keys().next().value;
+    if (this.foregroundId && this.connections.get(this.foregroundId)?.visible) return this.foregroundId;
     if (this.manualId && this.connections.has(this.manualId)) return this.manualId;
     if (this.activeId && this.connections.get(this.activeId)?.visible) return this.activeId;
     const visible = [...this.connections].filter(([, connection]) => connection.visible);
@@ -152,9 +159,13 @@ export class BridgeSession {
         connection.visible = parsed.visible;
         if (parsed.visible && parsed.active) {
           this.activeId = connectionId;
+          this.foregroundId = connectionId;
           this.manualId = undefined;
         }
-        else if (!parsed.visible && this.activeId === connectionId) this.activeId = undefined;
+        else if (!parsed.visible) {
+          if (this.activeId === connectionId) this.activeId = undefined;
+          if (this.foregroundId === connectionId) this.foregroundId = undefined;
+        }
         return;
       }
     }
