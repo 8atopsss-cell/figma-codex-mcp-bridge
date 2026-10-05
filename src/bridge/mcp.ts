@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
-import { screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
+import { createComponentVariantsSchema, screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
 
 export interface BridgeCaller {
   call(method: string, args: unknown): Promise<unknown>;
@@ -177,6 +177,20 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   );
 
   server.registerTool(
+    'create_component_variants',
+    {
+      description: 'Create explicitly requested variants by cloning local components into their existing local component set (layoutMode NONE). Defaults to dryRun=true: returns names, placements, exact style assignments, requested set size/new values and expectedState without writes. Apply requires dryRun=false and the unchanged expectedState. Existing axes are required; optional newVariantValues explicitly permits used new values on those axes. Optional componentSetSize resizes the set without changing original child geometry. Layer overrides use accessible PaintStyle IDs on new copies only. Inspect the active file and obtain agreement on the exact set, sources, properties, placements, styles and any set size/new values; reuse that same approval. Retry with the same operationId after timeout to recover prior IDs. Returns source-to-clone maps; rollback removes only new nodes and restores operation-written dimensions unless manually changed. Report full rollback details.',
+      inputSchema: createComponentVariantsSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false },
+    },
+    async (args) => textResult(async () => {
+      // Pin before entering the write queue, not when this request finally runs.
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('component.variants.create', args));
+    }),
+  );
+
+  server.registerTool(
     'delete_node',
     {
       description: 'Delete one Figma node only after the user confirms it in the Figma plugin.',
@@ -206,5 +220,9 @@ async function textResult(action: () => Promise<unknown>) {
 }
 
 function errorResult(error: unknown) {
-  return { content: [{ type: 'text' as const, text: error instanceof Error ? error.message : 'FIGMA_API_ERROR' }], isError: true };
+  const content = [{ type: 'text' as const, text: error instanceof Error ? error.message : 'FIGMA_API_ERROR' }];
+  if (error && typeof error === 'object' && 'details' in error && error.details !== undefined) {
+    content.push({ type: 'text', text: JSON.stringify({ details: error.details }) });
+  }
+  return { content, isError: true };
 }

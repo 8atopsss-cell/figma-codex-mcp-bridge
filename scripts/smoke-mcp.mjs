@@ -16,6 +16,10 @@ try {
   assert(tools.some((tool) => tool.name === 'get_file_overview'));
   assert(tools.some((tool) => tool.name === 'list_connected_files'));
   assert(tools.some((tool) => tool.name === 'get_variables' && tool.annotations?.readOnlyHint === true));
+  assert(tools.some((tool) => tool.name === 'create_component_variants' && tool.annotations?.readOnlyHint === false));
+  const variantsTool = tools.find((tool) => tool.name === 'create_component_variants');
+  assert(variantsTool.inputSchema.properties.componentSetSize);
+  assert(variantsTool.inputSchema.properties.newVariantValues);
   const result = await client.callTool({ name: 'get_file_overview', arguments: {} });
   if (result.isError) {
     assert(['NOT_CONNECTED', 'BRIDGE_PORT_BUSY', 'FILE_SELECTION_REQUIRED'].includes(result.content[0]?.text));

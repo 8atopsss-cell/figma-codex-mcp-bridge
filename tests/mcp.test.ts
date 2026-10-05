@@ -3,6 +3,73 @@ import { describe, expect, it } from 'vitest';
 import { createBridgeServer } from '../src/bridge/mcp.js';
 
 describe('MCP bridge', () => {
+  it('captures the active file before a variant write waits behind another write', async () => {
+    let active = 'file-a';
+    let release!: () => void;
+    let started!: () => void;
+    let pinned!: () => void;
+    const blocked = new Promise<void>((resolve) => { release = resolve; });
+    const firstStarted = new Promise<void>((resolve) => { started = resolve; });
+    const filePinned = new Promise<void>((resolve) => { pinned = resolve; });
+    const files: string[] = [];
+    const server = createBridgeServer({
+      call: async () => { started(); await blocked; return { pageId: 'page' }; },
+      pinCurrentFile: () => {
+        const file = active; pinned();
+        return { call: async () => { files.push(file); return { status: 'preview' }; } };
+      },
+    });
+    const client = new Client({ name: 'variants-queue', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const first = client.callTool({ name: 'create_page', arguments: { name: 'Test' } });
+      await firstStarted;
+      const next = client.callTool({ name: 'create_component_variants', arguments: {
+        componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
+      } });
+      await filePinned;
+      active = 'file-b';
+      release();
+      await Promise.all([first, next]);
+      expect(files).toEqual(['file-a']);
+    } finally { release(); await client.close(); await server.close(); }
+  });
+
+  it('pins variant creation to the file chosen at invocation and forwards preview arguments', async () => {
+    const pinned: Array<{ method: string; args: unknown }> = [];
+    const server = createBridgeServer({
+      call: async () => { throw new Error('Unpinned call'); },
+      pinCurrentFile: () => ({ call: async (method, args) => { pinned.push({ method, args }); return { status: 'preview' }; } }),
+    });
+    const client = new Client({ name: 'variants-test', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const { tools } = await client.listTools();
+      expect(tools.find((tool) => tool.name === 'create_component_variants')?.annotations?.readOnlyHint).toBe(false);
+      const args = { componentSetId: 'set', operationId: 'op', componentSetSize: { width: 120, height: 200 }, newVariantValues: { theme: ['light'] }, variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }] };
+      const result = await client.callTool({ name: 'create_component_variants', arguments: args });
+      expect(result.isError).not.toBe(true);
+      expect(pinned).toEqual([{ method: 'component.variants.create', args: { ...args, dryRun: true, variants: [{ ...args.variants[0], layerStyles: [] }] } }]);
+    } finally { await client.close(); await server.close(); }
+  });
+
+  it('keeps rollback IDs in MCP error details even when the error message is short', async () => {
+    const details = { remainingNodeIds: ['new-1', 'new-2'], cause: 'Removal failed' };
+    const server = createBridgeServer({ call: async () => { throw Object.assign(new Error('ROLLBACK_INCOMPLETE'), { details }); } });
+    const client = new Client({ name: 'variants-errors', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const result = await client.callTool({ name: 'create_component_variants', arguments: {
+        componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
+      } });
+      expect(result.isError).toBe(true);
+      expect(result.content).toContainEqual({ type: 'text', text: JSON.stringify({ details }) });
+    } finally { await client.close(); await server.close(); }
+  });
+
   it('exposes Figma overview and reports a disconnected file', async () => {
     const server = createBridgeServer({
       call: async () => { throw new Error('NOT_CONNECTED'); },

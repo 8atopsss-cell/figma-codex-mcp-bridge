@@ -6,6 +6,26 @@ import { startBridgeSocketServer } from '../src/bridge/session.js';
 const token = 'a'.repeat(64);
 
 describe('local Figma session', () => {
+  it('preserves complete rollback details through the socket reply', async () => {
+    const bridge = await startBridgeSocketServer({ port: 0, token });
+    const socket = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });
+    try {
+      await once(socket, 'open');
+      const hello = once(socket, 'message');
+      socket.send(JSON.stringify({ type: 'hello', token }));
+      await hello;
+      const message = once(socket, 'message');
+      const result = bridge.session.call('component.variants.create', {
+        componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
+      });
+      const details = { remainingNodeIds: Array.from({ length: 20 }, (_, index) => `new-${index}`), cause: 'Removal failed' };
+      const rejected = expect(result).rejects.toMatchObject({ details });
+      const request = JSON.parse(String((await message)[0]));
+      socket.send(JSON.stringify({ type: 'plugin.error', requestId: request.requestId, code: 'ROLLBACK_INCOMPLETE', message: 'Cleanup failed', details }));
+      await rejected;
+    } finally { socket.close(); await bridge.close(); }
+  });
+
   it('preserves plugin error details for the MCP caller', async () => {
     const bridge = await startBridgeSocketServer({ port: 0, token });
     const socket = new WebSocket(`ws://127.0.0.1:${bridge.port}`, { origin: 'null' });

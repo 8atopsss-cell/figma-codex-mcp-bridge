@@ -119,6 +119,55 @@ export const updateNodeSchema = z.object({
   }).strict().refine((patch) => Object.keys(patch).length > 0, 'Patch must not be empty'),
 }).strict();
 
+export const variantStyleOverrideSchema = z.object({
+  sourceNodeId: id,
+  fillStyleId: id.optional(),
+  strokeStyleId: id.optional(),
+}).strict().refine((style) => style.fillStyleId !== undefined || style.strokeStyleId !== undefined, 'Style override must not be empty');
+
+const variantPropertyName = name.refine((value) => value.trim() === value && !/[,=]/.test(value), 'Variant names must be unambiguous');
+export const componentVariantSchema = z.object({
+  sourceComponentId: id,
+  properties: z.record(variantPropertyName, variantPropertyName).refine((value) => Object.keys(value).length > 0 && Object.keys(value).length <= 20, 'Expected 1-20 variant properties'),
+  position: z.object({ x: position, y: position }).strict(),
+  layerStyles: z.array(variantStyleOverrideSchema).max(200).default([])
+    .refine((styles) => new Set(styles.map((style) => style.sourceNodeId)).size === styles.length, 'Duplicate source layer'),
+}).strict();
+
+export const createComponentVariantsSchema = z.object({
+  componentSetId: id,
+  operationId: id,
+  dryRun: z.boolean().default(true),
+  expectedState: z.string().min(1).max(262_144).optional(),
+  componentSetSize: z.object({ width: size, height: size }).strict().optional(),
+  newVariantValues: z.record(variantPropertyName, z.array(variantPropertyName).min(1).max(20)
+    .refine((values) => new Set(values).size === values.length, 'Duplicate new variant value'))
+    .refine((values) => Object.keys(values).length > 0 && Object.keys(values).length <= 20, 'Expected 1-20 variant axes').optional(),
+  variants: z.array(componentVariantSchema).min(1).max(20),
+}).strict().refine((value) => value.dryRun || value.expectedState !== undefined, 'Apply requires expectedState from preview');
+
+export type ComponentVariantSpec = z.infer<typeof componentVariantSchema>;
+export type CreateComponentVariantsArgs = z.infer<typeof createComponentVariantsSchema>;
+export interface CreatedVariantResult {
+  name: string;
+  sourceComponentId: string;
+  properties: Record<string, string>;
+  position: { x: number; y: number };
+  layerStyles: z.infer<typeof variantStyleOverrideSchema>[];
+  nodeId?: string;
+  nodeMap?: Record<string, string>;
+}
+export interface CreateComponentVariantsResult {
+  status: 'preview' | 'applied' | 'replayed';
+  operationId: string;
+  componentSetId: string;
+  expectedState?: string;
+  componentSetSize?: { width: number; height: number };
+  newVariantValues?: Record<string, string[]>;
+  variants: CreatedVariantResult[];
+  componentPropertyDefinitions: unknown;
+}
+
 const call = <M extends string, A extends z.ZodType>(method: M, args: A) => z.object({
   type: z.literal('plugin.call'),
   requestId: id,
@@ -136,12 +185,13 @@ export const pluginRequestSchema = z.discriminatedUnion('method', [
   call('page.create', z.object({ name }).strict()),
   call('screen.create', screenSpecSchema),
   call('node.update', updateNodeSchema),
+  call('component.variants.create', createComponentVariantsSchema),
   call('node.delete', z.object({ nodeId: id }).strict()),
 ]);
 
 export const pluginReplySchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('plugin.result'), requestId: id, value: z.unknown() }).strict(),
-  z.object({ type: z.literal('plugin.error'), requestId: id, code: z.string().min(1).max(80), message: z.string().max(500) }).strict(),
+  z.object({ type: z.literal('plugin.error'), requestId: id, code: z.string().min(1).max(80), message: z.string().max(500), details: z.unknown().optional() }).strict(),
 ]);
 
 export const confirmationRequestSchema = z.object({

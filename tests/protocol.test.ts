@@ -31,4 +31,14 @@ describe('bridge protocol', () => {
     expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, limit: 501 } }).success).toBe(false);
     expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, setValue: 20 } }).success).toBe(false);
   });
+
+  it('accepts variant previews through the shared message protocol and rejects direct writes without a snapshot', () => {
+    const request = {
+      type: 'plugin.call', requestId: 'r-variants', method: 'component.variants.create',
+      args: { componentSetId: '1:2', operationId: 'op-1', variants: [{ sourceComponentId: '1:3', properties: { theme: 'light' }, position: { x: 10, y: 10 } }] },
+    };
+    expect(pluginRequestSchema.parse(request).args).toMatchObject({ dryRun: true });
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, dryRun: false } }).success).toBe(false);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...request.args, dryRun: false, expectedState: '{}' } }).success).toBe(true);
+  });
 });

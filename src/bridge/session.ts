@@ -187,7 +187,9 @@ export class BridgeSession {
     this.pending.delete(reply.data.requestId);
     if (reply.data.type === 'plugin.error') {
       const { code, message } = reply.data;
-      pending.reject(new Error(message && message !== code ? `${code}: ${message}` : code));
+      const error = new Error(message && message !== code ? `${code}: ${message}` : code);
+      if (reply.data.details !== undefined) Object.assign(error, { details: reply.data.details });
+      pending.reject(error);
     }
     else pending.resolve(reply.data.value);
   }

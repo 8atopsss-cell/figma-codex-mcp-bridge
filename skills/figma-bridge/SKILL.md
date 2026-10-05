@@ -30,6 +30,16 @@ First inspect the live source. Present the exact proposed changes with file name
 
 Approval applies only to the agreed objects and changes. If the user has already confirmed those exact changes in this session, carry them out without asking again. Ask again when the scope changes.
 
+## Create missing variants
+
+- Use `create_component_variants` only for explicit missing combinations identified from the live schema and the user's requirements. Do not fill every Cartesian combination automatically.
+- Inspect exact source component and descendant IDs, available PaintStyle IDs and placements in the existing set. Accepts local components from that same local set with layoutMode NONE; axes must already exist. New values require explicit `newVariantValues`, e.g. `{theme:["light"]}`; declare only missing values actually used by the requested variants. Optional `componentSetSize:{width,height}` must be included in the exact approved changes. Without these arguments, existing options and bounds remain required.
+- Run `dryRun: true` first. Record the preview's operationId, expectedState, canonical properties/names, coordinates and layer style assignments. Preview does not grant permission to write.
+- Present the exact changes and obtain approval unless those same changes are already approved. Apply the unchanged request with dryRun=false and expectedState; SOURCE_CHANGED requires inspecting the current source and preparing a fresh preview.
+- After TIMEOUT or disconnect, inspect the set or retry the same operationId. `replayed` returns existing IDs. Never generate a different operationId to bypass duplicate protection.
+- On ROLLBACK_INCOMPLETE, report all details.remainingNodeIds, componentSetSizeRestored/currentSize when present and the cause. Do not delete or repair existing components automatically. Resize preserves original child geometry; rollback restores dimensions only while they still match this operation's written size. Manual dimensions must not be overwritten.
+- Read back all created IDs, mapped descendant IDs, schema, geometry, style IDs/bindings and SVG; only the user assigns visual acceptance. Missing PaintStyle data must not be replaced by guessed RGB.
+
 ## Export designs to code
 
 - Call `get_node_tree` with enough `depth` and `limit` to cover the entire component. Check every node's `warnings`; omitted descendants mean the export is incomplete.
