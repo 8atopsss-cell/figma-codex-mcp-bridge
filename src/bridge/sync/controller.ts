@@ -11,7 +11,9 @@ const entrySchema = z.object({
   componentId: z.string().regex(/^[a-z0-9-]{1,80}$/), displayName: z.string(), modulePath: z.string(),
   storybook: z.object({ componentEntryId: z.string(), storyIds: z.array(z.string()) }),
   figma: z.object({ displayName: z.string(), fileKey: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/), url: z.string().url().optional(),
-    sources: z.array(z.object({ theme: z.string(), componentSetId: z.string() })).min(1) }),
+    sources: z.array(z.object({ theme: z.string().min(1), componentSetId: z.string().min(1),
+      key: z.string().min(1).max(128).optional(), nodeType: z.enum(['COMPONENT_SET', 'COMPONENT']).optional(),
+      exportPath: z.array(z.string().min(1).max(200)).min(1).max(64).optional() })).min(1) }),
   baselineCandidate: z.object({ rawExport: z.string(), status: z.string() }).passthrough(),
 }).passthrough();
 const registrySchema = z.object({ schemaVersion: z.literal(1), components: z.array(entrySchema) });
@@ -48,6 +50,11 @@ export class SyncController {
   private async registry() {
     const value = registrySchema.parse(JSON.parse(await readFile(await this.path('source/figma/component-links.json'), 'utf8')));
     if (new Set(value.components.map((entry) => entry.componentId)).size !== value.components.length) throw new Error('DUPLICATE_COMPONENT_ID');
+    for (const entry of value.components) {
+      const keys = entry.figma.sources.map(source => source.key ?? source.theme);
+      if (new Set(keys).size !== keys.length) throw new Error('DUPLICATE_SOURCE_KEY');
+      if (new Set(entry.figma.sources.map(source => source.componentSetId)).size !== keys.length) throw new Error('DUPLICATE_SOURCE_NODE');
+    }
     return value;
   }
   private async load(): Promise<State> {
@@ -96,16 +103,18 @@ export class SyncController {
     if (this.binding?.connectionId !== current.id || this.binding.fileKey !== entry.figma.fileKey) throw new Error('FILE_CONFIRMATION_REQUIRED');
     return this.host.pinCurrentFile();
   }
-  bind(fileKey: string, connectionId: string) {
+  bind(fileKey: string, connectionId: string, componentId?: string) {
     return this.serial(async () => {
       const entries = (await this.registry()).components.filter((entry) => entry.figma.fileKey === fileKey);
       if (!entries.length) throw new Error('FILE_NOT_IN_REGISTRY');
+      const selected = componentId ? entries.filter(entry => entry.componentId === componentId) : entries;
+      if (!selected.length) throw new Error('COMPONENT_NOT_IN_REGISTRY');
       const current = this.host.listFiles().find((file) => file.active && file.id === connectionId);
       if (!current || (current.fileKey && current.fileKey !== fileKey)) throw new Error('FILE_IDENTITY_MISMATCH');
       const reader = this.host.pinCurrentFile(current.fileKey ? fileKey : undefined);
-      for (const entry of entries) for (const source of entry.figma.sources) {
+      for (const entry of selected) for (const source of entry.figma.sources) {
         const node = await reader.call('node.tree', { nodeId: source.componentSetId, depth: 0, offset: 0, limit: 1 }) as Tree;
-        if (node.id !== source.componentSetId || node.type !== 'COMPONENT_SET') throw new Error('INVALID_COMPONENT_SOURCE');
+        if (node.id !== source.componentSetId || node.type !== (source.nodeType ?? 'COMPONENT_SET')) throw new Error('INVALID_COMPONENT_SOURCE');
       }
       this.binding = { fileKey, connectionId };
       return { confirmed: true, persistent: !!current.fileKey };
@@ -115,7 +124,7 @@ export class SyncController {
     const registry = await this.registry();
     const state = await this.load();
     const codeHash = await this.implementationHash();
-    return { files: this.host.listFiles(), components: registry.components.map((entry) => {
+    return { protocolVersion: 2, files: this.host.listFiles(), components: registry.components.map((entry) => {
       const record = state.components[entry.componentId];
       const status = record?.observationComplete === false ? 'incomplete' : !record?.implemented ? 'no-baseline' : record.warnings.length ? 'incomplete'
         : record.differences.length ? 'needs-transfer' : record.implementationHash !== codeHash ? 'implementation-changed'
@@ -147,7 +156,15 @@ export class SyncController {
     else {
       // Historical exports are candidates, never automatically accepted baselines.
       const raw = JSON.parse(await readFile(await this.path(entry.baselineCandidate.rawExport), 'utf8')) as Record<string, Tree>;
-      const roots = Object.fromEntries(entry.figma.sources.map((source) => [source.theme, raw[source.theme]]));
+      const roots = Object.fromEntries(entry.figma.sources.map((source) => {
+        let tree: unknown = raw;
+        for (const part of source.exportPath ?? [source.theme]) {
+          if (!tree || typeof tree !== 'object' || !Object.hasOwn(tree, part)) throw new Error('BASELINE_ROOT_MISSING');
+          tree = (tree as Record<string, unknown>)[part];
+        }
+        if (!tree || typeof tree !== 'object' || (tree as Tree).id !== source.componentSetId) throw new Error('BASELINE_ROOT_MISMATCH');
+        return [source.key ?? source.theme, tree as Tree];
+      }));
       const candidate = snapshot(roots);
       next.candidateDifferences = differences(candidate.data.nodes, observed.data.nodes, '/nodes');
       next.warnings = [...new Set([...observed.warnings, ...candidate.warnings.map((warning) => `Historical baseline: ${warning}`)])];

@@ -1,7 +1,7 @@
 import type { Difference, Snapshot } from './snapshot.js';
 
 interface Node { id: string; name: string; type: string; children?: string[]; properties?: Record<string, unknown>; [key: string]: unknown }
-interface Data { roots: Record<string, string>; nodes: Record<string, Node>; assets?: Record<string, unknown> }
+interface Data { roots: Record<string, string>; nodes: Record<string, Node>; assets?: Record<string, unknown>; sourceThemes?: Record<string, string> }
 
 // Reconstruct only the changed variants from the exact two saved snapshots.
 // No editor reads, acceptance writes, or historical-export fallbacks here.
@@ -14,6 +14,10 @@ export function previewVariants(before: Snapshot, after: Snapshot, changes: Diff
       const node = data.nodes[id];
       if (!node) return;
       const variantRoot = node.type === 'COMPONENT' && !variantId;
+      if (variantRoot && node.properties?.variantProperties && typeof node.properties.variantProperties === 'object') {
+        const declared = Object.entries(node.properties.variantProperties).find(([key]) => key.toLowerCase() === 'theme')?.[1];
+        if (typeof declared === 'string') theme = declared;
+      }
       const owner = variantRoot ? id : variantId;
       const root = owner ? data.nodes[owner] : undefined;
       contexts[id] = { name: node.name, type: node.type, theme, variant: root?.properties?.variantProperties ?? {}, variantRoot,
@@ -21,7 +25,7 @@ export function previewVariants(before: Snapshot, after: Snapshot, changes: Diff
       if (owner) owners.set(id, owner);
       for (const child of node.children ?? []) visit(child, theme, owner);
     };
-    for (const [theme, id] of Object.entries(data.roots)) visit(id, theme);
+    for (const [key, id] of Object.entries(data.roots)) visit(id, data.sourceThemes?.[key] ?? key);
   }
   const affected = new Map<string, Set<string>>();
   for (const change of changes) {

@@ -5,7 +5,7 @@ import { SyncController } from './controller.js';
 
 const action = z.object({ componentId: z.string().min(1).max(80) }).strict();
 const accept = action.extend({ snapshotId: z.string().regex(/^[a-f0-9]{64}$/), revision: z.string().regex(/^[a-f0-9]{32}$/) }).strict();
-const bind = z.object({ fileKey: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/), connectionId: z.string().uuid() }).strict();
+const bind = z.object({ fileKey: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/), connectionId: z.string().uuid(), componentId: z.string().min(1).max(80).optional() }).strict();
 const origins = new Set(['http://127.0.0.1:6007', 'http://localhost:6007']);
 
 export async function startSyncHttp(controller: SyncController, port = 3847) {
@@ -52,7 +52,7 @@ export async function startSyncHttp(controller: SyncController, port = 3847) {
       let result: unknown;
       if (req.url === '/sync/compare') { const data = action.parse(value); result = await controller.compare(data.componentId); }
       else if (req.url === '/sync/accept') { const data = accept.parse(value); result = await controller.accept(data.componentId, data.snapshotId, data.revision); }
-      else { const data = bind.parse(value); result = await controller.bind(data.fileKey, data.connectionId); }
+      else { const data = bind.parse(value); result = await controller.bind(data.fileKey, data.connectionId, data.componentId); }
       res.end(JSON.stringify(result));
     } catch (error) {
       res.writeHead(409);

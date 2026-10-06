@@ -1,7 +1,7 @@
 import { snapshot, type Snapshot, type Tree } from './snapshot.js';
 
 export interface Reader { call(method: string, args: unknown): Promise<unknown> }
-export interface Source { theme: string; componentSetId: string }
+export interface Source { theme: string; componentSetId: string; key?: string; nodeType?: 'COMPONENT_SET' | 'COMPONENT' }
 export async function collect(reader: Reader, sources: Source[]): Promise<Snapshot> {
   let reads = 0;
   const deadline = Date.now() + 180_000;
@@ -80,7 +80,13 @@ export async function collect(reader: Reader, sources: Source[]): Promise<Snapsh
     return result;
   };
   const trees: Record<string, Tree> = {};
-  for (const source of sources) trees[source.theme] = await tree(source.componentSetId);
+  for (const source of sources) {
+    const root = await tree(source.componentSetId);
+    if (source.nodeType && root.type !== source.nodeType) throw new Error('INVALID_COMPONENT_SOURCE');
+    const key = source.key ?? source.theme;
+    if (Object.hasOwn(trees, key)) throw new Error('DUPLICATE_SOURCE_KEY');
+    trees[key] = root;
+  }
   const styles = await call('styles.list', {}) as Record<string, unknown[]>;
   for (const [kind, values] of Object.entries(styles)) if (!Array.isArray(values) || values.length >= 500) warnings.push(`styles/${kind}: completeness unavailable`);
   const selectedStyles: Record<string, unknown> = {};
@@ -88,7 +94,8 @@ export async function collect(reader: Reader, sources: Source[]): Promise<Snapsh
     if (value && typeof value === 'object' && 'id' in value && typeof value.id === 'string' && styleIds.has(value.id)) selectedStyles[value.id] = value;
   }
   for (const id of styleIds) if (!Object.hasOwn(selectedStyles, id)) warnings.push(`${id}: referenced style unavailable`);
-  const result = snapshot(trees, { assets, variables, styles: selectedStyles });
+  const result = snapshot(trees, { assets, variables, styles: selectedStyles,
+    ...(sources.some(source => source.key) ? { sourceThemes: Object.fromEntries(sources.map(source => [source.key ?? source.theme, source.theme])) } : {}) });
   result.warnings.push(...warnings);
   return result;
 }

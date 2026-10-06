@@ -48,6 +48,10 @@ Approval applies only to the agreed objects and changes. If the user has already
 
 ## Export designs to code
 
+- In a Storybook project with `source/figma/sync-project.json`, preserve the original Figma trees in `source/figma/<component-kebab-name>-export.json` and include the verified `source.fileKey` and `source.fileName` whenever available. The project file supplies an explicit default file identity for legacy exports without fileKey; never infer identity from the file name. Export COMPONENT_SET and standalone COMPONENT roots, including public icon/group sources, without replacing native IDs or adding derived variants to raw trees.
+- Add static CSF `title`, `component` and optional `id` metadata to the component's `.stories.tsx`. The common sync registry generator discovers the source roots and their paths, module and Storybook IDs at startup/build and while the development server runs. Do not hand-edit `component-links.json` or mark a newly discovered component as implemented/accepted merely because registration or export succeeded. If the project offers `npm run figma:sync-registry`, run it after export and check that this component appears without a missing-source diagnostic.
+- After transferring and verifying the exact observed snapshot in code, call `mark_storybook_implemented` with that component's current snapshot ID and revision. Visual acceptance remains the user's explicit action. Registration is automatic; assigning a trusted implementation baseline is a separate step.
+
 - Call `get_node_tree` with enough `depth` and `limit` to cover the entire component. Check every node's `warnings`; omitted descendants mean the export is incomplete.
 - Map CSS from `properties`, not the convenience `fills` list. `properties` contains the structured Figma paints, radii, strokes, effects, opacity, transforms, layout, constraints, text style, and component properties.
 - For text, use `textSegments` when style values are mixed. Do not guess missing typography or geometry.
