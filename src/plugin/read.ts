@@ -1,13 +1,17 @@
 import { describeError } from './errors.js';
+import { readFileKey } from './file-identity.js';
 
 type OverviewApi = {
+  readonly fileKey?: string;
   root: { name: string; children: ReadonlyArray<{ id: string; name: string }> };
   currentPage: { id: string; selection: ReadonlyArray<{ id: string; name: string; type: string }> };
 };
 
 export function getFileOverview(api: OverviewApi) {
+  const fileKey = readFileKey(api);
   return {
     fileName: api.root.name,
+    ...(fileKey ? { fileKey } : {}),
     pages: api.root.children.map((page) => ({ id: page.id, name: page.name })),
     currentPageId: api.currentPage.id,
     selection: api.currentPage.selection.map((node) => ({ id: node.id, name: node.name, type: node.type })),

@@ -50,11 +50,11 @@ it('loads saved pairing, connects automatically, saves successful pairing and re
 
   expect(messages).toContainEqual({ pluginMessage: { type: 'pairing.load' } });
   const token = 'a'.repeat(64);
-  fakeWindow.dispatchEvent(Object.assign(new Event('message'), { data: { pluginMessage: { type: 'pairing.saved', token, fileName: 'First file' } } }));
+  fakeWindow.dispatchEvent(Object.assign(new Event('message'), { data: { pluginMessage: { type: 'pairing.saved', token, fileName: 'First file', fileKey: 'original' } } }));
   expect(FakeSocket.sockets).toHaveLength(1);
   const first = FakeSocket.sockets[0];
   first.open();
-  expect(first.sent).toContainEqual({ type: 'hello', token, fileName: 'First file' });
+  expect(first.sent).toContainEqual({ type: 'hello', token, fileName: 'First file', fileKey: 'original' });
   first.receive({ type: 'hello.ok' });
   expect(first.sent).toContainEqual({ type: 'file.presence', visible: true, active: true });
   fakeDocument.visibilityState = 'hidden';
@@ -68,7 +68,7 @@ it('loads saved pairing, connects automatically, saves successful pairing and re
   await vi.advanceTimersByTimeAsync(2_100);
   expect(FakeSocket.sockets).toHaveLength(2);
   FakeSocket.sockets[1].open();
-  expect(FakeSocket.sockets[1].sent).toContainEqual({ type: 'hello', token, fileName: 'First file' });
+  expect(FakeSocket.sockets[1].sent).toContainEqual({ type: 'hello', token, fileName: 'First file', fileKey: 'original' });
 });
 
 it('exposes the code form when the saved pairing is rejected', async () => {

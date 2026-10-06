@@ -5,6 +5,7 @@ import { describeError } from './errors.js';
 import { createPage, createScreen, deleteNode, updateNode } from './write.js';
 import { createComponentVariants } from './variants.js';
 import { VariantError } from './variant-state.js';
+import { readFileKey } from './file-identity.js';
 
 figma.showUI(__html__, { width: 320, height: 300, themeColors: true });
 
@@ -19,11 +20,13 @@ function serializeWrite<T>(action: () => Promise<T>): Promise<T> {
 figma.ui.onmessage = async (message: unknown) => {
   if (message && typeof message === 'object' && 'type' in message) {
     if (message.type === 'pairing.load') {
+      const fileKey = readFileKey(figma);
+      const file = { fileName: figma.root.name, ...(fileKey ? { fileKey } : {}) };
       try {
         const token: unknown = await figma.clientStorage.getAsync('bridge-pairing-token');
-        figma.ui.postMessage({ type: 'pairing.saved', token: typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null, fileName: figma.root.name });
+        figma.ui.postMessage({ type: 'pairing.saved', token: typeof token === 'string' && /^[a-f0-9]{64}$/.test(token) ? token : null, ...file });
       } catch {
-        figma.ui.postMessage({ type: 'pairing.saved', token: null, fileName: figma.root.name });
+        figma.ui.postMessage({ type: 'pairing.saved', token: null, ...file });
       }
       return;
     }

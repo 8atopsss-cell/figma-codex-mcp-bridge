@@ -1,12 +1,14 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 import { createComponentVariantsSchema, screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
+import type { SyncController } from './sync/controller.js';
 
 export interface BridgeCaller {
+  getSync?(): SyncController | undefined;
   call(method: string, args: unknown): Promise<unknown>;
   pairingCode?: string;
   confirmDelete?(node: { nodeId: string; nodeName: string; nodeType: string }): Promise<void>;
-  listFiles?(): Array<{ id: string; name: string; active: boolean; visible: boolean }>;
+  listFiles?(): Array<{ id: string; name: string; fileKey?: string; active: boolean; visible: boolean }>;
   activateFile?(file: string): void;
   pinCurrentFile?(): Pick<BridgeCaller, 'call' | 'confirmDelete'>;
 }
@@ -14,6 +16,25 @@ export interface BridgeCaller {
 export function createBridgeServer(bridge: BridgeCaller): McpServer {
   const server = new McpServer({ name: 'figma-codex-bridge', version: '0.1.0' });
   const nodeId = z.string().min(1).max(128);
+  if (bridge.getSync) {
+    server.registerTool('get_storybook_sync_code', {
+      description: 'Get a separate access code for the local Storybook sync UI. This is not the Figma pairing code.',
+      inputSchema: z.object({}), annotations: { readOnlyHint: true },
+    }, async () => textResult(async () => {
+      const sync = bridge.getSync!();
+      if (!sync) throw new Error('SYNC_NOT_CONFIGURED');
+      return { accessCode: sync.accessCode, url: 'http://127.0.0.1:3847' };
+    }));
+    server.registerTool('mark_storybook_implemented', {
+      description: 'After transferring the exact observed Figma snapshot to code, mark it ready for user visual acceptance. Export alone is not transfer. Never call merely to clear a marker.',
+      inputSchema: z.object({ componentId: z.string().min(1).max(80), snapshotId: z.string().regex(/^[a-f0-9]{64}$/), revision: z.string().regex(/^[a-f0-9]{32}$/) }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false },
+    }, async ({ componentId, snapshotId, revision }) => textResult(async () => {
+      const sync = bridge.getSync!();
+      if (!sync) throw new Error('SYNC_NOT_CONFIGURED');
+      return sync.implemented(componentId, snapshotId, revision);
+    }));
+  }
   let writeTail = Promise.resolve();
   const serializeWrite = <T>(action: () => Promise<T>): Promise<T> => {
     const next = writeTail.then(action, action);
@@ -37,7 +58,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
     server.registerTool(
       'list_connected_files',
       {
-        description: 'List every Figma file currently connected to this bridge, including its name and active status.',
+        description: 'List every connected Figma file, name, active status and optional stable fileKey. Connection IDs change after reconnect. Missing fileKey means stable identity is unavailable; never identify a file by its name alone.',
         inputSchema: z.object({}),
         annotations: { readOnlyHint: true },
       },

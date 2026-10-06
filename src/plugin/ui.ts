@@ -11,6 +11,7 @@ let confirmationId: string | undefined;
 let savedToken: string | undefined;
 let retryTimer: ReturnType<typeof setTimeout> | undefined;
 let fileName: string | undefined;
+let fileKey: string | undefined;
 let paired = false;
 
 form.hidden = true;
@@ -39,7 +40,7 @@ function connect(code: string) {
   const next = new WebSocket('ws://localhost:3846');
   socket = next;
   paired = false;
-  next.addEventListener('open', () => next.send(JSON.stringify({ type: 'hello', token: code, ...(fileName ? { fileName } : {}) })));
+  next.addEventListener('open', () => next.send(JSON.stringify({ type: 'hello', token: code, ...(fileName ? { fileName } : {}), ...(fileKey ? { fileKey } : {}) })));
   next.addEventListener('message', (event) => {
     if (socket !== next) return;
     let value: unknown;
@@ -119,6 +120,7 @@ window.addEventListener('message', (event) => {
   const message = event.data?.pluginMessage;
   if (message?.type === 'pairing.saved') {
     fileName = typeof message.fileName === 'string' ? message.fileName.slice(0, 200) : undefined;
+    fileKey = typeof message.fileKey === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(message.fileKey) ? message.fileKey : undefined;
     if (typeof message.token === 'string' && /^[a-f0-9]{64}$/.test(message.token)) {
       savedToken = message.token;
       form.hidden = true;

@@ -8,3 +8,6 @@ v_2/
 !.env.example
 *.log
 .playwright-mcp/
+.playwright-cli/
+figma-sync.local.json
+.figma-sync/

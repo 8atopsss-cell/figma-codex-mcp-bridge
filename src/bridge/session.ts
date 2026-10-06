@@ -6,7 +6,7 @@ const MAX_MESSAGE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_ORIGINS = new Set(['null', 'https://www.figma.com', 'https://figma.com']);
 
 type Pending = { connectionId: string; resolve(value: unknown): void; reject(error: Error): void; timer: ReturnType<typeof setTimeout> };
-type Connection = { socket: WebSocket; fileName: string; visible: boolean };
+type Connection = { socket: WebSocket; fileName: string; fileKey?: string; visible: boolean };
 
 export class BridgeSession {
   private readonly connections = new Map<string, Connection>();
@@ -18,9 +18,9 @@ export class BridgeSession {
 
   get connectionCount(): number { return this.connections.size; }
 
-  attach(plugin: WebSocket, fileName = 'Figma file'): string {
+  attach(plugin: WebSocket, fileName = 'Figma file', fileKey?: string): string {
     const connectionId = randomUUID();
-    this.connections.set(connectionId, { socket: plugin, fileName, visible: true });
+    this.connections.set(connectionId, { socket: plugin, fileName, ...(fileKey ? { fileKey } : {}), visible: true });
     this.activeId = connectionId;
     this.manualId = undefined;
     plugin.on('message', (raw) => {
@@ -38,10 +38,11 @@ export class BridgeSession {
     return connectionId;
   }
 
-  listFiles(): Array<{ id: string; name: string; active: boolean; visible: boolean }> {
+  listFiles(): Array<{ id: string; name: string; fileKey?: string; active: boolean; visible: boolean }> {
     const activeId = this.effectiveActiveId();
     return [...this.connections].map(([id, connection]) => ({
       id, name: connection.fileName, active: id === activeId, visible: connection.visible,
+      ...(connection.fileKey ? { fileKey: connection.fileKey } : {}),
     }));
   }
 
@@ -59,8 +60,13 @@ export class BridgeSession {
     this.manualId = connectionId;
   }
 
-  pinCurrentFile() {
+  pinCurrentFile(expectedFileKey?: string) {
     const connectionId = this.currentId();
+    if (expectedFileKey !== undefined) {
+      const actual = this.connections.get(connectionId)?.fileKey;
+      if (!actual) throw new Error('FILE_IDENTITY_UNAVAILABLE');
+      if (actual !== expectedFileKey) throw new Error('FILE_IDENTITY_MISMATCH');
+    }
     return {
       call: (method: string, args: unknown) => this.callOn(connectionId, method, args),
       confirmDelete: (node: { nodeId: string; nodeName: string; nodeType: string }) => this.confirmDeleteOn(connectionId, node),
@@ -234,7 +240,9 @@ export async function startBridgeSocketServer(options: SocketServerOptions = {})
       if (!isValidHello(hello, pairingCode)) { socket.close(1008, 'Invalid pairing code'); return; }
       const fileName = hello && typeof hello === 'object' && 'fileName' in hello && typeof hello.fileName === 'string'
         ? hello.fileName.slice(0, 200) : 'Figma file';
-      session.attach(socket, fileName);
+      const fileKey = hello && typeof hello === 'object' && 'fileKey' in hello && typeof hello.fileKey === 'string'
+        ? hello.fileKey : undefined;
+      session.attach(socket, fileName, fileKey);
     });
     socket.once('close', () => clearTimeout(timer));
   });
@@ -256,6 +264,7 @@ function isValidHello(value: unknown, token: string): boolean {
   if (!value || typeof value !== 'object') return false;
   const hello = value as Record<string, unknown>;
   if (hello.type !== 'hello' || typeof hello.token !== 'string') return false;
+  if (hello.fileKey !== undefined && (typeof hello.fileKey !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(hello.fileKey))) return false;
   const actual = Buffer.from(hello.token);
   const expected = Buffer.from(token);
   return actual.length === expected.length && timingSafeEqual(actual, expected);

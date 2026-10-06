@@ -1,4 +1,7 @@
 import { startBridgeSocketServer } from './session.js';
+import { SyncController } from './sync/controller.js';
+import { startSyncHttp } from './sync/http.js';
+import { loadOrCreateSyncAccessCode } from './sync/access-code.js';
 
 type RunningBridge = Awaited<ReturnType<typeof startBridgeSocketServer>>;
 
@@ -7,10 +10,12 @@ export class BridgeHost {
   private retryTimer: ReturnType<typeof setTimeout> | undefined;
   private stopped = false;
   private busyLogged = false;
+  sync: SyncController | undefined;
+  private syncHttp: Awaited<ReturnType<typeof startSyncHttp>> | undefined;
 
   constructor(
     readonly pairingCode: string,
-    private readonly options: { port?: number; retryMs?: number } = {},
+    private readonly options: { port?: number; retryMs?: number; syncProject?: string; syncPort?: number } = {},
   ) {}
 
   get status(): 'waiting' | 'listening' | 'stopped' {
@@ -26,6 +31,9 @@ export class BridgeHost {
     this.stopped = true;
     if (this.retryTimer) clearTimeout(this.retryTimer);
     this.retryTimer = undefined;
+    await this.syncHttp?.close();
+    this.syncHttp = undefined;
+    this.sync = undefined;
     const bridge = this.bridge;
     this.bridge = undefined;
     if (bridge) await bridge.close();
@@ -48,9 +56,9 @@ export class BridgeHost {
     this.bridge.session.activateFile(file);
   }
 
-  pinCurrentFile() {
+  pinCurrentFile(expectedFileKey?: string) {
     if (!this.bridge) throw new Error('BRIDGE_PORT_BUSY');
-    return this.bridge.session.pinCurrentFile();
+    return this.bridge.session.pinCurrentFile(expectedFileKey);
   }
 
   private async tryStart(): Promise<void> {
@@ -59,6 +67,16 @@ export class BridgeHost {
       const bridge = await startBridgeSocketServer({ token: this.pairingCode, port: this.options.port });
       if (this.stopped) { await bridge.close(); return; }
       this.bridge = bridge;
+      if (this.options.syncProject) {
+        try {
+          this.sync = new SyncController(this.options.syncProject, this, await loadOrCreateSyncAccessCode(this.options.syncProject));
+          this.syncHttp = await startSyncHttp(this.sync, this.options.syncPort);
+          console.error(`Storybook Figma sync listening on 127.0.0.1:${this.syncHttp.port}`);
+        } catch (error) {
+          this.sync = undefined;
+          console.error('Storybook Figma sync unavailable:', error instanceof Error ? error.message : 'SYNC_ERROR');
+        }
+      }
       this.busyLogged = false;
       console.error(`Figma Codex MCP bridge listening on 127.0.0.1:${bridge.port}`);
     } catch (error) {
