@@ -70,7 +70,9 @@ export async function updateNode(api: WriteApi, input: unknown) {
   const { nodeId, patch } = updateNodeSchema.parse(input);
   const node = await api.getNodeByIdAsync(nodeId);
   if (!node) throw new Error('NODE_NOT_FOUND');
-  if ((node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') && patch.name !== undefined && Object.keys(patch).length === 1) {
+  const supportsNameOnly = node.type === 'COMPONENT' || node.type === 'COMPONENT_SET'
+    || node.type === 'GROUP' || node.type === 'VECTOR' || node.type === 'INSTANCE' || node.type === 'ELLIPSE';
+  if (supportsNameOnly && patch.name !== undefined && Object.keys(patch).length === 1) {
     node.name = patch.name;
     return { nodeId: node.id, name: node.name };
   }

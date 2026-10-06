@@ -169,7 +169,7 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   server.registerTool(
     'update_node',
     {
-      description: 'Change explicitly listed properties of one editable Figma node. COMPONENT and COMPONENT_SET support name-only patches. Before modifying finished components, variants, instances or their sublayers, inspect the live source and ask the user to confirm the exact changes. Reuse existing confirmation only for those same objects and changes.',
+      description: 'Change explicitly listed properties of one editable Figma node. COMPONENT, COMPONENT_SET, GROUP, VECTOR, INSTANCE and ELLIPSE support name-only patches: { name }. Renaming an instance changes only that instance, not its main component. Before modifying finished components, variants, instances or their sublayers, inspect the live source and ask the user to confirm the exact changes. Reuse existing confirmation only for those same objects and changes.',
       inputSchema: updateNodeSchema,
       annotations: { readOnlyHint: false, destructiveHint: false },
     },

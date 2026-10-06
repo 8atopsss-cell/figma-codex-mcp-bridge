@@ -1,8 +1,34 @@
 import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
 import { describe, expect, it } from 'vitest';
 import { createBridgeServer } from '../src/bridge/mcp.js';
+import { updateNode } from '../src/plugin/write.js';
 
 describe('MCP bridge', () => {
+  it.each(['GROUP', 'VECTOR', 'INSTANCE', 'ELLIPSE'])('renames %s through MCP and returns rejected patches as errors', async (type) => {
+    const node = { id: '2:3', type, name: 'Original', x: 20 };
+    const api = { getNodeByIdAsync: async () => node } as unknown as Parameters<typeof updateNode>[0];
+    const calls: Array<{ method: string; args: unknown }> = [];
+    const server = createBridgeServer({ call: async (method, args) => {
+      calls.push({ method, args });
+      if (method !== 'node.update') throw new Error('Unexpected method');
+      return updateNode(api, args);
+    } });
+    const client = new Client({ name: 'rename-test', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const args = { nodeId: node.id, patch: { name: 'Renamed' } };
+      const result = await client.callTool({ name: 'update_node', arguments: args });
+      expect(result.isError).not.toBe(true);
+      expect(result.content).toEqual([{ type: 'text', text: JSON.stringify({ nodeId: node.id, name: 'Renamed' }) }]);
+      expect(calls).toEqual([{ method: 'node.update', args }]);
+      const rejected = await client.callTool({ name: 'update_node', arguments: { nodeId: node.id, patch: { name: 'Rejected', x: 50 } } });
+      expect(rejected.isError).toBe(true);
+      expect(rejected.content).toEqual([{ type: 'text', text: 'UNSUPPORTED_NODE' }]);
+      expect(node).toEqual({ id: '2:3', type, name: 'Renamed', x: 20 });
+    } finally { await client.close(); await server.close(); }
+  });
+
   it('captures the active file before a variant write waits behind another write', async () => {
     let active = 'file-a';
     let release!: () => void;

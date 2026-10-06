@@ -30,6 +30,12 @@ First inspect the live source. Present the exact proposed changes with file name
 
 Approval applies only to the agreed objects and changes. If the user has already confirmed those exact changes in this session, carry them out without asking again. Ask again when the scope changes.
 
+## Rename nodes
+
+- Use `update_node` with `patch: { name: "New name" }` for COMPONENT, COMPONENT_SET, GROUP, VECTOR, INSTANCE and ELLIPSE. These types support name-only patches; combining a rename with geometry, fills, text or layout changes is rejected before applying the name.
+- Renaming an INSTANCE targets that instance only; it does not rename its main component or detach the instance. Target a descendant by its own live node ID. Verify nested instance layers in Figma and report any API restriction instead of detaching or replacing nodes.
+- Inspect the active file and exact node IDs, present old and new names, and obtain approval for finished components, instances and their sublayers under the rule above. Read back names after applying changes. Sequential calls are not an atomic batch; stop and inspect on an error, reporting completed and remaining IDs.
+
 ## Create missing variants
 
 - Use `create_component_variants` only for explicit missing combinations identified from the live schema and the user's requirements. Do not fill every Cartesian combination automatically.

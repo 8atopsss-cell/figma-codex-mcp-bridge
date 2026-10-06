@@ -1,0 +1,1231 @@
+{
+  "fileName": "SD Enterprice",
+  "selectedNodeIds": [
+    "2938:65838",
+    "4384:89088"
+  ],
+  "operation": "name-only",
+  "status": "complete",
+  "previousApplied": 72,
+  "appliedThisRun": 172,
+  "totalPlan": 244,
+  "applied": [
+    {
+      "nodeId": "575:21907",
+      "type": "GROUP",
+      "theme": "dark",
+      "oldName": "Group 623",
+      "newName": "Footer"
+    },
+    {
+      "nodeId": "1488:52914",
+      "type": "GROUP",
+      "theme": "dark",
+      "oldName": "g10",
+      "newName": "Artwork"
+    },
+    {
+      "nodeId": "1488:52915",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path14",
+      "newName": "Path1"
+    },
+    {
+      "nodeId": "1488:52916",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path16",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "1488:52917",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path18",
+      "newName": "Path3"
+    },
+    {
+      "nodeId": "1488:52918",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path20",
+      "newName": "Path4"
+    },
+    {
+      "nodeId": "1488:52919",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path22",
+      "newName": "Path5"
+    },
+    {
+      "nodeId": "1488:52920",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path24",
+      "newName": "Path6"
+    },
+    {
+      "nodeId": "1488:52921",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path26",
+      "newName": "Path7"
+    },
+    {
+      "nodeId": "1488:52922",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path28",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "I1517:42509;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/dashboard",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1517:42509;9440:125700;9440:133647",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1517:42509;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1517:42509;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I575:21921;538:14102",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/person_black (2) 4",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I575:21921;538:14102;488:13897",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I575:21921;7049:29596",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I575:21921;7049:29596;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1363:63706;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/resourses",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1363:63706;9440:125700;9440:133848",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Subtract",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1363:63706;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1363:63706;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1363:54585;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/templ",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1363:54585;9440:125700;9418:62144",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1363:54585;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1363:54585;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1368:70229;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/desktop",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1368:70229;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1368:70229;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I13838:42466;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/server",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I13838:42466;9440:125700;13838:57227",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I13838:42466;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I13838:42466;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1447:40157;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/browse activity",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1447:40157;9440:125700;11384:42778",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1447:40157;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1447:40157;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1368:75310;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/license",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1368:75310;9440:125700;12369:38001",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Union",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1368:75310;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1368:75310;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I1368:80304;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I1368:80304;9440:125700;9441:37318",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I1368:80304;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I1368:80304;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65939;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 18/info_fill",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65939;9440:125700;2938:72087",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65939;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65939;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "575:21928",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "line ver",
+      "newName": "Divider"
+    },
+    {
+      "nodeId": "2938:65841",
+      "type": "GROUP",
+      "theme": "dark",
+      "oldName": "Group 623",
+      "newName": "Footer"
+    },
+    {
+      "nodeId": "2938:65844",
+      "type": "GROUP",
+      "theme": "dark",
+      "oldName": "g10",
+      "newName": "Artwork"
+    },
+    {
+      "nodeId": "2938:65845",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path14",
+      "newName": "Path1"
+    },
+    {
+      "nodeId": "2938:65846",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path16",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "2938:65847",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path18",
+      "newName": "Path3"
+    },
+    {
+      "nodeId": "2938:65848",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path20",
+      "newName": "Path4"
+    },
+    {
+      "nodeId": "2938:65849",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path22",
+      "newName": "Path5"
+    },
+    {
+      "nodeId": "2938:65850",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path24",
+      "newName": "Path6"
+    },
+    {
+      "nodeId": "2938:65851",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path26",
+      "newName": "Path7"
+    },
+    {
+      "nodeId": "2938:65852",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "path28",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "I2938:65854;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/dashboard",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65854;9440:125700;9440:133647",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65854;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65854;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65855;538:14102",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "person_black_24dp (2) 1",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65855;538:14102;2112:35468",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65855;7049:29596",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65855;7049:29596;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65856;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/resourses",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65856;9440:125700;9440:133848",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Subtract",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65856;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65856;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65857;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/templ",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65857;9440:125700;9418:62144",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65857;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65857;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65858;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/desktop",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65858;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65858;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I13838:57441;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/server",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I13838:57441;9440:125700;13838:57227",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I13838:57441;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I13838:57441;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65859;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/browse activity",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65859;9440:125700;11384:42778",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65859;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65859;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:65860;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/license",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:65860;9440:125700;12369:38001",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Union",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:65860;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:65860;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I2938:72171;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I2938:72171;9440:125700;9441:37318",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I2938:72171;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I2938:72171;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I9441:49220;9440:125700",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "icon 18/info_fill",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I9441:49220;9440:125700;2938:72087",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I9441:49220;7049:38753",
+      "type": "INSTANCE",
+      "theme": "dark",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I9441:49220;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "dark",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "2938:65863",
+      "type": "VECTOR",
+      "theme": "dark",
+      "oldName": "line ver",
+      "newName": "Divider"
+    },
+    {
+      "nodeId": "4384:89091",
+      "type": "GROUP",
+      "theme": "light",
+      "oldName": "Group 623",
+      "newName": "Footer"
+    },
+    {
+      "nodeId": "4384:89094",
+      "type": "GROUP",
+      "theme": "light",
+      "oldName": "g10",
+      "newName": "Artwork"
+    },
+    {
+      "nodeId": "4384:89095",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path14",
+      "newName": "Path1"
+    },
+    {
+      "nodeId": "4384:89096",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path16",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "4384:89097",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path18",
+      "newName": "Path3"
+    },
+    {
+      "nodeId": "4384:89098",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path20",
+      "newName": "Path4"
+    },
+    {
+      "nodeId": "4384:89099",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path22",
+      "newName": "Path5"
+    },
+    {
+      "nodeId": "4384:89100",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path24",
+      "newName": "Path6"
+    },
+    {
+      "nodeId": "4384:89101",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path26",
+      "newName": "Path7"
+    },
+    {
+      "nodeId": "4384:89102",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path28",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "I4384:89104;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/dashboard",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89104;9441:49409;9440:133647",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89105;4384:91439",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "person_black_24dp (2) 1",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89105;4384:91439;2112:35468",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89106;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/resourses",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89106;9441:49409;9440:133848",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Subtract",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89107;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/templ",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89107;9441:49409;9418:62144",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89108;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/desktop",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89110;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89110;9441:49409;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89109;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89109;9441:49409;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89111;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89111;9441:49409;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89112;9441:49409",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 18/info_fill",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89112;9441:49409;2938:72087",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "4384:89113",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "line ver",
+      "newName": "Divider"
+    },
+    {
+      "nodeId": "4384:89116",
+      "type": "GROUP",
+      "theme": "light",
+      "oldName": "Group 623",
+      "newName": "Footer"
+    },
+    {
+      "nodeId": "4384:89119",
+      "type": "GROUP",
+      "theme": "light",
+      "oldName": "g10",
+      "newName": "Artwork"
+    },
+    {
+      "nodeId": "4384:89120",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path14",
+      "newName": "Path1"
+    },
+    {
+      "nodeId": "4384:89121",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path16",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "4384:89122",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path18",
+      "newName": "Path3"
+    },
+    {
+      "nodeId": "4384:89123",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path20",
+      "newName": "Path4"
+    },
+    {
+      "nodeId": "4384:89124",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path22",
+      "newName": "Path5"
+    },
+    {
+      "nodeId": "4384:89125",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path24",
+      "newName": "Path6"
+    },
+    {
+      "nodeId": "4384:89126",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path26",
+      "newName": "Path7"
+    },
+    {
+      "nodeId": "4384:89127",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "path28",
+      "newName": "Path2"
+    },
+    {
+      "nodeId": "I4384:89129;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/dashboard",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89129;9440:125700;9440:133647",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89129;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89129;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89130;4384:91439",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "person_black_24dp (2) 1",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89130;4384:91439;2112:35468",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89131;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/resourses",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89131;9440:125700;9440:133848",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Subtract",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89131;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89131;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89132;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/templ",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89132;9440:125700;9418:62144",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89132;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89132;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89133;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/desktop",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89133;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89133;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89134;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89134;9440:125700;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89134;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89134;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89135;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89135;9440:125700;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89135;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89135;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I4384:89136;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 24/construction",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I4384:89136;9440:125700;9441:37318",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I4384:89136;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I4384:89136;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "I9441:50324;9440:125700",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "icon 18/info_fill",
+      "newName": "Icon"
+    },
+    {
+      "nodeId": "I9441:50324;9440:125700;2938:72087",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "Vector",
+      "newName": "Glyph"
+    },
+    {
+      "nodeId": "I9441:50324;7049:38753",
+      "type": "INSTANCE",
+      "theme": "light",
+      "oldName": "badge dark",
+      "newName": "Badge"
+    },
+    {
+      "nodeId": "I9441:50324;7049:38753;7049:29221",
+      "type": "ELLIPSE",
+      "theme": "light",
+      "oldName": "badge",
+      "newName": "Indicator"
+    },
+    {
+      "nodeId": "4384:89137",
+      "type": "VECTOR",
+      "theme": "light",
+      "oldName": "line ver",
+      "newName": "Divider"
+    }
+  ],
+  "alreadyCorrect": [],
+  "errors": [],
+  "verification": {
+    "nodesCompared": 320,
+    "namesVerified": 172,
+    "missing": [],
+    "nameMismatches": [],
+    "propertyChanges": [],
+    "childChanges": [],
+    "fullPlanNamesVerified": 244,
+    "fullPlanMismatches": []
+  },
+  "note": "Read-back comparison includes all non-name fields and child IDs exposed by get_node_tree. No geometry, style or structure changes detected."
+}

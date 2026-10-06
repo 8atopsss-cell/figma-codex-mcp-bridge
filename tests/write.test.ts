@@ -20,6 +20,42 @@ function fakeApi() {
 }
 
 describe('Figma writes', () => {
+  const nameOnlyTypes = ['COMPONENT', 'COMPONENT_SET', 'GROUP', 'VECTOR', 'INSTANCE', 'ELLIPSE'];
+
+  it.each(nameOnlyTypes)('renames %s without touching other properties or loading fonts', async (type) => {
+    const node = { id: '2:3', type, name: 'Original', x: 20, y: 30, width: 40, height: 50,
+      fills: [{ type: 'SOLID' }], children: [{ id: '2:4' }], mainComponent: { id: '2:5' } };
+    const before = structuredClone(node);
+    const loadFontAsync = vi.fn();
+    const api = { getNodeByIdAsync: vi.fn(async () => node), loadFontAsync } as unknown as Parameters<typeof updateNode>[0];
+    expect(await updateNode(api, { nodeId: node.id, patch: { name: 'Renamed' } })).toEqual({ nodeId: node.id, name: 'Renamed' });
+    expect(node).toEqual({ ...before, name: 'Renamed' });
+    expect(loadFontAsync).not.toHaveBeenCalled();
+  });
+
+  it.each(nameOnlyTypes)('rejects mixed and non-name patches for %s before any mutation', async (type) => {
+    const node = { id: '2:3', type, name: 'Original', x: 20, fills: [] };
+    const before = structuredClone(node);
+    const api = { getNodeByIdAsync: vi.fn(async () => node) } as unknown as Parameters<typeof updateNode>[0];
+    for (const extra of [{ x: 50 }, { fill: '#ffffff' }, { width: 100 }, { characters: 'Text' }, { layoutMode: 'NONE' }]) {
+      await expect(updateNode(api, { nodeId: node.id, patch: { name: 'Changed', ...extra } })).rejects.toThrow('UNSUPPORTED_NODE');
+      await expect(updateNode(api, { nodeId: node.id, patch: extra })).rejects.toThrow('UNSUPPORTED_NODE');
+      expect(node).toEqual(before);
+    }
+  });
+
+  it.each(['', 'a'.repeat(201)])('rejects invalid rename input before looking up a node', async (name) => {
+    const getNodeByIdAsync = vi.fn();
+    const api = { getNodeByIdAsync } as unknown as Parameters<typeof updateNode>[0];
+    await expect(updateNode(api, { nodeId: '2:3', patch: { name } })).rejects.toThrow();
+    expect(getNodeByIdAsync).not.toHaveBeenCalled();
+  });
+
+  it('reports a missing rename target', async () => {
+    const api = { getNodeByIdAsync: vi.fn(async () => null) } as unknown as Parameters<typeof updateNode>[0];
+    await expect(updateNode(api, { nodeId: 'missing', patch: { name: 'Renamed' } })).rejects.toThrow('NODE_NOT_FOUND');
+  });
+
   it.each(['COMPONENT', 'COMPONENT_SET'])('renames an approved %s without changing its geometry or appearance', async (type) => {
     const node = { id: '14853:131178', type, name: 'type=ghost, state=active, size=32', x: 20, width: 112, fills: [] };
     const api = { getNodeByIdAsync: vi.fn(async () => node) } as unknown as Parameters<typeof updateNode>[0];
