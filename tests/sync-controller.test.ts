@@ -100,3 +100,34 @@ it('protects the local API with Origin and a separate scoped code and exposes no
     expect((await fetch(`${url}/sync/components`, { headers: { ...headers, Origin: 'https://example.com' } })).status).toBe(403);
   } finally { await server.close(); }
 });
+
+it('allows exact sdeui loopback origins while preserving authorization and project identity', async () => {
+  const f = await fixture();
+  const {readFile} = await import('node:fs/promises');
+  const registryPath = join(f.project, 'source/figma/component-links.json');
+  const registry = JSON.parse(await readFile(registryPath, 'utf8'));
+  registry.projectId = 'sdeui';
+  registry.components[0].storybook.componentEntryIds = ['button', 'review-button'];
+  await writeFile(registryPath, JSON.stringify(registry));
+  expect(await f.controller.bind('original', f.file.id)).toMatchObject({projectId: 'sdeui', confirmed: true});
+  const server = await startSyncHttp(f.controller, 0);
+  const url = `http://127.0.0.1:${server.port}/sync/components`;
+  try {
+    for (const Origin of ['http://127.0.0.1:6006', 'http://localhost:6006', 'http://127.0.0.1:6008']) {
+      expect((await fetch(url, {headers: {Origin}})).status).toBe(401);
+      const response = await fetch(url, {headers: {Origin, Authorization: `Bearer ${f.controller.accessCode}`}});
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({projectId: 'sdeui', components: [{
+        storybook: {componentEntryIds: ['button', 'review-button']}, status: 'no-baseline',
+      }]});
+    }
+    expect((await fetch(url, {headers: {Origin: 'http://127.0.0.1:6010', Authorization: `Bearer ${f.controller.accessCode}`}})).status).toBe(403);
+    const headers = {Origin: 'http://127.0.0.1:6006', Authorization: `Bearer ${f.controller.accessCode}`, 'X-Figma-Sync-Project': 'other-project'};
+    expect((await fetch(url, {headers})).status).toBe(409);
+    const action = await fetch(url.replace('/components', '/compare'), {method: 'POST',
+      headers: {...headers, 'Content-Type': 'application/json'}, body: JSON.stringify({componentId: 'button'})});
+    expect(action.status).toBe(409);
+    expect(await action.json()).toEqual({error: 'PROJECT_IDENTITY_MISMATCH'});
+    expect((await f.controller.list()).components[0].snapshotId).toBeUndefined();
+  } finally {await server.close();}
+});

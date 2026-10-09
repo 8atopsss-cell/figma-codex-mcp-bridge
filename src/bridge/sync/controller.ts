@@ -9,14 +9,14 @@ import { previewVariants } from './preview.js';
 
 const entrySchema = z.object({
   componentId: z.string().regex(/^[a-z0-9-]{1,80}$/), displayName: z.string(), modulePath: z.string(),
-  storybook: z.object({ componentEntryId: z.string(), storyIds: z.array(z.string()) }),
+  storybook: z.object({ componentEntryId: z.string(), componentEntryIds: z.array(z.string()).optional(), storyIds: z.array(z.string()) }),
   figma: z.object({ displayName: z.string(), fileKey: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/), url: z.string().url().optional(),
     sources: z.array(z.object({ theme: z.string().min(1), componentSetId: z.string().min(1),
       key: z.string().min(1).max(128).optional(), nodeType: z.enum(['COMPONENT_SET', 'COMPONENT']).optional(),
       exportPath: z.array(z.string().min(1).max(200)).min(1).max(64).optional() })).min(1) }),
   baselineCandidate: z.object({ rawExport: z.string(), status: z.string() }).passthrough(),
 }).passthrough();
-const registrySchema = z.object({ schemaVersion: z.literal(1), components: z.array(entrySchema) });
+const registrySchema = z.object({ schemaVersion: z.literal(1), projectId: z.string().regex(/^[a-z0-9-]{1,80}$/).optional(), components: z.array(entrySchema) });
 type Entry = z.infer<typeof entrySchema>;
 interface RecordState {
   observed?: Snapshot; implemented?: Snapshot; implementationHash?: string; acceptedHash?: string;
@@ -71,6 +71,9 @@ export class SyncController {
       throw error;
     }
   }
+  async assertProject(expected: string) {
+    if (expected !== (await this.registry()).projectId) throw new Error('PROJECT_IDENTITY_MISMATCH');
+  }
   private async save(state: State) {
     const root = await realpath(this.project);
     await mkdir(join(root, '.figma-sync'), { recursive: true });
@@ -105,7 +108,8 @@ export class SyncController {
   }
   bind(fileKey: string, connectionId: string, componentId?: string) {
     return this.serial(async () => {
-      const entries = (await this.registry()).components.filter((entry) => entry.figma.fileKey === fileKey);
+      const registry = await this.registry();
+      const entries = registry.components.filter((entry) => entry.figma.fileKey === fileKey);
       if (!entries.length) throw new Error('FILE_NOT_IN_REGISTRY');
       const selected = componentId ? entries.filter(entry => entry.componentId === componentId) : entries;
       if (!selected.length) throw new Error('COMPONENT_NOT_IN_REGISTRY');
@@ -117,14 +121,14 @@ export class SyncController {
         if (node.id !== source.componentSetId || node.type !== (source.nodeType ?? 'COMPONENT_SET')) throw new Error('INVALID_COMPONENT_SOURCE');
       }
       this.binding = { fileKey, connectionId };
-      return { confirmed: true, persistent: !!current.fileKey };
+      return { projectId: registry.projectId, confirmed: true, persistent: !!current.fileKey };
     });
   }
   async list() {
     const registry = await this.registry();
     const state = await this.load();
     const codeHash = await this.implementationHash();
-    return { protocolVersion: 2, files: this.host.listFiles(), components: registry.components.map((entry) => {
+    return { protocolVersion: 2, projectId: registry.projectId, files: this.host.listFiles(), components: registry.components.map((entry) => {
       const record = state.components[entry.componentId];
       const status = record?.observationComplete === false ? 'incomplete' : !record?.implemented ? 'no-baseline' : record.warnings.length ? 'incomplete'
         : record.differences.length ? 'needs-transfer' : record.implementationHash !== codeHash ? 'implementation-changed'

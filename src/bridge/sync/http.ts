@@ -6,7 +6,7 @@ import { SyncController } from './controller.js';
 const action = z.object({ componentId: z.string().min(1).max(80) }).strict();
 const accept = action.extend({ snapshotId: z.string().regex(/^[a-f0-9]{64}$/), revision: z.string().regex(/^[a-f0-9]{32}$/) }).strict();
 const bind = z.object({ fileKey: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/), connectionId: z.string().uuid(), componentId: z.string().min(1).max(80).optional() }).strict();
-const origins = new Set(['http://127.0.0.1:6007', 'http://localhost:6007']);
+const origins = new Set([6006, 6007, 6008].flatMap(port => [`http://127.0.0.1:${port}`, `http://localhost:${port}`]));
 
 export async function startSyncHttp(controller: SyncController, port = 3847) {
   const server = createServer(async (req, res) => {
@@ -22,7 +22,7 @@ export async function startSyncHttp(controller: SyncController, port = 3847) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
     if (req.method === 'OPTIONS') {
-      res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+      res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Figma-Sync-Project');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
       res.writeHead(204); res.end(); return;
     }
@@ -32,6 +32,11 @@ export async function startSyncHttp(controller: SyncController, port = 3847) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'SYNC_ACCESS_CODE_REQUIRED' })); return;
     }
     try {
+      const expectedProject = req.headers['x-figma-sync-project'];
+      if (expectedProject !== undefined) {
+        if (typeof expectedProject !== 'string' || !/^[a-z0-9-]{1,80}$/.test(expectedProject)) throw new Error('INVALID_PROJECT_ID');
+        await controller.assertProject(expectedProject);
+      }
       if (req.method === 'GET' && req.url === '/sync/components') { res.end(JSON.stringify(await controller.list())); return; }
       if (req.method === 'GET' && req.url?.startsWith('/sync/previews?')) {
         const query = new URL(req.url, 'http://127.0.0.1').searchParams;
