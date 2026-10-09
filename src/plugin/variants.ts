@@ -4,7 +4,7 @@ import {
   type CreatedVariantResult, type CreateComponentVariantsResult,
 } from '../shared/protocol.js';
 import { describeError } from './errors.js';
-import { fail, indexNodes, jsonValue, snapshot, stable, utf8Length, VariantError, type NodeSnapshot } from './variant-state.js';
+import { fail, indexNodes, isInDocument, jsonValue, snapshot, stable, utf8Length, VariantError, type NodeSnapshot } from './variant-state.js';
 
 type VariantApi = Pick<typeof figma, 'getNodeByIdAsync' | 'getStyleByIdAsync' | 'mixed'>;
 const markerKey = 'codex-component-variants-v1';
@@ -228,7 +228,7 @@ function cloneMap(source: SceneNode, clone: SceneNode): Map<string, SceneNode> {
 }
 
 // Compare every captured property except requested root placement/name and paint channels.
-function preserved(tree: NodeSnapshot, spec: ComponentVariantSpec, idToSource: Map<string, string>, root = true): unknown {
+function preserved(tree: NodeSnapshot, spec: ComponentVariantSpec, idToSource: Map<string, string>, root = true): NodeSnapshot {
   const id = idToSource.get(tree.id) ?? tree.id;
   const properties = { ...tree.properties };
   const override = spec.layerStyles.find((style) => style.sourceNodeId === id);
@@ -249,6 +249,33 @@ function preserved(tree: NodeSnapshot, spec: ComponentVariantSpec, idToSource: M
     }
   }
   return { id, type: tree.type, name: root ? spec.sourceComponentId : tree.name, properties, children: tree.children.map((child) => preserved(child, spec, idToSource, false)) };
+}
+
+function valueDifference(expected: unknown, actual: unknown, field: string): { field: string; expected: unknown; actual: unknown } | undefined {
+  if (stable(expected) === stable(actual)) return;
+  if (expected !== null && actual !== null && typeof expected === 'object' && typeof actual === 'object'
+    && Array.isArray(expected) === Array.isArray(actual)) {
+    const a = expected as Record<string, unknown>;
+    const b = actual as Record<string, unknown>;
+    for (const key of [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()) {
+      const difference = valueDifference(a[key], b[key], field ? `${field}.${key}` : key);
+      if (difference) return difference;
+    }
+  }
+  return { field, expected: expected === undefined ? { $figma: 'undefined' } : expected, actual: actual === undefined ? { $figma: 'undefined' } : actual };
+}
+
+function cloneDifference(expected: NodeSnapshot, actual: NodeSnapshot): { sourceNodeId: string; field: string; expected: unknown; actual: unknown } | undefined {
+  const difference = valueDifference({ id: expected.id, type: expected.type, name: expected.name, properties: expected.properties },
+    { id: actual.id, type: actual.type, name: actual.name, properties: actual.properties }, '');
+  if (difference) return { sourceNodeId: expected.id, ...difference };
+  if (expected.children.length !== actual.children.length) {
+    return { sourceNodeId: expected.id, field: 'children.length', expected: expected.children.length, actual: actual.children.length };
+  }
+  for (const [index, child] of expected.children.entries()) {
+    const difference = cloneDifference(child, actual.children[index]);
+    if (difference) return difference;
+  }
 }
 
 async function writeVariants(api: VariantApi, args: CreateComponentVariantsArgs, p: Prepared): Promise<CreateComponentVariantsResult> {
@@ -290,6 +317,25 @@ async function writeVariants(api: VariantApi, args: CreateComponentVariantsArgs,
       clone.x = p.variants[index].spec.position.x;
       clone.y = p.variants[index].spec.position.y;
     }
+    // A clone briefly lives outside its set; Figma can strip CHANGE_TO reactions
+    // and reset constraints there. Restore source behavior on new copies only.
+    stage = 'restore-behavior';
+    for (const [index, clone] of created.entries()) {
+      const v = p.variants[index];
+      const targets = indexNodes(clone);
+      for (const [sourceId, source] of v.nodes) {
+        sourceNodeId = sourceId;
+        const target = targets.get(results[index].nodeMap![sourceId])!;
+        if ('constraints' in source && 'constraints' in target && stable(source.constraints) !== stable(target.constraints)) {
+          target.constraints = { ...source.constraints };
+        }
+        if ('reactions' in source && 'reactions' in target && 'setReactionsAsync' in target
+          && stable(jsonValue(source.reactions, api.mixed)) !== stable(jsonValue(target.reactions, api.mixed))) {
+          await target.setReactionsAsync(JSON.parse(JSON.stringify(source.reactions)));
+          assertUnchanged(p, args, api, added, true);
+        }
+      }
+    }
     stage = 'readback';
     assertUnchanged(p, args, api, added, true);
     for (const [index, clone] of created.entries()) {
@@ -298,8 +344,10 @@ async function writeVariants(api: VariantApi, args: CreateComponentVariantsArgs,
       if (clone.parent !== p.set || clone.name !== v.name || clone.x !== v.spec.position.x || clone.y !== v.spec.position.y
         || combination(clone.variantProperties, p.keys) !== combination(v.spec.properties, p.keys)) fail('SOURCE_CHANGED', { stage, nodeId: clone.id, reason: 'Variant readback mismatch' });
       const reverse = new Map(Object.entries(result.nodeMap!).map(([source, target]) => [target, source]));
-      if (stable(preserved(snapshot(v.source, api.mixed), v.spec, new Map())) !== stable(preserved(snapshot(clone, api.mixed), v.spec, reverse))) {
-        fail('SOURCE_CHANGED', { stage, nodeId: clone.id, reason: 'Clone changed unrequested properties' });
+      const difference = cloneDifference(preserved(snapshot(v.source, api.mixed), v.spec, new Map()),
+        preserved(snapshot(clone, api.mixed), v.spec, reverse));
+      if (difference) {
+        fail('SOURCE_CHANGED', { stage, ...difference, nodeId: result.nodeMap![difference.sourceNodeId], reason: 'Clone changed unrequested properties' });
       }
       const map = indexNodes(clone);
       for (const style of v.spec.layerStyles) {
@@ -325,7 +373,16 @@ async function writeVariants(api: VariantApi, args: CreateComponentVariantsArgs,
     const remainingNodeIds: string[] = [];
     const cleanupErrors: string[] = [];
     for (const node of [...created].reverse()) {
-      try { if (!node.removed) node.remove(); if (!node.removed) remainingNodeIds.push(node.id); }
+      try {
+        if (!node.removed) {
+          const parent = node.parent;
+          node.remove();
+          // Figma may first turn a removed variant into a standalone page component.
+          // A second removal is restricted to this operation's newly created copy.
+          if (isInDocument(node) && parent?.type === 'COMPONENT_SET' && node.parent?.type === 'PAGE') node.remove();
+        }
+        if (isInDocument(node)) remainingNodeIds.push(node.id);
+      }
       catch (cleanup) { remainingNodeIds.push(node.id); cleanupErrors.push(describeError(cleanup)); }
     }
     let componentSetSizeRestored = true;

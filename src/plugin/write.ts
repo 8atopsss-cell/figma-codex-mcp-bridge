@@ -1,4 +1,5 @@
 import { screenSpecSchema, updateNodeSchema, type NodeSpec } from '../shared/protocol.js';
+import { fail, isInDocument } from './variant-state.js';
 
 type WriteApi = Pick<typeof figma, 'getNodeByIdAsync' | 'createPage' | 'createFrame' | 'createText' | 'createRectangle' | 'loadFontAsync' | 'mixed'>;
 type CreatedNode = FrameNode | TextNode | RectangleNode;
@@ -105,6 +106,7 @@ export async function deleteNode(api: Pick<WriteApi, 'getNodeByIdAsync'>, nodeId
   if (!node) throw new Error('NODE_NOT_FOUND');
   if (node.type === 'PAGE' || node.type === 'DOCUMENT') throw new Error('UNSUPPORTED_NODE');
   node.remove();
+  if (isInDocument(node)) fail('DELETE_INCOMPLETE', { nodeId, parentId: node.parent?.id });
   return { nodeId };
 }
 

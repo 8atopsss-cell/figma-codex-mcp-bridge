@@ -118,4 +118,25 @@ describe('Figma writes', () => {
     await expect(deleteNode(api as unknown as Parameters<typeof deleteNode>[0], '0:1')).rejects.toThrow('UNSUPPORTED_NODE');
     expect(page.appendChild).not.toHaveBeenCalled();
   });
+
+  it('does not report deletion success if a node remains in the document tree', async () => {
+    const node: any = { id: 'copy', type: 'COMPONENT', removed: false, remove: vi.fn() };
+    const page: any = { id: 'page', type: 'PAGE', children: [node] };
+    const document: any = { id: 'document', type: 'DOCUMENT', parent: null, children: [page] };
+    node.parent = page;
+    page.parent = document;
+    const api = { getNodeByIdAsync: vi.fn(async () => node) };
+    await expect(deleteNode(api as unknown as Parameters<typeof deleteNode>[0], node.id)).rejects.toMatchObject({
+      code: 'DELETE_INCOMPLETE', details: { nodeId: 'copy', parentId: 'page' },
+    });
+  });
+
+  it('recognizes removed library components retained outside the document tree', async () => {
+    const node: any = { id: 'copy', type: 'COMPONENT', removed: false, parent: null, remove: vi.fn() };
+    node.remove.mockImplementation(() => {
+      node.parent = { id: 'deleted', type: 'PAGE', parent: null, children: [node] };
+    });
+    const api = { getNodeByIdAsync: vi.fn(async () => node) };
+    await expect(deleteNode(api as unknown as Parameters<typeof deleteNode>[0], node.id)).resolves.toEqual({ nodeId: 'copy' });
+  });
 });

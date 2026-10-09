@@ -8,6 +8,8 @@ function fixture() {
   const created: any[] = [];
   const style = { id: 'light-primary', type: 'PAINT', name: 'Light primary', paints: [{ type: 'SOLID', color: { r: 0.1, g: 0.2, b: 0.3 } }] };
   const page: any = { id: 'page', type: 'PAGE', loadAsync: vi.fn(async () => {}), children: [], appendChild(node: any) { attach(this, node); } };
+  const document: any = { id: 'document', type: 'DOCUMENT', parent: null, children: [page] };
+  page.parent = document;
   function attach(parent: any, node: any) {
     if (node.parent) node.parent.children.splice(node.parent.children.indexOf(node), 1);
     parent.children.push(node);
@@ -310,6 +312,94 @@ describe('component variant creation', () => {
     await expect(apply(f)).rejects.toThrow('Append failed');
     expect(f.set.children).toEqual(f.sources);
     expect(f.created.every((n) => n.removed)).toBe(true);
+  });
+
+  it('finishes rollback when removing a variant first detaches it onto the page', async () => {
+    const f = fixture();
+    const append = f.set.appendChild.bind(f.set);
+    let calls = 0;
+    f.set.appendChild = (node: any) => { if (++calls === 2) throw new Error('Append failed'); append(node); };
+    const clone = f.sources[0].clone;
+    f.sources[0].clone = () => {
+      const node = clone();
+      const remove = node.remove.getMockImplementation()!;
+      node.remove.mockImplementation(() => {
+        if (node.parent === f.set) {
+          f.set.children.splice(f.set.children.indexOf(node), 1);
+          node.parent = f.set.parent;
+          node.parent.children.push(node);
+          node.name = 'Sort/light descending';
+        } else remove();
+      });
+      return node;
+    };
+    await expect(apply(f)).rejects.toThrow('Append failed');
+    expect(f.created.every((node) => node.removed)).toBe(true);
+    expect(f.sources.every((node) => !node.removed && node.parent === f.set)).toBe(true);
+  });
+
+  it('reports the exact source, clone and unrequested property changed by native cloning', async () => {
+    const f = fixture();
+    f.sources[0].children[0].opacity = 1;
+    const clone = f.sources[0].clone;
+    f.sources[0].clone = () => {
+      const node = clone();
+      node.children[0].opacity = 0.5;
+      return node;
+    };
+    await expect(apply(f)).rejects.toMatchObject({
+      code: 'SOURCE_CHANGED',
+      details: {
+        stage: 'readback', sourceNodeId: 'descending-0', nodeId: '101',
+        field: 'properties.opacity', expected: 1, actual: 0.5,
+      },
+    });
+    expect(f.created.every((node) => node.removed)).toBe(true);
+  });
+
+  it('preserves prototype reactions and layer constraints lost by native cloning', async () => {
+    const f = fixture();
+    const reactions = [{ trigger: { type: 'ON_CLICK' }, actions: [{ type: 'NODE', navigation: 'CHANGE_TO', destinationId: 'none' }] }];
+    f.sources[0].reactions = reactions;
+    f.sources[0].children[0].constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
+    const clone = f.sources[0].clone;
+    f.sources[0].clone = () => {
+      const node = clone();
+      node.reactions = [];
+      node.setReactionsAsync = vi.fn(async (value: any) => {
+        expect(node.parent).toBe(f.set);
+        node.reactions = value;
+      });
+      node.children[0].constraints = { horizontal: 'MIN', vertical: 'SCALE' };
+      return node;
+    };
+    const result = await apply(f);
+    expect(result.status).toBe('applied');
+    expect(f.created[0].reactions).toEqual(reactions);
+    expect(f.created[0].children[0].constraints).toEqual(f.sources[0].children[0].constraints);
+    expect(f.sources[0].reactions).toBe(reactions);
+  });
+
+  it('does not report an inaccessible deleted component as an incomplete rollback', async () => {
+    const f = fixture();
+    const clone = f.sources[0].clone;
+    f.sources[0].clone = () => {
+      const node = clone();
+      node.remove.mockImplementation(() => {
+        node.parent.children.splice(node.parent.children.indexOf(node), 1);
+        node.parent = { id: 'deleted', type: 'PAGE', parent: null, children: [node] };
+        // Figma can retain the component object after removal for library references.
+        node.removed = false;
+      });
+      node.children[0].setStrokeStyleIdAsync.mockRejectedValueOnce(new Error('Setter failed'));
+      return node;
+    };
+    try { await apply(f); throw new Error('Expected failure'); }
+    catch (error: any) {
+      expect(error.code).toBe('FIGMA_API_ERROR');
+      expect(error.message).toContain('Setter failed');
+    }
+    expect(f.set.children).toEqual(f.sources);
   });
 
   it('stops after a manual source edit during an asynchronous setter', async () => {

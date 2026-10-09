@@ -106,3 +106,18 @@ export function indexNodes(node: SceneNode): Map<string, SceneNode> {
   visit(node, 0);
   return result;
 }
+
+// Deleted library components can remain addressable, with removed=false, on an
+// internal page outside the document tree. Only attached document nodes survive.
+export function isInDocument(node: BaseNode): boolean {
+  let current = node;
+  const seen = new Set<string>();
+  while (!current.removed && !seen.has(current.id)) {
+    seen.add(current.id);
+    const parent = current.parent;
+    if (!parent) return current.type === 'DOCUMENT';
+    if (!('children' in parent) || !parent.children.some((child) => child.id === current.id)) return false;
+    current = parent;
+  }
+  return false;
+}

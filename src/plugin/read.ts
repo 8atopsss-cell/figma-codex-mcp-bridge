@@ -22,6 +22,8 @@ export interface NodeTree {
   id: string;
   name: string;
   type: string;
+  parent?: { id: string; name: string; type: string } | null;
+  removed?: boolean;
   x?: number;
   y?: number;
   width?: number;
@@ -68,6 +70,8 @@ export async function getNodeTree(
   const serialize = async (current: BaseNode, depth: number, root: boolean): Promise<NodeTree> => {
     if (current.type === 'PAGE') await current.loadAsync();
     const result: NodeTree = { id: current.id, name: current.name, type: current.type };
+    if ('parent' in current) result.parent = current.parent ? { id: current.parent.id, name: current.parent.name, type: current.parent.type } : null;
+    if ('removed' in current) result.removed = current.removed;
     if ('x' in current) result.x = current.x;
     if ('y' in current) result.y = current.y;
     if ('width' in current) result.width = current.width;
