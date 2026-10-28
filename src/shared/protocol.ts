@@ -1,4 +1,6 @@
 import * as z from 'zod/v4';
+import { listComponentsSchema, themePlanSchema } from './theme-conversion.js';
+import { themeCopySchema } from './theme-copy.js';
 
 const id = z.string().min(1).max(128);
 const name = z.string().min(1).max(200);
@@ -125,6 +127,32 @@ export const variantStyleOverrideSchema = z.object({
   strokeStyleId: id.optional(),
 }).strict().refine((style) => style.fillStyleId !== undefined || style.strokeStyleId !== undefined, 'Style override must not be empty');
 
+export const duplicateNodeSchema = z.object({
+  sourceNodeId: id,
+  operationId: z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/),
+  name,
+  position: z.object({ x: position, y: position }).strict(),
+  layerStyles: z.array(variantStyleOverrideSchema).max(200).default([])
+    .refine((styles) => new Set(styles.map((style) => style.sourceNodeId)).size === styles.length, 'Duplicate source layer'),
+  dryRun: z.boolean().default(true),
+  expectedState: z.string().min(1).max(262_144).optional(),
+}).strict().refine((value) => value.dryRun || value.expectedState !== undefined, 'Apply requires expectedState from preview');
+
+export type DuplicateNodeArgs = z.infer<typeof duplicateNodeSchema>;
+export interface DuplicateNodeResult {
+  status: 'preview' | 'applied' | 'replayed';
+  sourceNodeId: string;
+  operationId: string;
+  parentId: string;
+  name: string;
+  position: { x: number; y: number };
+  layerStyles: z.infer<typeof variantStyleOverrideSchema>[];
+  expectedState?: string;
+  nodeId?: string;
+  nodeMap?: Record<string, string>;
+  previousFailure?: { code: string; details: Record<string, unknown> };
+}
+
 const variantPropertyName = name.refine((value) => value.trim() === value && !/[,=]/.test(value), 'Variant names must be unambiguous');
 export const componentVariantSchema = z.object({
   sourceComponentId: id,
@@ -182,9 +210,13 @@ export const pluginRequestSchema = z.discriminatedUnion('method', [
   call('node.svg', z.object({ nodeId: id }).strict()),
   call('styles.list', z.object({}).strict()),
   call('variables.list', variableReadSchema),
+  call('components.list', listComponentsSchema),
+  call('theme.plan', themePlanSchema),
+  call('theme.copy', themeCopySchema),
   call('page.create', z.object({ name }).strict()),
   call('screen.create', screenSpecSchema),
   call('node.update', updateNodeSchema),
+  call('node.duplicate', duplicateNodeSchema),
   call('component.variants.create', createComponentVariantsSchema),
   call('node.delete', z.object({ nodeId: id }).strict()),
 ]);

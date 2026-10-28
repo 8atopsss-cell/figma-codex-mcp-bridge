@@ -27,6 +27,7 @@ const fields = [
   'textAlignHorizontal', 'textAlignVertical', 'textAutoResize', 'textTruncation', 'maxLines',
   'paragraphIndent', 'paragraphSpacing', 'indentation', 'listSpacing', 'listOptions', 'textWrapStyle', 'openTypeFeatures', 'hyperlink',
   'textStyleId', 'fillStyleId', 'strokeStyleId', 'effectStyleId', 'vectorPaths', 'vectorNetwork',
+  'arcData', 'pointCount', 'innerRadius', 'booleanOperation',
   'reactions', 'exportSettings', 'description', 'descriptionMarkdown', 'documentationLinks',
 ] as const;
 

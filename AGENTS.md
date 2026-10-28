@@ -1,5 +1,7 @@
 # Project maintenance
 
+Keep the local Figma development plugin in the project root: `manifest.json` uses the current `dist/plugin/main.js` and `dist/plugin/ui.html`. Preserve the existing local plugin ID. Update it with `npm.cmd run build`; do not create or install another `v_2` copy. The transfer folder is a generated distribution, not another local Figma registration.
+
 For Figma operations, use the project skill at `skills/figma-bridge/SKILL.md`.
 
 Always ask for explicit confirmation before modifying finished Figma components, sets, variants, instances, or their sublayers, including renames and repairs. Inspect the live source and present the exact changes first. An existing confirmation for those exact changes remains valid; do not ask twice. See the project skill for the approval workflow.
@@ -9,6 +11,13 @@ Keep reusable skills created for this plugin in `skills/<name>/SKILL.md`, includ
 After changes to the plugin, bridge, dependencies, assets, installation instructions, or project skills, run `npm.cmd run build`. The build regenerates `transfer/figma-codex-mcp-bridge`; verify it before handing it to users. Do not edit generated bundle files directly. The bundle must include all project skills and must exclude pairing tokens, personal manifests, account settings, and node_modules.
 
 # Инструкции проекта
+
+## Логи разработки
+
+- Вести ежедневный журнал проекта в папке `логи разработки/`.
+- На каждый день — отдельный Markdown-файл `Название-ГГГГ-ММ-ДД.md`, дата по `Europe/Moscow`. Для общего журнала использовать `Разработка плагина-ГГГГ-ММ-ДД.md`.
+- Дополнять файл после значимого этапа и перед завершением работы: запрос, изменения, проверки с результатами, ограничения и следующие шаги. Несколько сессий одного дня дополняют тот же файл.
+- Отделять выполненное от запланированного, автоматические проверки от живых и визуального принятия. Не записывать токены, коды сопряжения, личные настройки и другие секреты.
 
 ## Общение
 

@@ -36,6 +36,22 @@ Approval applies only to the agreed objects and changes. If the user has already
 - Renaming an INSTANCE targets that instance only; it does not rename its main component or detach the instance. Target a descendant by its own live node ID. Verify nested instance layers in Figma and report any API restriction instead of detaching or replacing nodes.
 - Inspect the active file and exact node IDs, present old and new names, and obtain approval for finished components, instances and their sublayers under the rule above. Read back names after applying changes. Sequential calls are not an atomic batch; stop and inspect on an error, reporting completed and remaining IDs.
 
+## Convert a layout through theme components
+
+- Default workflow for changing a layout theme: `list_components` → `plan_theme_conversion` → review. Reuse an existing compatible light/dark parent and nested components. A recolored instance retaining its dark main component is not component reuse. Names are candidate hints; use explicit component/property/value maps or a verified same-set theme axis.
+- Catalog and planner are read-only. `executable:false` always applies to plans, including `status:review`. `copy_theme_component` is a separate preview/apply operation for one compatible parent INSTANCE on a new copy; it is not a recursive layout conversion. Inspect and agree on its exact source, target, layerMap, properties and placement first. Unsupported preservation blocks the operation. Do not substitute appearance-only copying for a blocked component conversion.
+- For incompatible slots report **Светлый и тёмный компоненты необходимо привести в соответствие**. Show exact source/target IDs, properties, affected content and required corrections, then pause that component until the alignment is agreed. Empty slots still require a matching slot. Do not repair the library, flatten to a frame or create a duplicate to bypass incompatibility.
+- Plan parent first. Nested steps are provisional and must be replanned against the actual tree after a parent substitution; old instance-child IDs are not reusable. Preserve text, custom icons, states, slot contents/order and layout. A missing variant/component is a proposal after scoped search, not proof of global absence or creation approval.
+- Read [theme conversion instructions](references/theme-conversion.md) for schemas, scoped catalog pagination, property maps, blockers and later implementation stages.
+
+## Create an appearance-only copy
+
+- Use `duplicate_node` only for an explicitly requested appearance copy retaining existing main components. Resolve the active file/selection and inspect the full source tree, preview and local PaintStyle IDs first. Record the exact source ID, new name, coordinates and per-layer fill/stroke assignments. Obtain agreement unless those exact changes already have confirmation.
+- Supported parents are PAGE or a free-layout FRAME. Component/instance ancestors and auto-layout parents are rejected. Never move, detach or rebuild the source to bypass these checks. Do not swap main components: theme styles are overrides on the copy, preserving slots and component links.
+- Run `dryRun:true` first. Apply the unchanged request with `dryRun:false` and its `expectedState`. Operation IDs use 1-80 ASCII letters/digits/underscores/hyphens. The tool validates style membership/type and checks source, parent, copied content, geometry and bindings.
+- After timeout, inspect the same operationId and request with dryRun:true. `replayed` returns the original copy; preview may include previousFailure after a completed rollback. Read that code/details before another apply, rather than silently recreating a failed copy. Do not bypass `OPERATION_CONFLICT`, `OPERATION_RESULT_CHANGED` or `OPERATION_INCOMPLETE` with a new ID. For `ROLLBACK_INCOMPLETE`, report remainingNodeIds, cleanup errors and cause; do not remove surviving nodes automatically.
+- Read back `nodeId`, the full `nodeMap` and the copy preview. Only the user assigns visual acceptance. Private document operation receipts and copy metadata support retries; original layers are never changed. See [duplication contract](references/duplicate-node.md).
+
 ## Create missing variants
 
 - Use `create_component_variants` only for explicit missing combinations identified from the live schema and the user's requirements. Do not fill every Cartesian combination automatically.

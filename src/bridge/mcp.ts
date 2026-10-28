@@ -1,7 +1,9 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
-import { createComponentVariantsSchema, screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
+import { createComponentVariantsSchema, duplicateNodeSchema, screenSpecSchema, updateNodeSchema, variableReadSchema } from '../shared/protocol.js';
 import type { SyncController } from './sync/controller.js';
+import { listComponentsSchema, themePlanSchema } from '../shared/theme-conversion.js';
+import { themeCopySchema } from '../shared/theme-copy.js';
 
 export interface BridgeCaller {
   getSync?(): SyncController | undefined;
@@ -148,6 +150,26 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
   );
 
   server.registerTool(
+    'list_components',
+    {
+      description: 'Read-only bounded catalog of local component masters and sets within an explicit library root. Includes IDs/keys, schema owner, property definitions, variant values and schema failures. Paginate with offset/limit and expectedScopeSnapshot from the previous result to detect edits. Only a complete scoped scan can return results; limits and inaccessible roots fail closed. Instance subtrees are not library masters. A scoped local search never proves global absence or grants permission to create/import components.',
+      inputSchema: listComponentsSchema,
+      annotations: { readOnlyHint: true, destructiveHint: false },
+    },
+    args => textResult(() => (bridge.pinCurrentFile?.() ?? bridge).call('components.list', args)),
+  );
+
+  server.registerTool(
+    'plan_theme_conversion',
+    {
+      description: 'Read-only, non-executable component-reuse plan for a FRAME or INSTANCE. Prefer explicit source/target component or set mappings, then same-set theme variants. Names provide candidates only. Check full property IDs, explicit value aliases, slot attachment, contents and restrictions. Existing incompatible slots return alignment_required and the message: Светлый и тёмный компоненты необходимо привести в соответствие. Show differences and pause that component; never bypass with a painted clone, frame or new component. Nested steps are provisional and must be replanned after parent replacement. Missing variants/components are proposals within the search scope, never proof of global absence. This tool does not swap, clone, repair, import or write metadata; review does not authorize writes. See the project theme-conversion skill reference for operation and later stages.',
+      inputSchema: themePlanSchema,
+      annotations: { readOnlyHint: true, destructiveHint: false },
+    },
+    args => textResult(() => (bridge.pinCurrentFile?.() ?? bridge).call('theme.plan', args)),
+  );
+
+  server.registerTool(
     'get_local_styles',
     {
       description: 'Read local paint, text, and effect styles with full paint and typography properties for code handoff.',
@@ -195,6 +217,32 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
       annotations: { readOnlyHint: false, destructiveHint: false },
     },
     async (args) => textResult(() => serializeWrite(() => bridge.call('node.update', args))),
+  );
+
+  server.registerTool(
+    'copy_theme_component',
+    {
+      description: 'Preview/apply one parent component substitution on a NEW INSTANCE copy, preserving the original and library masters. This is a staged operation, not a complete layout conversion: inspect the resulting descendant inventory and replan using new IDs. Resolve the active file, inspect exact source/target masters, properties, slot contents and explicit layerMap (source descendant IDs to target master descendant IDs), then obtain agreement on the exact copy before apply. Defaults dryRun=true, read-only preview; apply requires the unchanged request, dryRun=false and expectedState. Existing incompatible slots require alignment and stop before cloning. Unsupported overrides or ambiguous transfer fail closed; never detach, reset all overrides, repair masters or bypass blockers with recoloring. Retry the SAME operationId after timeout; inspect incomplete/modified receipts, never create a second copy to bypass them. Report ROLLBACK_INCOMPLETE remainingNodeIds and cleanupErrors. Read back main identities, contents and preview; user grants visual acceptance.',
+      inputSchema: themeCopySchema,
+      annotations: { readOnlyHint: false, destructiveHint: false },
+    },
+    args => textResult(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('theme.copy', args));
+    }),
+  );
+
+  server.registerTool(
+    'duplicate_node',
+    {
+      description: 'Duplicate a FRAME or INSTANCE under its existing page or free-layout FRAME parent, preserving slots and component links. Only new copies receive the explicitly listed PaintStyle overrides. Inspect live source and agree on the exact source, placement, name and styles first. Defaults to dryRun=true; apply the unchanged request with dryRun=false and expectedState from preview. After timeout retry the same operationId; replay returns the original copy. Never detach instances or guess theme colors. Read back nodeMap and preview before claiming visual parity. Reports remainingNodeIds on incomplete rollback.',
+      inputSchema: duplicateNodeSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false },
+    },
+    async (args) => textResult(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('node.duplicate', args));
+    }),
   );
 
   server.registerTool(

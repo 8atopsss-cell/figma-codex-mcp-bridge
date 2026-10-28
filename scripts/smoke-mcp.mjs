@@ -16,7 +16,18 @@ try {
   assert(tools.some((tool) => tool.name === 'get_file_overview'));
   assert(tools.some((tool) => tool.name === 'list_connected_files'));
   assert(tools.some((tool) => tool.name === 'get_variables' && tool.annotations?.readOnlyHint === true));
+  for (const name of ['list_components', 'plan_theme_conversion']) {
+    assert(tools.some(tool => tool.name === name && tool.annotations?.readOnlyHint === true && tool.annotations?.destructiveHint === false));
+  }
   assert(tools.some((tool) => tool.name === 'create_component_variants' && tool.annotations?.readOnlyHint === false));
+  const themeCopyTool = tools.find(tool => tool.name === 'copy_theme_component');
+  assert(themeCopyTool?.annotations?.readOnlyHint === false && themeCopyTool?.annotations?.destructiveHint === false);
+  for (const property of ['nodeId', 'layerMap', 'expectedState', 'operationId']) assert(themeCopyTool.inputSchema.properties[property]);
+  const duplicateTool = tools.find((tool) => tool.name === 'duplicate_node');
+  assert(duplicateTool && duplicateTool.annotations?.readOnlyHint === false);
+  assert(duplicateTool.inputSchema.properties.sourceNodeId);
+  assert(duplicateTool.inputSchema.properties.layerStyles);
+  assert(duplicateTool.inputSchema.properties.expectedState);
   const variantsTool = tools.find((tool) => tool.name === 'create_component_variants');
   assert(variantsTool.inputSchema.properties.componentSetSize);
   assert(variantsTool.inputSchema.properties.newVariantValues);

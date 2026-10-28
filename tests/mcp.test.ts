@@ -4,6 +4,48 @@ import { createBridgeServer } from '../src/bridge/mcp.js';
 import { updateNode } from '../src/plugin/write.js';
 
 describe('MCP bridge', () => {
+  it('exposes staged theme copies with pinned preview/apply and preserves cleanup errors', async () => {
+    const calls: Array<{ method: string; args: unknown }> = [];
+    const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); },
+      pinCurrentFile: () => ({ call: async (method, args) => {
+        calls.push({ method, args });
+        if ((args as any).dryRun === false) throw Object.assign(new Error('ROLLBACK_INCOMPLETE'), { details: { remainingNodeIds: ['new-copy', 'new-slot-child'] } });
+        return { status: 'preview', expectedState: 'fresh-state', followupRequired: true };
+      } }),
+    });
+    const client = new Client({ name: 'theme-copy-test', version: '1.0.0' });
+    const [a, b] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(b), client.connect(a)]);
+      const listed = await client.listTools();
+      expect(listed.tools.find(t => t.name === 'copy_theme_component')?.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: false });
+      const args = { nodeId: 'instance', libraryRootIds: ['kit'], operationId: 'light-copy', name: 'Light copy', position: { x: 700, y: 200 }, layerMap: { label: 'light-label' } };
+      expect((await client.callTool({ name: 'copy_theme_component', arguments: args })).isError).not.toBe(true);
+      expect(calls[0]).toMatchObject({ method: 'theme.copy', args: { ...args, dryRun: true } });
+      const result = await client.callTool({ name: 'copy_theme_component', arguments: { ...args, dryRun: false, expectedState: 'fresh-state' } });
+      expect(result.isError).toBe(true);
+      expect(result.content).toContainEqual({ type: 'text', text: JSON.stringify({ details: { remainingNodeIds: ['new-copy', 'new-slot-child'] } }) });
+    } finally { await client.close(); await server.close(); }
+  });
+  it('exposes catalog/theme planning as read-only and pins each call to the selected file', async () => {
+    const calls: Array<{ method: string; args: any }> = [];
+    const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); },
+      pinCurrentFile: () => ({ call: async (method, args) => { calls.push({ method, args }); return { executable: false }; } }),
+    });
+    const client = new Client({ name: 'theme-plan-test', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const listed = await client.listTools();
+      for (const name of ['list_components', 'plan_theme_conversion']) {
+        expect(listed.tools.find(t => t.name === name)?.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
+      }
+      expect((await client.callTool({ name: 'list_components', arguments: { rootNodeId: 'kit' } })).isError).not.toBe(true);
+      expect((await client.callTool({ name: 'plan_theme_conversion', arguments: { nodeId: 'window', libraryRootIds: ['kit'] } })).isError).not.toBe(true);
+      expect(calls[0]).toMatchObject({ method: 'components.list', args: { rootNodeId: 'kit', offset: 0, limit: 50 } });
+      expect(calls[1]).toMatchObject({ method: 'theme.plan', args: { nodeId: 'window', targetTheme: 'light', mappings: [] } });
+    } finally { await client.close(); await server.close(); }
+  });
   it.each(['GROUP', 'VECTOR', 'INSTANCE', 'ELLIPSE'])('renames %s through MCP and returns rejected patches as errors', async (type) => {
     const node = { id: '2:3', type, name: 'Original', x: 20 };
     const api = { getNodeByIdAsync: async () => node } as unknown as Parameters<typeof updateNode>[0];
@@ -29,7 +71,7 @@ describe('MCP bridge', () => {
     } finally { await client.close(); await server.close(); }
   });
 
-  it('captures the active file before a variant write waits behind another write', async () => {
+  it.each(['create_component_variants', 'duplicate_node', 'copy_theme_component'])('captures the active file before %s waits behind another write', async (tool) => {
     let active = 'file-a';
     let release!: () => void;
     let started!: () => void;
@@ -51,7 +93,11 @@ describe('MCP bridge', () => {
       await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
       const first = client.callTool({ name: 'create_page', arguments: { name: 'Test' } });
       await firstStarted;
-      const next = client.callTool({ name: 'create_component_variants', arguments: {
+      const next = client.callTool({ name: tool, arguments: tool === 'duplicate_node' ? {
+        sourceNodeId: 'source', operationId: 'op', name: 'Light copy', position: { x: 700, y: 200 },
+      } : tool === 'copy_theme_component' ? {
+        nodeId: 'source', libraryRootIds: ['kit'], operationId: 'op', name: 'Light copy', position: { x: 700, y: 200 },
+      } : {
         componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
       } });
       await filePinned;
@@ -60,6 +106,31 @@ describe('MCP bridge', () => {
       await Promise.all([first, next]);
       expect(files).toEqual(['file-a']);
     } finally { release(); await client.close(); await server.close(); }
+  });
+
+  it('exposes duplication with pinned preview/apply arguments and preserves rollback details', async () => {
+    const calls: Array<{ method: string; args: unknown }> = [];
+    const server = createBridgeServer({
+      call: async () => { throw new Error('Unpinned call'); },
+      pinCurrentFile: () => ({ call: async (method, args) => {
+        calls.push({ method, args });
+        if ((args as any).dryRun === false) throw Object.assign(new Error('ROLLBACK_INCOMPLETE'), { details: { remainingNodeIds: ['copy-1'] } });
+        return { status: 'preview', expectedState: 'approved-state' };
+      } }),
+    });
+    const client = new Client({ name: 'duplicate-test', version: '1.0.0' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
+      const { tools } = await client.listTools();
+      expect(tools.find((tool) => tool.name === 'duplicate_node')?.annotations?.readOnlyHint).toBe(false);
+      const args = { sourceNodeId: 'source', operationId: 'light-copy', name: 'Modal light', position: { x: 700, y: 200 }, layerStyles: [{ sourceNodeId: 'source', fillStyleId: 'light' }] };
+      expect((await client.callTool({ name: 'duplicate_node', arguments: args })).isError).not.toBe(true);
+      expect(calls).toEqual([{ method: 'node.duplicate', args: { ...args, dryRun: true } }]);
+      const failed = await client.callTool({ name: 'duplicate_node', arguments: { ...args, dryRun: false, expectedState: 'approved-state' } });
+      expect(failed.isError).toBe(true);
+      expect(failed.content).toContainEqual({ type: 'text', text: JSON.stringify({ details: { remainingNodeIds: ['copy-1'] } }) });
+    } finally { await client.close(); await server.close(); }
   });
 
   it('pins variant creation to the file chosen at invocation and forwards preview arguments', async () => {

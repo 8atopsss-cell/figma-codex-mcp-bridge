@@ -4,13 +4,17 @@ import { getVariables } from './variables.js';
 import { describeError } from './errors.js';
 import { createPage, createScreen, deleteNode, updateNode } from './write.js';
 import { createComponentVariants } from './variants.js';
+import { duplicateNode } from './duplicate.js';
+import { listComponents } from './component-catalog.js';
+import { planThemeConversion } from './theme-plan.js';
+import { copyThemeComponent } from './theme-copy.js';
 import { VariantError } from './variant-state.js';
 import { readFileKey } from './file-identity.js';
 
 figma.showUI(__html__, { width: 320, height: 300, themeColors: true });
 
 let writeTail = Promise.resolve();
-const writeMethods = new Set(['page.create', 'screen.create', 'node.update', 'node.delete', 'component.variants.create']);
+const writeMethods = new Set(['page.create', 'screen.create', 'node.update', 'node.delete', 'node.duplicate', 'component.variants.create', 'theme.copy']);
 function serializeWrite<T>(action: () => Promise<T>): Promise<T> {
   const next = writeTail.then(action, action);
   writeTail = next.then(() => undefined, () => undefined);
@@ -50,9 +54,13 @@ figma.ui.onmessage = async (message: unknown) => {
         case 'node.svg': return getNodeSvg(figma, request.data.args);
         case 'styles.list': return getLocalStyles(figma);
         case 'variables.list': return getVariables(figma, request.data.args);
+        case 'components.list': return listComponents(figma, request.data.args);
+        case 'theme.plan': return planThemeConversion(figma, request.data.args);
+        case 'theme.copy': return copyThemeComponent(figma, request.data.args);
         case 'page.create': return createPage(figma, request.data.args.name);
         case 'screen.create': return createScreen(figma, request.data.args);
         case 'node.update': return updateNode(figma, request.data.args);
+        case 'node.duplicate': return duplicateNode(figma, request.data.args);
         case 'component.variants.create': return createComponentVariants(figma, request.data.args);
         case 'node.delete': return deleteNode(figma, request.data.args.nodeId);
         default: throw new Error('UNSUPPORTED_METHOD');
