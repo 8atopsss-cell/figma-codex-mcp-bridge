@@ -44,6 +44,16 @@ Approval applies only to the agreed objects and changes. If the user has already
 - Plan parent first. Nested steps are provisional and must be replanned against the actual tree after a parent substitution; old instance-child IDs are not reusable. Preserve text, custom icons, states, slot contents/order and layout. A missing variant/component is a proposal after scoped search, not proof of global absence or creation approval.
 - Read [theme conversion instructions](references/theme-conversion.md) for schemas, scoped catalog pagination, property maps, blockers and later implementation stages.
 
+## Align an approved component schema
+
+- Use `align_component_schema` only for exact agreed source/target masters, bindings, supported fields and affected instance scope. It edits an existing finished COMPONENT in place; it is not an automatic repair inside theme planning. Source stays unchanged; target starts with an empty schema. Copy only complete live BOOLEAN/SLOT definitions to exact target descendant IDs; existing FRAME-to-SLOT conversion must preserve IDs/children.
+- Preview first, inspect exact changes and complete `instanceImpact`, then apply the same approved request with its `expectedState`. Reuse existing exact approval. Keep user-deleted properties absent. Fonts, unsupported states, drift and limits fail closed; never detach, swap mains, delete existing nodes or copy paint colors to bypass alignment.
+- Inspect incomplete/modified receipts rather than repeating with a new operationId. Report exact changed nodes/properties and cleanup errors. Read back source, target schema/propertyMap, refs/types, IDs, light style/main identities and affected instances, then rerun compatibility. See [component alignment](references/component-alignment.md).
+
+## Repair an approved orphan icon reference
+
+Before repairing a broken local icon main link, use the separately approved `repair_component_reference` workflow in [component reference repair](references/component-reference-repair.md). Inspect the exact old/replacement IDs and complete instanceImpact; preview/apply with expectedState. Preserve icon content, size, visibility and paints; native derived IDs may change. Report partial operations, never bypass them with another operationId. A blocked alignment does not grant permission to repair a button master.
+
 ## Create an appearance-only copy
 
 - Use `duplicate_node` only for an explicitly requested appearance copy retaining existing main components. Resolve the active file/selection and inspect the full source tree, preview and local PaintStyle IDs first. Record the exact source ID, new name, coordinates and per-layer fill/stroke assignments. Obtain agreement unless those exact changes already have confirmation.

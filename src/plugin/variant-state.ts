@@ -26,6 +26,7 @@ const fields = [
   'characters', 'fontName', 'fontSize', 'letterSpacing', 'lineHeight', 'textCase', 'textDecoration',
   'textAlignHorizontal', 'textAlignVertical', 'textAutoResize', 'textTruncation', 'maxLines',
   'paragraphIndent', 'paragraphSpacing', 'indentation', 'listSpacing', 'listOptions', 'textWrapStyle', 'openTypeFeatures', 'hyperlink',
+  'hangingPunctuation', 'hangingList', 'autoRename',
   'textStyleId', 'fillStyleId', 'strokeStyleId', 'effectStyleId', 'vectorPaths', 'vectorNetwork',
   'arcData', 'pointCount', 'innerRadius', 'booleanOperation',
   'reactions', 'exportSettings', 'description', 'descriptionMarkdown', 'documentationLinks',

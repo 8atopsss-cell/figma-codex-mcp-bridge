@@ -4,6 +4,8 @@ import { createComponentVariantsSchema, duplicateNodeSchema, screenSpecSchema, u
 import type { SyncController } from './sync/controller.js';
 import { listComponentsSchema, themePlanSchema } from '../shared/theme-conversion.js';
 import { themeCopySchema } from '../shared/theme-copy.js';
+import { componentAlignmentSchema } from '../shared/component-alignment.js';
+import { componentReferenceRepairSchema } from '../shared/component-reference-repair.js';
 
 export interface BridgeCaller {
   getSync?(): SyncController | undefined;
@@ -217,6 +219,32 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
       annotations: { readOnlyHint: false, destructiveHint: false },
     },
     async (args) => textResult(() => serializeWrite(() => bridge.call('node.update', args))),
+  );
+
+  server.registerTool(
+    'align_component_schema',
+    {
+      description: 'Align an existing local standalone target COMPONENT to an explicitly inspected local source COMPONENT: copy its complete BOOLEAN/SLOT schema and bind exact target descendant IDs, plus only the listed supported fields from exact source/target node pairs. In-place FRAME-to-SLOT conversion preserves IDs and children. This CHANGES A FINISHED MASTER and affects its instances. Inspect live schemas, bindings, fields, and instanceImpact, and obtain agreement for that exact scope before apply; reuse the same prior agreement. Source and target must be distinct; target schema initially empty. No orphan properties, names inferred as mappings, imports, detach, node deletion, main-component swaps, or paint changes. Defaults dryRun=true; apply unchanged arguments with dryRun=false and preview expectedState. Recheck source, target, fonts and affected instances; errors stop unsupported transfer. Retry timeouts using the SAME operationId; inspect changed/incomplete receipts rather than bypassing them. Report exact changedNodeIds, createdPropertyIds and cleanup errors if rollback is incomplete. Verify schemas, refs, IDs, styles, instance content and preview after apply. See project component-alignment instructions.',
+      inputSchema: componentAlignmentSchema,
+      annotations: { readOnlyHint: false, destructiveHint: true },
+    },
+    args => textResult(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('component.schema.align', args));
+    }),
+  );
+
+  server.registerTool(
+    'repair_component_reference',
+    {
+      description: 'Preview/apply an explicitly approved orphan icon-reference repair on an exact direct-owned INSTANCE inside a local finished component master. Requires exact expected old local orphan main and attached replacement COMPONENT IDs. This changes a finished master and propagates to its instances: inspect full live trees, exact native layout changes and complete instanceImpact; obtain approval for that exact scope, reusing existing exact approval. Preserve icon content, paints, size, visibility and custom instance overrides. Native swap may regenerate derived descendant IDs; inspect returned mapping and previews. No generic swap, name inference, detach, deletion or reparenting. Defaults dryRun=true; apply unchanged request with expectedState. Same operationId for retries; inspect PARTIAL_APPLY/OPERATION_INCOMPLETE instead of bypassing with a new ID. No guaranteed inverse to an orphan main. Stop and report exact changedNodeIds and cause on partial failure; do not silently repair unrelated components.',
+      inputSchema: componentReferenceRepairSchema,
+      annotations: { readOnlyHint: false, destructiveHint: true },
+    },
+    args => textResult(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('component.reference.repair', args));
+    }),
   );
 
   server.registerTool(

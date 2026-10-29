@@ -2,6 +2,31 @@ import { afterEach, expect, it, vi } from 'vitest';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); });
 
+it('dispatches bounded reference repair and reports a missing instance', async () => {
+  const messages: any[] = [];
+  const api = { showUI: vi.fn(), ui: { postMessage: (message: unknown) => messages.push(message), onmessage: undefined as unknown as (message: unknown) => Promise<void> },
+    root: { getPluginData: () => '', getPluginDataKeys: () => [] }, getNodeByIdAsync: vi.fn(async () => null) };
+  vi.stubGlobal('figma', api); vi.stubGlobal('__html__', '');
+  await import('../src/plugin/main.js');
+  await api.ui.onmessage({ type: 'plugin.call', requestId: 'repair', method: 'component.reference.repair', args: {
+    instanceId: 'missing-icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1',
+  } });
+  expect(messages[0]).toMatchObject({ type: 'plugin.error', requestId: 'repair', code: 'NODE_NOT_FOUND' });
+});
+
+it('dispatches schema alignment and reports the missing source', async () => {
+  const messages: any[] = [];
+  const api = { showUI: vi.fn(), ui: { postMessage: (message: unknown) => messages.push(message), onmessage: undefined as unknown as (message: unknown) => Promise<void> },
+    root: { getPluginData: () => '', getPluginDataKeys: () => [] }, getNodeByIdAsync: vi.fn(async () => null) };
+  vi.stubGlobal('figma', api); vi.stubGlobal('__html__', '');
+  await import('../src/plugin/main.js');
+  await api.ui.onmessage({ type: 'plugin.call', requestId: 'align', method: 'component.schema.align', args: {
+    sourceComponentId: 'missing-source', targetComponentId: 'light', operationId: 'align-1', bindings: [{ sourcePropertyId: 'title#d', targetNodeIds: ['light-title'] }],
+  } });
+  expect(messages).toHaveLength(1);
+  expect(messages[0]).toMatchObject({ type: 'plugin.error', requestId: 'align', code: 'NODE_NOT_FOUND' });
+});
+
 it('dispatches a theme copy and reports the missing instance', async () => {
   const messages: any[] = [];
   const api = { showUI: vi.fn(), ui: { postMessage: (value: unknown) => messages.push(value), onmessage: undefined as unknown as (value: unknown) => Promise<void> },

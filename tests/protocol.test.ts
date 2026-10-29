@@ -4,6 +4,27 @@ import { pluginRequestSchema, screenSpecSchema, updateNodeSchema } from '../src/
 const rectangle = { type: 'rectangle', name: 'Card', x: 0, y: 0, width: 100, height: 50, fill: '#ffffff' };
 
 describe('bridge protocol', () => {
+  it('accepts bounded orphan-reference repairs and requires expectedState for apply', () => {
+    const args = { instanceId: 'icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1' };
+    const request = { type: 'plugin.call', requestId: 'repair', method: 'component.reference.repair', args };
+    expect(pluginRequestSchema.safeParse(request).success).toBe(true);
+    expect(pluginRequestSchema.parse(request).args).toMatchObject({ dryRun: true });
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, dryRun: false } }).success).toBe(false);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, dryRun: false, expectedState: 'state' } }).success).toBe(true);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, deleteNode: true } }).success).toBe(false);
+  });
+  it('accepts explicit schema alignment previews and rejects writes without state or arbitrary patch fields', () => {
+    const args = { sourceComponentId: 'dark', targetComponentId: 'light', operationId: 'align-1', bindings: [{ sourcePropertyId: 'title#d', targetNodeIds: ['light-title'] }] };
+    const request = { type: 'plugin.call', requestId: 'align', method: 'component.schema.align', args };
+    expect(pluginRequestSchema.safeParse(request).success).toBe(true);
+    expect(pluginRequestSchema.parse(request).args).toMatchObject({ dryRun: true, fields: [] });
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, dryRun: false, expectedState: 'approved-state' } }).success).toBe(true);
+    for (const patch of [{ dryRun: false }, { operationId: '../unsafe' }, { deleteProperties: ['anything'] }, { bindings: [] },
+      { fields: [{ sourceNodeId: 'dark-body', targetNodeId: 'light-body', fields: ['fills'] }] },
+      { fields: [{ sourceNodeId: 'dark-body', targetNodeId: 'light-body', fields: ['mainComponent'] }] }]) {
+      expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, ...patch } }).success).toBe(false);
+    }
+  });
   it('requires a preview snapshot for a theme component copy and rejects implicit destructive options', () => {
     const args = { nodeId: 'instance', libraryRootIds: ['kit'], operationId: 'theme-copy-1', name: 'Light copy', position: { x: 700, y: 200 }, layerMap: { label: 'light-label' } };
     const request = { type: 'plugin.call', requestId: 'theme-copy', method: 'theme.copy', args };

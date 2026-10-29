@@ -21,6 +21,12 @@ try {
   }
   assert(tools.some((tool) => tool.name === 'create_component_variants' && tool.annotations?.readOnlyHint === false));
   const themeCopyTool = tools.find(tool => tool.name === 'copy_theme_component');
+  const alignmentTool = tools.find(tool => tool.name === 'align_component_schema');
+  const referenceRepairTool = tools.find(tool => tool.name === 'repair_component_reference');
+  assert(referenceRepairTool?.annotations?.readOnlyHint === false && referenceRepairTool?.annotations?.destructiveHint === true);
+  for (const property of ['instanceId', 'expectedMainComponentId', 'replacementComponentId', 'operationId', 'expectedState']) assert(referenceRepairTool.inputSchema.properties[property]);
+  assert(alignmentTool?.annotations?.readOnlyHint === false && alignmentTool?.annotations?.destructiveHint === true);
+  for (const property of ['sourceComponentId', 'targetComponentId', 'bindings', 'fields', 'expectedState']) assert(alignmentTool.inputSchema.properties[property]);
   assert(themeCopyTool?.annotations?.readOnlyHint === false && themeCopyTool?.annotations?.destructiveHint === false);
   for (const property of ['nodeId', 'layerMap', 'expectedState', 'operationId']) assert(themeCopyTool.inputSchema.properties[property]);
   const duplicateTool = tools.find((tool) => tool.name === 'duplicate_node');

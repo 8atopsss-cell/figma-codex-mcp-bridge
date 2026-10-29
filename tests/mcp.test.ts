@@ -1,9 +1,53 @@
 import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
 import { describe, expect, it } from 'vitest';
 import { createBridgeServer } from '../src/bridge/mcp.js';
+
+it('exposes reference repair with pinned apply and structured partial errors', async () => {
+  const calls: Array<{ method: string; args: unknown }> = [];
+  const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); }, pinCurrentFile: () => ({ call: async (method, args) => {
+    calls.push({ method, args });
+    if ((args as any).dryRun === false) throw Object.assign(new Error('PARTIAL_APPLY'), { details: { changedNodeIds: ['icon'] } });
+    return { status: 'preview', expectedState: 'state' };
+  } }) });
+  const client = new Client({ name: 'reference-repair-test', version: '1.0.0' });
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  try {
+    await Promise.all([server.connect(b), client.connect(a)]);
+    expect((await client.listTools()).tools.find(t => t.name === 'repair_component_reference')?.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: true });
+    const args = { instanceId: 'icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1' };
+    expect((await client.callTool({ name: 'repair_component_reference', arguments: args })).isError).not.toBe(true);
+    expect(calls[0]).toMatchObject({ method: 'component.reference.repair', args: { ...args, dryRun: true } });
+    const r = await client.callTool({ name: 'repair_component_reference', arguments: { ...args, dryRun: false, expectedState: 'state' } });
+    expect(r.isError).toBe(true);
+    expect(r.content).toContainEqual({ type: 'text', text: JSON.stringify({ details: { changedNodeIds: ['icon'] } }) });
+  } finally { await client.close(); await server.close(); }
+});
 import { updateNode } from '../src/plugin/write.js';
 
 describe('MCP bridge', () => {
+  it('pins schema alignment and forwards preview/apply with exact partial-error details', async () => {
+    const calls: Array<{ method: string; args: unknown }> = [];
+    const details = { changedNodeIds: ['light-title'], createdPropertyIds: ['Title#new'], cleanupErrors: ['Native inverse failed'] };
+    const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); },
+      pinCurrentFile: () => ({ call: async (method, args) => {
+        calls.push({ method, args });
+        if ((args as any).dryRun === false) throw Object.assign(new Error('ROLLBACK_INCOMPLETE'), { details });
+        return { status: 'preview', expectedState: 'state', instanceImpact: { target: { count: 2, nodeIds: ['a', 'b'] } } };
+      } }),
+    });
+    const client = new Client({ name: 'schema-alignment-test', version: '1.0.0' });
+    const [a, b] = InMemoryTransport.createLinkedPair();
+    try {
+      await Promise.all([server.connect(b), client.connect(a)]);
+      expect((await client.listTools()).tools.find(t => t.name === 'align_component_schema')?.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: true });
+      const args = { sourceComponentId: 'dark', targetComponentId: 'light', operationId: 'align-1', bindings: [{ sourcePropertyId: 'title#d', targetNodeIds: ['light-title'] }] };
+      expect((await client.callTool({ name: 'align_component_schema', arguments: args })).isError).not.toBe(true);
+      expect(calls[0]).toMatchObject({ method: 'component.schema.align', args: { ...args, dryRun: true, fields: [] } });
+      const result = await client.callTool({ name: 'align_component_schema', arguments: { ...args, dryRun: false, expectedState: 'state' } });
+      expect(result.isError).toBe(true);
+      expect(result.content).toContainEqual({ type: 'text', text: JSON.stringify({ details }) });
+    } finally { await client.close(); await server.close(); }
+  });
   it('exposes staged theme copies with pinned preview/apply and preserves cleanup errors', async () => {
     const calls: Array<{ method: string; args: unknown }> = [];
     const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); },
@@ -71,7 +115,7 @@ describe('MCP bridge', () => {
     } finally { await client.close(); await server.close(); }
   });
 
-  it.each(['create_component_variants', 'duplicate_node', 'copy_theme_component'])('captures the active file before %s waits behind another write', async (tool) => {
+  it.each(['create_component_variants', 'duplicate_node', 'copy_theme_component', 'align_component_schema', 'repair_component_reference'])('captures the active file before %s waits behind another write', async (tool) => {
     let active = 'file-a';
     let release!: () => void;
     let started!: () => void;
@@ -97,6 +141,10 @@ describe('MCP bridge', () => {
         sourceNodeId: 'source', operationId: 'op', name: 'Light copy', position: { x: 700, y: 200 },
       } : tool === 'copy_theme_component' ? {
         nodeId: 'source', libraryRootIds: ['kit'], operationId: 'op', name: 'Light copy', position: { x: 700, y: 200 },
+      } : tool === 'align_component_schema' ? {
+        sourceComponentId: 'dark', targetComponentId: 'light', operationId: 'op', bindings: [{ sourcePropertyId: 'title#d', targetNodeIds: ['light-title'] }],
+      } : tool === 'repair_component_reference' ? {
+        instanceId: 'icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1',
       } : {
         componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
       } });

@@ -1,0 +1,17 @@
+# Repair an orphan icon reference
+
+Use `repair_component_reference` only after live inspection and separate exact approval. This is a repair of an existing finished component master, with native propagation to its instances. It is not an automatic fallback for a blocked theme conversion. Never treat an ID-addressable local master outside the document as an attached library component.
+
+Resolve the active file, inspect the exact owner/master/instance, orphan old main, replacement main, nested icon content, paint/style bindings, geometry and current visibility. Use exact `instanceId`, `expectedMainComponentId`, `replacementComponentId` and a stable `operationId`. The current implementation intentionally supports a narrow icon-wrapper topology; unsupported states stop before writes. Do not infer a replacement from names.
+
+Run `dryRun:true`, inspect all native layout differences and complete `instanceImpact`. Reuse existing approval only for these same objects and changes. Apply the unchanged request with `dryRun:false` and the returned `expectedState`. Read all affected instances and replacement/source state again; do not overwrite changes made during awaits.
+
+`expectedState` is an opaque versioned SHA-256 fingerprint bound to the exact request and complete canonical live snapshot. Keep it unchanged; never fabricate it or carry it across a new preview. Full internal snapshots remain capped at 8 MiB, all tree/impact/override/paint checks still apply, and public results/receipt payloads remain capped at 512 KiB. New receipts store a versioned result digest; legacy raw-state receipts are still checked in full. No snapshot content is trimmed to fit.
+
+Native `swapComponent` keeps the root instance ID but may regenerate derived descendant IDs and preserves overrides heuristically. Verify actual returned correspondence, icon main, palette/style bindings, size, visibility, custom content and existing overrides. Only the explicitly planned wrapper layout differences may change; no paint copying, detach, deletion, reparenting or unrelated master repair. Preserve the accessible original nested icon main if native swap loses that exact content override; unsupported preservation must be reported.
+
+Retry only the same operation ID. Successful receipts must validate the actual result before returning `replayed`. `PARTIAL_APPLY` or `OPERATION_INCOMPLETE` means inspect exact changedNodeIds/cause; never retry with another ID or claim automatic restoration to an orphan main. A native swap has no guaranteed inverse. The user decides further repairs.
+
+After success, inspect PNGs and rerun the original blocked alignment preview using its existing operation ID and fresh expectedState. Fixing a reference does not itself finish the Modal alignment or the layout theme conversion. Visual acceptance remains the user's decision.
+
+Approved SD Enterprice repair: direct INSTANCE `9552:17590` in primary light button variant `4391:92046`, old orphan main `9552:17581` -> attached icon wrapper `1900:44736`; preserve nested add `1893:44710`, 16x16 size, current visibility, light colors and affected instance overrides. The user subsequently hid the icon manually; preserve visible:false in the master and its Modal instance. Both visible and hidden wrappers are supported; visibility is independently sealed and never toggled by repair. Scope approval includes propagation to instances of that button variant. It does not authorize changing the dark button or deleting the orphan set.

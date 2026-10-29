@@ -1,0 +1,2832 @@
+{
+  "date": "2026-10-29",
+  "timezone": "Europe/Moscow",
+  "fileName": "SD Enterprice",
+  "operationId": "modal-light-align-20261028-v1",
+  "status": "blocked_by_native_api",
+  "recoveryAttempt": 3,
+  "maxRecoveryAttempts": 3,
+  "lastFailure": {
+    "operationId": "modal-light-align-20261028-v1",
+    "cause": "in set_componentPropertyReferences: Cannot set component property references on slot sublayer",
+    "createdPropertyIds": [
+      "Optional label#16126:15",
+      "button bar#16126:16",
+      "body copy#16126:17",
+      "content #16126:18",
+      "Title #16126:19"
+    ],
+    "changedNodeIds": [
+      "4745:44256",
+      "4745:44241",
+      "4745:44237",
+      "4745:44236",
+      "4745:44238",
+      "4745:44239",
+      "4745:44242",
+      "I4936:44979;4391:92075",
+      "I4936:45014;4391:92048"
+    ],
+    "completedSteps": [
+      "property:Optional label#2046:0",
+      "property:button bar#2046:2",
+      "property:body copy#2674:0",
+      "property:content #12416:0",
+      "property:Title #12705:1",
+      "bind:content #12416:0:4745:44241",
+      "bind:Title #12705:1:4745:44237",
+      "field:4745:44236:paddingRight",
+      "field:4745:44237:width",
+      "field:4745:44237:layoutGrow",
+      "field:4745:44237:layoutSizingHorizontal",
+      "field:4745:44238:layoutAlign",
+      "field:4745:44238:layoutSizingHorizontal",
+      "field:4745:44238:textAutoResize",
+      "field:4745:44239:characters",
+      "field:4745:44242:typography",
+      "field:I4936:44979;4391:92075:characters",
+      "field:I4936:45014;4391:92048:characters"
+    ],
+    "remainingSteps": [
+      "bind:Optional label#2046:0:4745:44238",
+      "bind:button bar#2046:2:4745:44243",
+      "bind:body copy#2674:0:4745:44241"
+    ],
+    "cleanupErrors": [
+      {
+        "nodeId": "4745:44238",
+        "field": "componentPropertyReferences",
+        "error": "Reference changed externally; left untouched"
+      },
+      {
+        "nodeId": "4745:44238",
+        "field": "layoutSizingHorizontal",
+        "error": "Field changed externally or write incomplete; left untouched"
+      }
+    ],
+    "restored": true
+  },
+  "observedApiError": "Cannot set component property references on slot sublayer",
+  "blockedBinding": {
+    "sourcePropertyId": "Optional label#2046:0",
+    "sourceNodeId": "2046:48404",
+    "sourceSlotAncestorId": "2046:48403",
+    "targetNodeId": "4745:44238",
+    "targetSlotAncestorId": "4745:44237"
+  },
+  "finalReadback": {
+    "sourceSchemaUnchanged": true,
+    "targetSchema": {},
+    "titleType": "FRAME",
+    "bodyType": "FRAME",
+    "bodyTextStyleId": "",
+    "bodyFont": "PT Root UI Regular",
+    "lastRollbackRestoredImmediateBaseline": true
+  },
+  "inventorySummary": {
+    "dark": 65,
+    "light": 7,
+    "darkOptionalPropertyFalse": 45,
+    "darkTitlesWithNonDefaultChildIds": 39,
+    "classificationCaveat": "Nondefault native child IDs are migration candidates, not proof that every child was manually replaced."
+  },
+  "inventory": [
+    {
+      "instanceId": "11248:25020",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I11248:25020;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 381,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I11248:25020;2046:48403;13574:26975",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I11248:25020;2046:48403;13574:26976",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "11724:35756",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I11724:35756;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 261,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I11724:35756;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I11724:35756;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "11785:19587",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I11785:19587;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 322,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I11785:19587;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I11785:19587;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12452:36949",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12452:36949;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 495,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12452:36949;2046:48403;12787:24817",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12452:36949;2046:48403;12787:24818",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12452:37031",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12452:37031;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 441,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12452:37031;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12452:37031;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12478:18219",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I12478:18219;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 441,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12478:18219;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12478:18219;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12663:83454",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12663:83454;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12663:83454;2046:48403;12767:26742",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12663:83454;2046:48403;12767:26743",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12663:83454;2046:48403;12767:26744",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12665:84039",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12665:84039;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12665:84039;2046:48403;12705:70173",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12665:84039;2046:48403;12705:70174",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12665:84039;2046:48403;12705:70175",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12680:24578",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12680:24578;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 286,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12680:24578;2046:48403;12748:84753",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12680:24578;2046:48403;12748:84754",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12680:24578;2046:48403;12748:84755",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12742:84228",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12742:84228;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12742:84228;2046:48403;12742:84230",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12742:84228;2046:48403;12742:84231",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12742:84228;2046:48403;12742:84232",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12742:84418",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12742:84418;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12742:84418;2046:48403;12742:84420",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12742:84418;2046:48403;12742:84421",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12742:84418;2046:48403;12742:84422",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12749:85100",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12749:85100;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 286,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I12749:85100;2046:48403;12749:85102",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12749:85100;2046:48403;12749:85103",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12749:85100;2046:48403;12749:85104",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12787:24746",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12787:24746;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12787:24746;2046:48403;12787:24814",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12787:24746;2046:48403;12787:24815",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12798:141770",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12798:141770;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 244,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12798:141770;2046:48403;12798:141840",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12798:141770;2046:48403;12798:141841",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12959:147873",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12959:147873;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12959:147873;2046:48403;12959:147896",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12959:147873;2046:48403;12959:147897",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12959:150580",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12959:150580;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12959:150580;2046:48403;12959:150629",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12959:150580;2046:48403;12959:150630",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "12959:151228",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I12959:151228;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I12959:151228;2046:48403;12959:151282",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I12959:151228;2046:48403;12959:151283",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "14435:31398",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I14435:31398;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 244,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I14435:31398;2046:48403;14435:31400",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I14435:31398;2046:48403;14435:31401",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "14637:57231",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I14637:57231;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 244,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I14637:57231;2046:48403;14637:57233",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I14637:57231;2046:48403;14637:57234",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "14637:57320",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I14637:57320;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 244,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I14637:57320;2046:48403;14637:57322",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I14637:57320;2046:48403;14637:57323",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "14690:39531",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I14690:39531;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I14690:39531;2046:48403;14690:39554",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I14690:39531;2046:48403;14690:39555",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15029:55607",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15029:55607;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15029:55607;2046:48403;15029:55604",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:55607;2046:48403;15029:55605",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:55607;2046:48403;15029:55606",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15029:55808",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15029:55808;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15029:55808;2046:48403;15029:55799",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:55808;2046:48403;15029:55800",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:55808;2046:48403;15029:55801",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15029:56131",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15029:56131;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 310,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15029:56131;2046:48403;15029:56108",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:56131;2046:48403;15029:56109",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:56131;2046:48403;15029:56110",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15029:66419",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15029:66419;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 310,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15029:66419;2046:48403;15029:66396",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:66419;2046:48403;15029:66397",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15029:66419;2046:48403;15029:66398",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15056:66670",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I15056:66670;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I15056:66670;2046:48403;15056:66666",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15056:66670;2046:48403;15056:66667",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15056:69039",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15056:69039;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 419,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15056:69039;2046:48403;15056:69010",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15056:69039;2046:48403;15056:69011",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15056:69039;2046:48403;15056:69012",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15277:117573",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I15277:117573;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I15277:117573;2046:48403;15277:117569",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15277:117573;2046:48403;15277:117570",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:117733",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:117733;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 306,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I15279:117733;2046:48403;15279:117730",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:117733;2046:48403;15279:117731",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:117894",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:117894;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15279:117894;2046:48403;15279:117888",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:117894;2046:48403;15279:117889",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:117894;2046:48403;15279:117890",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:118023",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:118023;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 260,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I15279:118023;2046:48403;15279:118051",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118023;2046:48403;15279:118052",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:118116",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:118116;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15279:118116;2046:48403;15279:118105",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118116;2046:48403;15279:118106",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118116;2046:48403;15279:118107",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:118298",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:118298;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15279:118298;2046:48403;15279:118308",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118298;2046:48403;15279:118309",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118298;2046:48403;15279:118310",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "15279:118636",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I15279:118636;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 344,
+        "height": 50,
+        "childCount": 3,
+        "children": [
+          {
+            "id": "I15279:118636;2046:48403;15279:118641",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118636;2046:48403;15279:118642",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I15279:118636;2046:48403;15279:118643",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16079:56961",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16079:56961;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16079:56961;2046:48403;16079:56953",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16079:56961;2046:48403;16079:56954",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16079:57400",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16079:57400;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 490,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16079:57400;2046:48403;16079:57420",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16079:57400;2046:48403;16079:57421",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16096:57763",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16096:57763;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16096:57763;2046:48403;16096:57765",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16096:57763;2046:48403;16096:57766",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16101:22755",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16101:22755;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16101:22755;2046:48403;16101:22757",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16101:22755;2046:48403;16101:22758",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16101:22972",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16101:22972;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16101:22972;2046:48403;16101:22975",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16101:22972;2046:48403;16101:22976",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16101:23182",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16101:23182;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16101:23182;2046:48403;16101:23185",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16101:23182;2046:48403;16101:23186",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "16112:22878",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I16112:22878;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 426,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I16112:22878;2046:48403;16112:22880",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I16112:22878;2046:48403;16112:22881",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "2046:48407",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I2046:48407;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I2046:48407;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I2046:48407;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:69375",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:69375;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:69375;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:69375;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:69401",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:69401;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:69401;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:69401;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:69536",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:69536;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:69536;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:69536;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:69616",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:69616;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 48,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:69616;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:69616;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": [
+              "fills has mixed values; see textSegments",
+              "fillStyleId has mixed values; see textSegments"
+            ]
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:82537",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I3178:82537;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:82537;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:82537;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:82759",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:82759;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 234,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:82759;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:82759;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:82908",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:82908;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 234,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:82908;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:82908;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:83219",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I3178:83219;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 234,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:83219;2046:48404",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:83219;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "3178:83644",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I3178:83644;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I3178:83644;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I3178:83644;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "6575:34990",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I6575:34990;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I6575:34990;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I6575:34990;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "6575:35658",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I6575:35658;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I6575:35658;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I6575:35658;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:100555",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:100555;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:100555;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:100555;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:100562",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:100562;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:100562;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:100562;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:100569",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:100569;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:100569;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:100569;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:100574",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:100574;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:100574;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:100574;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:101392",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": false,
+      "title": {
+        "nodeId": "I8321:101392;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 280,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:101392;2046:48403;12705:70169",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:101392;2046:48403;12705:70170",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:115168",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:115168;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 389,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:115168;2046:48403;12813:82563",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:115168;2046:48403;12813:82564",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8321:115186",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8321:115186;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 389,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8321:115186;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8321:115186;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8507:41003",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8507:41003;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8507:41003;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8507:41003;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8507:41014",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8507:41014;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8507:41014;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8507:41014;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8701:73217",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8701:73217;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 380,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8701:73217;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8701:73217;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8725:98577",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8725:98577;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8725:98577;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8725:98577;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8790:38876",
+      "theme": "dark",
+      "main": "2046:48406",
+      "optionalLabel": true,
+      "title": {
+        "nodeId": "I8790:38876;2046:48403",
+        "type": "SLOT",
+        "visible": true,
+        "width": 384,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8790:38876;2046:48404",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8790:38876;2046:48405",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "4760:44285",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I4760:44285;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I4760:44285;4745:44238",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I4760:44285;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "8790:39393",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I8790:39393;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I8790:39393;4745:44238",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I8790:39393;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "9358:99645",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I9358:99645;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I9358:99645;4745:44238",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I9358:99645;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "9358:99646",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I9358:99646;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I9358:99646;4745:44238",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I9358:99646;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "9358:99675",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I9358:99675;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I9358:99675;4745:44238",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I9358:99675;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "9358:99678",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I9358:99678;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 42,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I9358:99678;4745:44238",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I9358:99678;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    },
+    {
+      "instanceId": "9358:99679",
+      "theme": "light",
+      "main": "4745:44256",
+      "optionalLabel": null,
+      "title": {
+        "nodeId": "I9358:99679;4745:44237",
+        "type": "FRAME",
+        "visible": true,
+        "width": 392,
+        "height": 24,
+        "childCount": 2,
+        "children": [
+          {
+            "id": "I9358:99679;4745:44238",
+            "type": "TEXT",
+            "visible": false,
+            "defaultOptional": true,
+            "defaultTitle": false,
+            "hasChildren": false,
+            "warnings": []
+          },
+          {
+            "id": "I9358:99679;4745:44239",
+            "type": "TEXT",
+            "visible": true,
+            "defaultOptional": false,
+            "defaultTitle": true,
+            "hasChildren": false,
+            "warnings": []
+          }
+        ],
+        "warnings": []
+      },
+      "rootWarnings": []
+    }
+  ],
+  "notes": [
+    "No further Figma writes after final failed apply; no cap increase/new ID/receipt deletion.",
+    "restored:true refers to the immediate baseline before the last attempt, not the initial pre-work design.",
+    "The existing dark master retains a legacy/readable Boolean reference inside Title SLOT; current API rejects creating the corresponding new binding.",
+    "Both-master restructuring needs a separately reviewed migration plan and exact approval; it has not been applied.",
+    "294 automated tests passed; native unsupported binding remains an execution limitation despite mock tests."
+  ]
+}

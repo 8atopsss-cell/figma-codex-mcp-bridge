@@ -1,0 +1,709 @@
+{
+  "date": "2026-10-29",
+  "timezone": "Europe/Moscow",
+  "fileName": "SD Enterprice",
+  "pageId": "933:24166",
+  "operationId": "light-button-icon-repair-20261028-v1",
+  "status": "incomplete",
+  "applyError": {
+    "operationId": "light-button-icon-repair-20261028-v1",
+    "changedNodeIds": [
+      "9552:17590",
+      "I12564:51933;9552:17590",
+      "I12564:51933;9552:17590;1900:44734",
+      "I12564:51933;9552:17590;1900:44734;1893:44709",
+      "I12564:51933;9552:17590;9552:17582",
+      "I12564:51933;9552:17590;9552:17582;1893:44709",
+      "I12592:2100;9552:17590",
+      "I12592:2100;9552:17590;1900:44734",
+      "I12592:2100;9552:17590;1900:44734;1893:44709",
+      "I12592:2100;9552:17590;9552:17582",
+      "I12592:2100;9552:17590;9552:17582;1893:44709",
+      "I4760:44285;4936:45014;9552:17590",
+      "I4760:44285;4936:45014;9552:17590;1900:44734",
+      "I4760:44285;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I4760:44285;4936:45014;9552:17590;9552:17582",
+      "I4760:44285;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I4936:45014;9552:17590",
+      "I4936:45014;9552:17590;1900:44734",
+      "I4936:45014;9552:17590;1900:44734;1893:44709",
+      "I4936:45014;9552:17590;9552:17582",
+      "I4936:45014;9552:17590;9552:17582;1893:44709",
+      "I8772:69719;9552:17590",
+      "I8772:69719;9552:17590;1900:44734",
+      "I8772:69719;9552:17590;1900:44734;1893:44709",
+      "I8772:69719;9552:17590;9552:17582",
+      "I8772:69719;9552:17590;9552:17582;1893:44709",
+      "I8790:32427;9552:17590",
+      "I8790:32427;9552:17590;1900:44734",
+      "I8790:32427;9552:17590;1900:44734;1893:44709",
+      "I8790:32427;9552:17590;9552:17582",
+      "I8790:32427;9552:17590;9552:17582;1893:44709",
+      "I8803:40964;4445:37149;9552:17590",
+      "I8803:40964;4445:37149;9552:17590;1900:44734",
+      "I8803:40964;4445:37149;9552:17590;1900:44734;1893:44709",
+      "I8803:40964;4445:37149;9552:17590;9552:17582",
+      "I8803:40964;4445:37149;9552:17590;9552:17582;1893:44709",
+      "I9066:24966;9552:17590",
+      "I9066:24966;9552:17590;1900:44734",
+      "I9066:24966;9552:17590;1900:44734;1893:44709",
+      "I9066:24966;9552:17590;9552:17582",
+      "I9066:24966;9552:17590;9552:17582;1893:44709",
+      "I9358:99645;4936:45014;9552:17590",
+      "I9358:99645;4936:45014;9552:17590;1900:44734",
+      "I9358:99645;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I9358:99645;4936:45014;9552:17590;9552:17582",
+      "I9358:99645;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I9358:99646;4936:45014;9552:17590",
+      "I9358:99646;4936:45014;9552:17590;1900:44734",
+      "I9358:99646;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I9358:99646;4936:45014;9552:17590;9552:17582",
+      "I9358:99646;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I9358:99675;4936:45014;9552:17590",
+      "I9358:99675;4936:45014;9552:17590;1900:44734",
+      "I9358:99675;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I9358:99675;4936:45014;9552:17590;9552:17582",
+      "I9358:99675;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I9358:99678;4936:45014;9552:17590",
+      "I9358:99678;4936:45014;9552:17590;1900:44734",
+      "I9358:99678;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I9358:99678;4936:45014;9552:17590;9552:17582",
+      "I9358:99678;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I9358:99679;4936:45014;9552:17590",
+      "I9358:99679;4936:45014;9552:17590;1900:44734",
+      "I9358:99679;4936:45014;9552:17590;1900:44734;1893:44709",
+      "I9358:99679;4936:45014;9552:17590;9552:17582",
+      "I9358:99679;4936:45014;9552:17590;9552:17582;1893:44709",
+      "I9552:17590;1900:44734",
+      "I9552:17590;1900:44734;1893:44709",
+      "I9552:17590;9552:17582",
+      "I9552:17590;9552:17582;1893:44709"
+    ],
+    "cause": "PRESERVATION_FAILED: {\"reason\":\"Content, geometry, paints, overrides, metadata, schema or main links changed outside exact plan\",\"changedRootIds\":[\"12564:51933\",\"12592:2100\",\"4391:92046\",\"4936:45014\",\"8772:69719\",\"8790:32427\",\"9066:24966\",\"I4760:44285;4936:45014\",\"I8803:40964;4445:37149\",\"I9358:99645;4936:45014\",\"I9358:99646;4936:45014\",\"I9358:99675;4936:45014\",\"I9358:99678;4936:45014\",\"I9358:99679;4936:45014\"]}",
+    "auditIncomplete": false
+  },
+  "observedMasterDifferences": [
+    {
+      "path": "/2",
+      "field": "name",
+      "before": "icon wrapper 01",
+      "after": "icon wrapper"
+    },
+    {
+      "path": "/2",
+      "field": "layoutMode",
+      "before": "NONE",
+      "after": "HORIZONTAL"
+    },
+    {
+      "path": "/2",
+      "field": "itemSpacing",
+      "before": 0,
+      "after": 10
+    },
+    {
+      "path": "/2",
+      "field": "primaryAxisSizingMode",
+      "before": "AUTO",
+      "after": "FIXED"
+    },
+    {
+      "path": "/2",
+      "field": "primaryAxisAlignItems",
+      "before": "MIN",
+      "after": "CENTER"
+    },
+    {
+      "path": "/2",
+      "field": "counterAxisAlignItems",
+      "before": "MIN",
+      "after": "CENTER"
+    },
+    {
+      "path": "/2",
+      "field": "mainComponent",
+      "before": {
+        "id": "9552:17581",
+        "name": "Property 1=button style",
+        "key": "665233ea13d649f4d9ad2ffef047d79338b2a26a"
+      },
+      "after": {
+        "id": "1900:44736",
+        "name": "Property 1=button style",
+        "key": "ee3ab51c82d5a7d32ce870b7e1136fbe425eb102"
+      }
+    },
+    {
+      "path": "/2",
+      "field": "componentPropertyDefinitionsSource",
+      "before": {
+        "id": "9552:17580",
+        "name": "icon wrapper 01",
+        "type": "COMPONENT_SET",
+        "key": "315c03fc0d1c56659e04753d12988af4ba147c85"
+      },
+      "after": {
+        "id": "1900:44737",
+        "name": "icon wrapper",
+        "type": "COMPONENT_SET",
+        "key": "a098f4ccbe03ab538bf1335d615c66574e25d7d1"
+      }
+    },
+    {
+      "path": "/2/0",
+      "field": "id",
+      "before": "I9552:17590;9552:17582",
+      "after": "I9552:17590;1900:44734"
+    },
+    {
+      "path": "/2/0",
+      "field": "constraints",
+      "before": {
+        "horizontal": "SCALE",
+        "vertical": "SCALE"
+      },
+      "after": {
+        "horizontal": "MIN",
+        "vertical": "MIN"
+      }
+    },
+    {
+      "path": "/2/0/0",
+      "field": "id",
+      "before": "I9552:17590;9552:17582;1893:44709",
+      "after": "I9552:17590;1900:44734;1893:44709"
+    }
+  ],
+  "readbackInstances": [
+    {
+      "instanceId": "12564:51933",
+      "wrapperId": "I12564:51933;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I12564:51933;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "12592:2100",
+      "wrapperId": "I12592:2100;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I12592:2100;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "4936:45014",
+      "wrapperId": "I4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "8772:69719",
+      "wrapperId": "I8772:69719;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I8772:69719;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "8790:32427",
+      "wrapperId": "I8790:32427;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I8790:32427;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "9066:24966",
+      "wrapperId": "I9066:24966;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9066:24966;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I4760:44285;4936:45014",
+      "wrapperId": "I4760:44285;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I4760:44285;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I8803:40964;4445:37149",
+      "wrapperId": "I8803:40964;4445:37149;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I8803:40964;4445:37149;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I9358:99645;4936:45014",
+      "wrapperId": "I9358:99645;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9358:99645;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I9358:99646;4936:45014",
+      "wrapperId": "I9358:99646;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9358:99646;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I9358:99675;4936:45014",
+      "wrapperId": "I9358:99675;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9358:99675;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I9358:99678;4936:45014",
+      "wrapperId": "I9358:99678;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9358:99678;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    },
+    {
+      "instanceId": "I9358:99679;4936:45014",
+      "wrapperId": "I9358:99679;4936:45014;9552:17590",
+      "name": "icon wrapper",
+      "visible": false,
+      "width": 16,
+      "height": 16,
+      "mainComponentId": "1900:44736",
+      "nested": [
+        {
+          "nodeId": "I9358:99679;4936:45014;9552:17590;1900:44734",
+          "mainComponentId": "1893:44710",
+          "constraints": {
+            "horizontal": "MIN",
+            "vertical": "MIN"
+          },
+          "vectorStyleIds": [
+            "S:7d30c53fc5dbb2e8598e29905074cc5c3012f5b1,"
+          ]
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Full apply preservation audit failed; this is not an applied/replayed success receipt.",
+    "Native same-operation retry returns OPERATION_INCOMPLETE. No new operation ID, rollback, deletion, or further Figma write used.",
+    "Readback confirms attached main1900:44736, original nested add1893:44710,16x16,visible:false and listed paint styles on all13instances.",
+    "Public readback is not a replacement for the failed full metadata/override audit; do not claim all original custom state was verified unchanged.",
+    "User decision requested for native rename and nested constraints before further writes."
+  ],
+  "alignmentPreview": {
+    "operationId": "modal-light-align-20261028-v1",
+    "status": "preview",
+    "targetComponentId": "4745:44256",
+    "properties": [
+      {
+        "sourcePropertyId": "Optional label#2046:0",
+        "name": "Optional label",
+        "type": "BOOLEAN",
+        "defaultValue": true,
+        "options": {},
+        "sourceNodeIds": [
+          "2046:48404"
+        ],
+        "targetNodeIds": [
+          "4745:44238"
+        ]
+      },
+      {
+        "sourcePropertyId": "button bar#2046:2",
+        "name": "button bar",
+        "type": "BOOLEAN",
+        "defaultValue": true,
+        "options": {},
+        "sourceNodeIds": [
+          "2043:48397"
+        ],
+        "targetNodeIds": [
+          "4745:44243"
+        ]
+      },
+      {
+        "sourcePropertyId": "body copy#2674:0",
+        "name": "body copy",
+        "type": "BOOLEAN",
+        "defaultValue": true,
+        "options": {},
+        "sourceNodeIds": [
+          "2043:48379"
+        ],
+        "targetNodeIds": [
+          "4745:44241"
+        ]
+      },
+      {
+        "sourcePropertyId": "content #12416:0",
+        "name": "content ",
+        "type": "SLOT",
+        "defaultValue": "",
+        "options": {
+          "description": "",
+          "preferredValues": []
+        },
+        "sourceNodeIds": [
+          "2043:48379"
+        ],
+        "targetNodeIds": [
+          "4745:44241"
+        ]
+      },
+      {
+        "sourcePropertyId": "Title #12705:1",
+        "name": "Title ",
+        "type": "SLOT",
+        "defaultValue": "",
+        "options": {
+          "description": "",
+          "preferredValues": []
+        },
+        "sourceNodeIds": [
+          "2046:48403"
+        ],
+        "targetNodeIds": [
+          "4745:44237"
+        ]
+      }
+    ],
+    "fields": [
+      {
+        "sourceNodeId": "2418:60886",
+        "targetNodeId": "4745:44236",
+        "field": "paddingRight",
+        "before": 48,
+        "after": 56
+      },
+      {
+        "sourceNodeId": "2046:48403",
+        "targetNodeId": "4745:44237",
+        "field": "width",
+        "before": 392,
+        "after": 384
+      },
+      {
+        "sourceNodeId": "2046:48403",
+        "targetNodeId": "4745:44237",
+        "field": "layoutGrow",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "sourceNodeId": "2046:48403",
+        "targetNodeId": "4745:44237",
+        "field": "layoutSizingHorizontal",
+        "before": "FILL",
+        "after": "FIXED"
+      },
+      {
+        "sourceNodeId": "2046:48404",
+        "targetNodeId": "4745:44238",
+        "field": "layoutAlign",
+        "before": "STRETCH",
+        "after": "INHERIT"
+      },
+      {
+        "sourceNodeId": "2046:48404",
+        "targetNodeId": "4745:44238",
+        "field": "layoutSizingHorizontal",
+        "before": "FILL",
+        "after": "HUG"
+      },
+      {
+        "sourceNodeId": "2046:48404",
+        "targetNodeId": "4745:44238",
+        "field": "textAutoResize",
+        "before": "HEIGHT",
+        "after": "WIDTH_AND_HEIGHT"
+      },
+      {
+        "sourceNodeId": "2046:48405",
+        "targetNodeId": "4745:44239",
+        "field": "characters",
+        "before": "modal title",
+        "after": "Modal title"
+      },
+      {
+        "sourceNodeId": "2043:48383",
+        "targetNodeId": "4745:44242",
+        "field": "typography",
+        "before": {
+          "textStyleId": "S:338fe882220225d891d978eaca64cc0bcdebfee4,",
+          "fontName": {
+            "family": "PT Root UI",
+            "style": "Medium"
+          },
+          "fontSize": 16,
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 18
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "textTruncation": "DISABLED",
+          "maxLines": null,
+          "paragraphIndent": 0,
+          "paragraphSpacing": 12,
+          "listSpacing": 0,
+          "textWrapStyle": "BALANCE",
+          "openTypeFeatures": {
+            "CASE": true,
+            "LIGA": false,
+            "LNUM": true,
+            "TNUM": true
+          },
+          "hangingPunctuation": false,
+          "hangingList": false
+        },
+        "after": {
+          "textStyleId": "S:8bf49c11f649e18d5fba5e31782146e50106c069,",
+          "fontName": {
+            "family": "PT Root UI",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "letterSpacing": {
+            "unit": "PERCENT",
+            "value": 0
+          },
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 18
+          },
+          "textCase": "ORIGINAL",
+          "textDecoration": "NONE",
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "textTruncation": "DISABLED",
+          "maxLines": null,
+          "paragraphIndent": 0,
+          "paragraphSpacing": 10,
+          "listSpacing": 0,
+          "textWrapStyle": "AUTO",
+          "openTypeFeatures": {
+            "CASE": true,
+            "LIGA": false,
+            "LNUM": true,
+            "PNUM": true
+          },
+          "hangingPunctuation": false,
+          "hangingList": false
+        }
+      },
+      {
+        "sourceNodeId": "I2043:48387;1900:45136",
+        "targetNodeId": "I4936:44979;4391:92075",
+        "field": "characters",
+        "before": "button",
+        "after": "отменить"
+      },
+      {
+        "sourceNodeId": "I2043:48392;1900:44763",
+        "targetNodeId": "I4936:45014;4391:92048",
+        "field": "characters",
+        "before": "button",
+        "after": "сохранить"
+      }
+    ],
+    "targetInstanceImpact": {
+      "count": 7,
+      "nodeIds": [
+        "4760:44285",
+        "8790:39393",
+        "9358:99645",
+        "9358:99646",
+        "9358:99675",
+        "9358:99678",
+        "9358:99679"
+      ]
+    },
+    "sourceInstanceCount": 65,
+    "applied": false
+  }
+}

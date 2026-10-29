@@ -1,0 +1,22 @@
+{
+  "sourceComponentId": "2046:48406",
+  "targetComponentId": "4745:44256",
+  "operationId": "modal-light-align-20261028-v1",
+  "dryRun": true,
+  "bindings": [
+    {"sourcePropertyId": "Optional label#2046:0", "targetNodeIds": ["4745:44238"]},
+    {"sourcePropertyId": "button bar#2046:2", "targetNodeIds": ["4745:44243"]},
+    {"sourcePropertyId": "body copy#2674:0", "targetNodeIds": ["4745:44241"]},
+    {"sourcePropertyId": "content #12416:0", "targetNodeIds": ["4745:44241"]},
+    {"sourcePropertyId": "Title #12705:1", "targetNodeIds": ["4745:44237"]}
+  ],
+  "fields": [
+    {"sourceNodeId": "2418:60886", "targetNodeId": "4745:44236", "fields": ["paddingRight"]},
+    {"sourceNodeId": "2046:48403", "targetNodeId": "4745:44237", "fields": ["width", "layoutGrow", "layoutSizingHorizontal"]},
+    {"sourceNodeId": "2046:48404", "targetNodeId": "4745:44238", "fields": ["layoutAlign", "layoutSizingHorizontal", "textAutoResize"]},
+    {"sourceNodeId": "2046:48405", "targetNodeId": "4745:44239", "fields": ["characters"]},
+    {"sourceNodeId": "2043:48383", "targetNodeId": "4745:44242", "fields": ["typography"]},
+    {"sourceNodeId": "I2043:48387;1900:45136", "targetNodeId": "I4936:44979;4391:92075", "fields": ["characters"]},
+    {"sourceNodeId": "I2043:48392;1900:44763", "targetNodeId": "I4936:45014;4391:92048", "fields": ["characters"]}
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-29",
+  "fileName": "SD Enterprice",
+  "operationId": "modal-light-align-20261028-v1",
+  "recoveryAttempt1": {
+    "operationId": "modal-light-align-20261028-v1",
+    "cause": "PRESERVATION_FAILED: {\"reason\":\"Unrequested target field, geometry, paint, or tree changed\"}",
+    "createdPropertyIds": [
+      "Optional label#16126:5",
+      "button bar#16126:6",
+      "body copy#16126:7",
+      "content #16126:8",
+      "Title #16126:9"
+    ],
+    "changedNodeIds": [
+      "4745:44256",
+      "4745:44236",
+      "4745:44237",
+      "4745:44238",
+      "4745:44239",
+      "4745:44242",
+      "I4936:44979;4391:92075",
+      "I4936:45014;4391:92048",
+      "4745:44243",
+      "4745:44241",
+      "I4760:44285;4745:44241",
+      "I4760:44285;4936:44979",
+      "I8790:39393;4745:44241",
+      "I9358:99645;4745:44241",
+      "I9358:99646;4745:44241",
+      "I9358:99646;4936:44979",
+      "I9358:99675;4745:44241",
+      "I9358:99675;4936:44979",
+      "I9358:99678;4745:44241",
+      "I9358:99679;4745:44241",
+      "I9358:99679;4936:44979"
+    ],
+    "completedSteps": [
+      "property:Optional label#2046:0",
+      "property:button bar#2046:2",
+      "property:body copy#2674:0",
+      "property:content #12416:0",
+      "property:Title #12705:1",
+      "field:4745:44236:paddingRight",
+      "field:4745:44237:width",
+      "field:4745:44237:layoutGrow",
+      "field:4745:44237:layoutSizingHorizontal",
+      "field:4745:44238:layoutAlign",
+      "field:4745:44238:layoutSizingHorizontal",
+      "field:4745:44238:textAutoResize",
+      "field:4745:44239:characters",
+      "field:4745:44242:typography",
+      "field:I4936:44979;4391:92075:characters",
+      "field:I4936:45014;4391:92048:characters",
+      "bind:Optional label#2046:0:4745:44238",
+      "bind:button bar#2046:2:4745:44243",
+      "bind:body copy#2674:0:4745:44241",
+      "bind:content #12416:0:4745:44241",
+      "bind:Title #12705:1:4745:44237"
+    ],
+    "remainingSteps": [],
+    "cleanupErrors": [
+      {
+        "nodeId": "4745:44238",
+        "field": "componentPropertyReferences",
+        "error": "Reference changed externally; left untouched"
+      },
+      {
+        "nodeId": "4745:44238",
+        "field": "layoutSizingHorizontal",
+        "error": "Field changed externally or write incomplete; left untouched"
+      },
+      {
+        "nodeId": "4745:44256",
+        "error": "Original complete target state not restored; FRAME/SLOT inverse or concurrent change remains"
+      },
+      {
+        "nodeId": "4760:44285",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "8790:39393",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "9358:99645",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "9358:99646",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "9358:99675",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "9358:99678",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      },
+      {
+        "nodeId": "9358:99679",
+        "error": "Existing instance custom content, fields or overrides were not restored; left untouched"
+      }
+    ],
+    "restored": false
+  },
+  "recoveryAttempt2": {
+    "operationId": "modal-light-align-20261028-v1",
+    "cause": "PRESERVATION_FAILED: {\"reason\":\"Unrequested target field, geometry, paint, or tree changed\"}",
+    "createdPropertyIds": [
+      "Optional label#16126:10",
+      "button bar#16126:11",
+      "body copy#16126:12",
+      "content #16126:13",
+      "Title #16126:14"
+    ],
+    "changedNodeIds": [
+      "4745:44256",
+      "4745:44236",
+      "4745:44237",
+      "4745:44238",
+      "4745:44239",
+      "4745:44242",
+      "I4936:44979;4391:92075",
+      "I4936:45014;4391:92048",
+      "4745:44243",
+      "4745:44241"
+    ],
+    "completedSteps": [
+      "property:Optional label#2046:0",
+      "property:button bar#2046:2",
+      "property:body copy#2674:0",
+      "property:content #12416:0",
+      "property:Title #12705:1",
+      "field:4745:44236:paddingRight",
+      "field:4745:44237:width",
+      "field:4745:44237:layoutGrow",
+      "field:4745:44237:layoutSizingHorizontal",
+      "field:4745:44238:layoutAlign",
+      "field:4745:44238:layoutSizingHorizontal",
+      "field:4745:44238:textAutoResize",
+      "field:4745:44239:characters",
+      "field:4745:44242:typography",
+      "field:I4936:44979;4391:92075:characters",
+      "field:I4936:45014;4391:92048:characters",
+      "bind:Optional label#2046:0:4745:44238",
+      "bind:button bar#2046:2:4745:44243",
+      "bind:body copy#2674:0:4745:44241",
+      "bind:content #12416:0:4745:44241",
+      "bind:Title #12705:1:4745:44237"
+    ],
+    "remainingSteps": [],
+    "cleanupErrors": [
+      {
+        "nodeId": "4745:44238",
+        "field": "componentPropertyReferences",
+        "error": "Reference changed externally; left untouched"
+      },
+      {
+        "nodeId": "4745:44238",
+        "field": "layoutSizingHorizontal",
+        "error": "Field changed externally or write incomplete; left untouched"
+      }
+    ],
+    "restored": true
+  },
+  "afterAttempt1PublicDiff": [
+    {
+      "nodeId": "4745:44241",
+      "path": "/1",
+      "field": "name",
+      "before": "content",
+      "after": "content "
+    }
+  ],
+  "maxRecoveryAttempts": 3,
+  "remainingRecoveryAttempts": 1,
+  "nextNativeApplyAllowedOnlyAfter": "Order-fix regression tests and diagnostics, full tests/build/bundle verification, plugin reload, fresh exact same-operation preview; no new ID or limit increase.",
+  "hypothesis": "Parent FRAME-to-SLOT conversion after fields/BOOLEAN refs may reset Optional label descendant refs and horizontal sizing; apply structural bindings before descendant settings.",
+  "confirmedFacts": [
+    "All planned fields/bindings completed before both checkTarget tree failures.",
+    "Attempt1 rollback left body name content(space), consistent with native SLOT property naming.",
+    "Attempt2 failed despite baseline name matching; cause is not solely the name.",
+    "Attempt2 returned restored:true while two cleanup checks flagged transient Optional label refs/layout sizing differences; same-op receipt remains incomplete.",
+    "No full alignment success claimed and no fourth native attempt without targeted diagnosis."
+  ]
+}
