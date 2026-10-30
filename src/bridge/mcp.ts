@@ -7,6 +7,7 @@ import { themeCopySchema } from '../shared/theme-copy.js';
 import { componentAlignmentSchema } from '../shared/component-alignment.js';
 import { componentReferenceRepairSchema } from '../shared/component-reference-repair.js';
 import { modalProbeSchema } from '../shared/modal-probe.js';
+import { frameCompositionSchema } from '../shared/frame-composition.js';
 
 export interface BridgeCaller {
   getSync?(): SyncController | undefined;
@@ -260,6 +261,15 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
       return serializeWrite(() => target.call('component.modal.probe', args));
     }),
   );
+
+  server.registerTool('compose_source_frame', {
+    description: 'Preview/apply an explicitly approved NEW ordinary FRAME composition from a live FRAME/INSTANCE source. Structural FRAME/SLOT nodes become new free-layout frames; INSTANCE fallbacks require exact frameNodeIds. Atomic controls use explicitly mapped local component masters with exact source-descendant to target-master-descendant layerMap and BOOLEAN/TEXT propertyMap. Nested component mappings select light nested controls; other nested icon mains/content are preserved. Source text, visibility and geometry come from inspected nodes, not caller text. Use verified local Paint/Text/Effect styles via layerStyles. Source, existing copies and library remain unchanged; no source detach, library repair, arbitrary JS, node deletion or broad property patches. Defaults dryRun=true; inspect exact maps/fallbacks/placement and reuse prior approval only for that same scope. Apply the unchanged request with expectedState. Source/target/font/style/parent drift fails closed. Retry SAME operationId; verify replay and new mains/tree/PNG. Partial results retain remainingNodeIds and errors; never reset/delete receipts or bypass with a new ID. This creates a composition, not a new reusable Modal schema; visual acceptance belongs to the user.',
+    inputSchema: frameCompositionSchema,
+    annotations: { readOnlyHint: false, destructiveHint: false },
+  }, args => textResult(async () => {
+    const target = bridge.pinCurrentFile?.() ?? bridge;
+    return serializeWrite(() => target.call('theme.frame.compose', args));
+  }));
 
   server.registerTool(
     'copy_theme_component',

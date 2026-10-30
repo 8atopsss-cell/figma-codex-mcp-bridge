@@ -44,6 +44,10 @@ Approval applies only to the agreed objects and changes. If the user has already
 - Plan parent first. Nested steps are provisional and must be replanned against the actual tree after a parent substitution; old instance-child IDs are not reusable. Preserve text, custom icons, states, slot contents/order and layout. A missing variant/component is a proposal after scoped search, not proof of global absence or creation approval.
 - Read [theme conversion instructions](references/theme-conversion.md) for schemas, scoped catalog pagination, property maps, blockers and later implementation stages.
 
+## Assemble an explicitly approved ordinary frame
+
+- If the user explicitly chooses a new ordinary FRAME composition instead of a reusable parent component, use `compose_source_frame` with exact source/target/property/layer maps and declared INSTANCE frame fallbacks. This is a separate agreed output, not implicit permission to bypass incompatibility. Preserve original/library nodes, source text/geometry/visibility and custom icons; use actual light masters for mapped controls. Preview/apply with expectedState, same operationId on retries, inspect partial IDs and read back the result/PNG. See [frame composition](references/frame-composition.md). Do not restart deferred Title/SLOT repairs as a prerequisite.
+
 ## Align an approved component schema
 
 - To investigate the native restriction on BOOLEAN references inside Title SLOT, use the fixed draft-only `probe_modal_slot_structure`. Preview/apply creates a new owned page; inspect every case's `passed` value. It never authorizes library migration. Read [Modal probe and read-only inventory](references/modal-probe.md) for replay, limits, native overrides and complete membership checks.

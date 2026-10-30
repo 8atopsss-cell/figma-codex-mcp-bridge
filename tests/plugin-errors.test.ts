@@ -3,6 +3,16 @@ import { modalProbeFixture } from './modal-probe-fixture.js';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); });
 
+it('dispatches frame composition and reports unavailable source without writes', async () => {
+  const messages: any[] = [];
+  const api = { showUI: vi.fn(), ui: { postMessage: (message: unknown) => messages.push(message), onmessage: undefined as unknown as (message: unknown) => Promise<void> },
+    root: { getPluginData: () => '', getPluginDataKeys: () => [] }, getNodeByIdAsync: vi.fn(async () => null), createFrame: vi.fn() };
+  vi.stubGlobal('figma', api); vi.stubGlobal('__html__', ''); await import('../src/plugin/main.js');
+  await api.ui.onmessage({ type: 'plugin.call', requestId: 'compose', method: 'theme.frame.compose', args: { operationId: 'compose-1', nodeId: 'missing', name: 'Light', position: { x: 0, y: 0 } } });
+  expect(messages[0]).toMatchObject({ type: 'plugin.error', requestId: 'compose', code: 'SOURCE_CHANGED' });
+  expect(api.createFrame).not.toHaveBeenCalled();
+});
+
 it('dispatches scratch probe preview without creating draft nodes', async () => {
   const f = modalProbeFixture(); const messages: any[] = [];
   Object.assign(f.api, { showUI: vi.fn(), ui: { postMessage: (message: unknown) => messages.push(message), onmessage: undefined } });

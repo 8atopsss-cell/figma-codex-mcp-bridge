@@ -11,13 +11,14 @@ import { copyThemeComponent } from './theme-copy.js';
 import { alignComponent } from './component-alignment.js';
 import { repairComponentReference } from './component-reference-repair.js';
 import { probeModalStructure } from './modal-probe.js';
+import { composeSourceFrame } from './frame-composition.js';
 import { VariantError } from './variant-state.js';
 import { readFileKey } from './file-identity.js';
 
 figma.showUI(__html__, { width: 320, height: 300, themeColors: true });
 
 let writeTail = Promise.resolve();
-const writeMethods = new Set(['page.create', 'screen.create', 'node.update', 'node.delete', 'node.duplicate', 'component.variants.create', 'theme.copy', 'component.schema.align', 'component.reference.repair', 'component.modal.probe']);
+const writeMethods = new Set(['page.create', 'screen.create', 'node.update', 'node.delete', 'node.duplicate', 'component.variants.create', 'theme.copy', 'component.schema.align', 'component.reference.repair', 'component.modal.probe', 'theme.frame.compose']);
 function serializeWrite<T>(action: () => Promise<T>): Promise<T> {
   const next = writeTail.then(action, action);
   writeTail = next.then(() => undefined, () => undefined);
@@ -63,6 +64,7 @@ figma.ui.onmessage = async (message: unknown) => {
         case 'component.schema.align': return alignComponent(figma, request.data.args);
         case 'component.reference.repair': return repairComponentReference(figma, request.data.args);
         case 'component.modal.probe': return probeModalStructure(figma, request.data.args);
+        case 'theme.frame.compose': return composeSourceFrame(figma, request.data.args);
         case 'page.create': return createPage(figma, request.data.args.name);
         case 'screen.create': return createScreen(figma, request.data.args);
         case 'node.update': return updateNode(figma, request.data.args);

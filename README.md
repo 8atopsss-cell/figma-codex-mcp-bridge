@@ -1,5 +1,7 @@
 # Figma Codex MCP Bridge
 
+30 октября 2026: `compose_source_frame` собирает согласованный обычный фрейм по исходнику с переиспользованием выбранных библиотечных компонентов. Точные maps и frame fallback задаются явно; Title может быть TEXT без изменения библиотеки. Preview/apply, проверка актуальности и same-ID replay. [Инструкция](skills/figma-bridge/references/frame-composition.md). После обновления загрузить плагин и Codex/MCP заново.
+
 29 октября 2026: `probe_modal_slot_structure` проверяет Optional вне Title SLOT на отдельной новой странице. `applied` означает создание диагностического черновика; результат каждого случая — `cases[].passed`. Компоненты библиотеки не мигрируются. `get_node_tree` дополнен native overrides и ограниченным inventory экземпляров root COMPONENT. [Контракт](skills/figma-bridge/references/modal-probe.md). Для новой команды нужны перезапуски плагина и Codex/MCP.
 
 Личный плагин Figma для управления открытым макетом из основного чата Codex через локальный MCP-мост. [План реализации](IMPLEMENTATION_PLAN.md).

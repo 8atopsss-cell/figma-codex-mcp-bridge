@@ -4,6 +4,8 @@
 
 [Краткая инструкция подключения моста](INSTALL-BRIDGE.md).
 
+`compose_source_frame` создаёт отдельно согласованную композицию FRAME по живому источнику, с настоящими экземплярами выбранных светлых компонентов. Заголовок может остаться обычным TEXT; новые FRAME вместо отдельных INSTANCE перечисляются явно. Исходник и библиотека сохраняются. Точные карты слоёв/свойств/вариантов, местные стили, read-only preview и apply с expectedState обязательны. Partial сохраняет созданные IDs; повтор использует тот же operationId. [Контракт](skills/figma-bridge/references/frame-composition.md). Для новой команды перезапустить плагин и Codex/MCP.
+
 `probe_modal_slot_structure` проверяет новую структуру Optional вне Title SLOT на отдельной странице с новыми узлами. Preview не пишет; apply требует expectedState. Проверять каждый `cases[].passed`: статус applied означает только создание диагностики. Готовые компоненты не меняются. `get_node_tree` возвращает native overrides и inventory root local COMPONENT; неполноту нельзя трактовать как отсутствие overrides/экземпляров. [Контракт](skills/figma-bridge/references/modal-probe.md). Новая команда требует перезапуска плагина и Codex/MCP.
 
 Если создание страницы остановил точный Starter page-limit до создания узлов, та же операция предлагает один recovery preview в новом отдельном FRAME на текущей странице. Старый receipt и ошибка сохраняются. Проверяйте placement и новый containerId; повторный partial recovery блокируется. Это уточнение уже существующей команды требует только перезапуска плагина.

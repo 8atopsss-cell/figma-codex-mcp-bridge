@@ -4,6 +4,14 @@ import { pluginRequestSchema, screenSpecSchema, updateNodeSchema } from '../src/
 const rectangle = { type: 'rectangle', name: 'Card', x: 0, y: 0, width: 100, height: 50, fill: '#ffffff' };
 
 describe('bridge protocol', () => {
+  it('accepts source frame composition previews and rejects unsealed or arbitrary writes', () => {
+    const args = { operationId: 'compose-1', nodeId: 'source', name: 'Light frame', position: { x: 0, y: 500 }, frameNodeIds: [], componentMappings: [], layerStyles: [] };
+    const request = { type: 'plugin.call', requestId: 'compose', method: 'theme.frame.compose', args };
+    expect(pluginRequestSchema.safeParse(request).success).toBe(true);
+    expect(pluginRequestSchema.parse(request).args).toMatchObject({ dryRun: true });
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, dryRun: false } }).success).toBe(false);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { ...args, script: 'arbitrary' } }).success).toBe(false);
+  });
   it('accepts only a fixed scratch probe and requires preview state for creation', () => {
     const request = { type: 'plugin.call', requestId: 'probe', method: 'component.modal.probe', args: { operationId: 'probe-1' } };
     expect(pluginRequestSchema.safeParse(request).success).toBe(true);

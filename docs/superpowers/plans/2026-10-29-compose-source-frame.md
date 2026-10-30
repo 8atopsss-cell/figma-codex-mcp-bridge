@@ -12,11 +12,11 @@ Core schema and safety contract are implemented in a separate shared/plugin unit
 
 ## Tasks
 
-- [ ] Core worker: new src/shared/frame-composition.ts, src/plugin/frame-composition.ts and focused native-shaped tests. Cover source drift, target/style/font drift, source ownership, partial result, replay/edited result, full geometry/content/hidden states, real component mains/custom icon.
-- [ ] Parent: gather fresh source/master/style snapshots, construct exact request recipe; inspect card catalog and choose allowed fallback only after scoped evidence. Save request and plan, no Figma writes until endpoint loaded.
-- [ ] Parent: protocol/plugin/MCP queue registration, file pinning, focused integration tests and MCP smoke schema.
-- [ ] Independent review: source/target guards, ownership/native API assumptions, preservation claims, limits and receipts. Fix blockers before full build.
-- [ ] Parent: instructions/project skill, daily log; full meaningful checks, npm.cmd run build/install:skills/smoke:mcp and transfer inventory/hash/privacy verification.
-- [ ] Load runtime, fresh preview and same-request apply within authorized scope; inspect node tree/main identities and PNG. Only user grants visual acceptance. Update backlog with implemented vs native/visual status.
+- [x] Core: src/shared/frame-composition.ts, src/plugin/frame-composition.ts and focused native-shaped tests implemented; frozen after user cancelled additional checks.
+- [x] Parent: fresh complete75-node source/master/style capture, exact request13maps/2fallback/37styleentries, scoped card search and placement1018,440 prepared.
+- [x] Parent: protocol/plugin/MCP write queues, file pinning and focused integration tests added.
+- [ ] Independent review interrupted at user's explicit request; do not continue extra checks automatically.
+- [x] Instructions/project skill/daily log updated; required build/install:skills completed. Full suite/typecheck/smoke/transfer verification cancelled by user; no fresh completion claim for them.
+- [ ] Load root-manifest plugin and Codex/MCP, then mandatory fresh preview + same-request apply. Additional node/PNG/visual checks cancelled by user; report createdID/partial/error and leave visual verification to user.
 
 Implementation details may be narrowed by verified native capabilities, but no recolored dark-instance copy may be reported as light-component reuse. Do not resume/change old incomplete alignment or probe receipts.
