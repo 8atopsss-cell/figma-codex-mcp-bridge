@@ -1,6 +1,17 @@
 import { afterEach, expect, it, vi } from 'vitest';
+import { modalProbeFixture } from './modal-probe-fixture.js';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); });
+
+it('dispatches scratch probe preview without creating draft nodes', async () => {
+  const f = modalProbeFixture(); const messages: any[] = [];
+  Object.assign(f.api, { showUI: vi.fn(), ui: { postMessage: (message: unknown) => messages.push(message), onmessage: undefined } });
+  vi.stubGlobal('figma', f.api); vi.stubGlobal('__html__', '');
+  await import('../src/plugin/main.js');
+  await f.api.ui.onmessage({ type: 'plugin.call', requestId: 'probe', method: 'component.modal.probe', args: { operationId: 'probe-1' } });
+  expect(messages[0]).toMatchObject({ type: 'plugin.result', requestId: 'probe', value: { status: 'preview', capabilityOnly: true } });
+  expect(f.api.createPage).not.toHaveBeenCalled();
+});
 
 it('dispatches bounded reference repair and reports a missing instance', async () => {
   const messages: any[] = [];

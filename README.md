@@ -1,5 +1,7 @@
 # Figma Codex MCP Bridge
 
+29 октября 2026: `probe_modal_slot_structure` проверяет Optional вне Title SLOT на отдельной новой странице. `applied` означает создание диагностического черновика; результат каждого случая — `cases[].passed`. Компоненты библиотеки не мигрируются. `get_node_tree` дополнен native overrides и ограниченным inventory экземпляров root COMPONENT. [Контракт](skills/figma-bridge/references/modal-probe.md). Для новой команды нужны перезапуски плагина и Codex/MCP.
+
 Личный плагин Figma для управления открытым макетом из основного чата Codex через локальный MCP-мост. [План реализации](IMPLEMENTATION_PLAN.md).
 
 ## Статус

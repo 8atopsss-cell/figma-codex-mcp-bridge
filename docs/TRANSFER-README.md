@@ -4,6 +4,10 @@
 
 [Краткая инструкция подключения моста](INSTALL-BRIDGE.md).
 
+`probe_modal_slot_structure` проверяет новую структуру Optional вне Title SLOT на отдельной странице с новыми узлами. Preview не пишет; apply требует expectedState. Проверять каждый `cases[].passed`: статус applied означает только создание диагностики. Готовые компоненты не меняются. `get_node_tree` возвращает native overrides и inventory root local COMPONENT; неполноту нельзя трактовать как отсутствие overrides/экземпляров. [Контракт](skills/figma-bridge/references/modal-probe.md). Новая команда требует перезапуска плагина и Codex/MCP.
+
+Если создание страницы остановил точный Starter page-limit до создания узлов, та же операция предлагает один recovery preview в новом отдельном FRAME на текущей странице. Старый receipt и ошибка сохраняются. Проверяйте placement и новый containerId; повторный partial recovery блокируется. Это уточнение уже существующей команды требует только перезапуска плагина.
+
 Для отдельно согласованного приведения master-схем использовать `align_component_schema`: перенос BOOLEAN/SLOT-привязок на существующие слои и только перечисленных поддержанных полей из эталона. Команда меняет готовый COMPONENT и влияет на связанные экземпляры. Сначала inspect/preview и точное согласование, затем тот же запрос с expectedState и dryRun=false. Существующие IDs/дети, светлые стили и main components должны сохраняться; удалённые пользователем свойства не добавляются обратно. Не обходить ошибки и неполный откат новым operationId. [Инструкция](skills/figma-bridge/references/component-alignment.md).
 
 Ссылку icon wrapper на удалённый локальный master ремонтировать только отдельно согласованной командой `repair_component_reference`: точные instance/old/replacement IDs, preview полного влияния на экземпляры и apply с expectedState. Частичный результат не обходить новым operationId. [Инструкция](skills/figma-bridge/references/component-reference-repair.md).

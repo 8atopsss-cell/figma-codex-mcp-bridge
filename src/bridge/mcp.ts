@@ -6,6 +6,7 @@ import { listComponentsSchema, themePlanSchema } from '../shared/theme-conversio
 import { themeCopySchema } from '../shared/theme-copy.js';
 import { componentAlignmentSchema } from '../shared/component-alignment.js';
 import { componentReferenceRepairSchema } from '../shared/component-reference-repair.js';
+import { modalProbeSchema } from '../shared/modal-probe.js';
 
 export interface BridgeCaller {
   getSync?(): SyncController | undefined;
@@ -244,6 +245,19 @@ export function createBridgeServer(bridge: BridgeCaller): McpServer {
     args => textResult(async () => {
       const target = bridge.pinCurrentFile?.() ?? bridge;
       return serializeWrite(() => target.call('component.reference.repair', args));
+    }),
+  );
+
+  server.registerTool(
+    'probe_modal_slot_structure',
+    {
+      description: 'Preview/create an operation-owned draft for three fixed Modal API capability tests: Optional label BOOLEAN outside Title SLOT, reparenting new draft Slot content, and custom Title content on a new instance. Normally creates a PAGE; only an exact native Starter page-limit failure with zero created nodes permits one same-ID recovery preview into a new standalone FRAME below content on the current PAGE. Recovery preserves the original receipt/failure, reports existing pageId/new containerId and binds exact placement/top-level geometry. No existing master, instance, style, page property, selection or old alignment receipt is changed. Inputs only operationId/dryRun/expectedState; no arbitrary JS, source nodes or patches. Defaults dryRun=true; apply requires unchanged preview expectedState and authorized diagnostic scope. Retry same operationId; replay validates owned root state, membership, schemas and main links. Any other partial/changed result blocks retry; never bypass with a new ID or reset. Inspect every cases[].passed; applied only records the draft, not safe or approved production migration. Partial results retain IDs/evidence, with no deletion.',
+      inputSchema: modalProbeSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false },
+    },
+    args => textResult(async () => {
+      const target = bridge.pinCurrentFile?.() ?? bridge;
+      return serializeWrite(() => target.call('component.modal.probe', args));
     }),
   );
 

@@ -22,6 +22,9 @@ try {
   assert(tools.some((tool) => tool.name === 'create_component_variants' && tool.annotations?.readOnlyHint === false));
   const themeCopyTool = tools.find(tool => tool.name === 'copy_theme_component');
   const alignmentTool = tools.find(tool => tool.name === 'align_component_schema');
+  const probeTool = tools.find(tool => tool.name === 'probe_modal_slot_structure');
+  assert(probeTool?.annotations?.readOnlyHint === false && probeTool?.annotations?.destructiveHint === false);
+  for (const property of ['operationId', 'dryRun', 'expectedState']) assert(probeTool.inputSchema.properties[property]);
   const referenceRepairTool = tools.find(tool => tool.name === 'repair_component_reference');
   assert(referenceRepairTool?.annotations?.readOnlyHint === false && referenceRepairTool?.annotations?.destructiveHint === true);
   for (const property of ['instanceId', 'expectedMainComponentId', 'replacementComponentId', 'operationId', 'expectedState']) assert(referenceRepairTool.inputSchema.properties[property]);

@@ -4,6 +4,14 @@ import { pluginRequestSchema, screenSpecSchema, updateNodeSchema } from '../src/
 const rectangle = { type: 'rectangle', name: 'Card', x: 0, y: 0, width: 100, height: 50, fill: '#ffffff' };
 
 describe('bridge protocol', () => {
+  it('accepts only a fixed scratch probe and requires preview state for creation', () => {
+    const request = { type: 'plugin.call', requestId: 'probe', method: 'component.modal.probe', args: { operationId: 'probe-1' } };
+    expect(pluginRequestSchema.safeParse(request).success).toBe(true);
+    expect(pluginRequestSchema.parse(request).args).toMatchObject({ dryRun: true });
+    expect(pluginRequestSchema.safeParse({ ...request, args: { operationId: 'probe-1', dryRun: false } }).success).toBe(false);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { operationId: 'probe-1', dryRun: false, expectedState: 'state' } }).success).toBe(true);
+    expect(pluginRequestSchema.safeParse({ ...request, args: { operationId: 'probe-1', sourceComponentId: 'finished' } }).success).toBe(false);
+  });
   it('accepts bounded orphan-reference repairs and requires expectedState for apply', () => {
     const args = { instanceId: 'icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1' };
     const request = { type: 'plugin.call', requestId: 'repair', method: 'component.reference.repair', args };

@@ -1,5 +1,7 @@
 import { describeError } from './errors.js';
 import { readFileKey } from './file-identity.js';
+import { snapshotDigest } from './snapshot-digest.js';
+import { isInDocument, stable } from './variant-state.js';
 
 type OverviewApi = {
   readonly fileKey?: string;
@@ -35,6 +37,7 @@ export interface NodeTree {
   warnings?: string[];
   children?: NodeTree[];
   childCount?: number;
+  instanceInventory?: { complete: boolean; count?: number; instanceIds: string[]; snapshot?: string; reason?: string };
 }
 
 const DESIGN_PROPERTIES = [
@@ -42,7 +45,7 @@ const DESIGN_PROPERTIES = [
   'fills', 'strokes', 'strokeWeight', 'strokeAlign', 'strokeCap', 'strokeJoin', 'strokeMiterLimit', 'dashPattern',
   'effects', 'cornerRadius', 'cornerSmoothing', 'topLeftRadius', 'topRightRadius', 'bottomLeftRadius', 'bottomRightRadius',
   'clipsContent', 'isMask', 'maskType', 'constraints',
-  'relativeTransform', 'absoluteTransform', 'componentProperties', 'componentPropertyReferences', 'variantProperties',
+  'relativeTransform', 'absoluteTransform', 'componentProperties', 'componentPropertyReferences', 'variantProperties', 'overrides',
   'boundVariables', 'explicitVariableModes', 'resolvedVariableModes',
   'layoutMode', 'layoutWrap', 'itemSpacing', 'counterAxisSpacing', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom',
   'primaryAxisSizingMode', 'counterAxisSizingMode', 'primaryAxisAlignItems', 'counterAxisAlignItems', 'counterAxisAlignContent',
@@ -107,10 +110,55 @@ export async function getNodeTree(
         }
       }
     }
+    if (root && current.type === 'COMPONENT' && !current.remote && isInDocument(current)) {
+      result.instanceInventory = await readInstanceInventory(current, result);
+    }
     if (result.warnings?.length) result.warnings = [...new Set(result.warnings)];
     return result;
   };
   return serialize(node, args.depth, true);
+}
+
+async function readInstanceInventory(component: ComponentNode, result: NodeTree): Promise<NonNullable<NodeTree['instanceInventory']>> {
+  const maxInstances = 1000;
+  let instanceIds: string[] = [];
+  try {
+    const owner = { id: component.id, key: component.key };
+    const ownerUnchanged = () => !component.remote && isInDocument(component)
+      && component.id === owner.id && component.key === owner.key;
+    if (typeof component.getInstancesAsync !== 'function') throw new Error('getInstancesAsync unavailable');
+    const membership = (instances: InstanceNode[]) => {
+      if (!Array.isArray(instances)) throw new Error('native instance list unavailable');
+      instanceIds = [...new Set(instances.slice(0, maxInstances).map(n => n?.id).filter(id => typeof id === 'string'))].sort();
+      if (instances.length > maxInstances) throw new Error(`instance list truncated by ${maxInstances} instance limit`);
+      if (instanceIds.length !== instances.length) throw new Error('duplicate or invalid instance IDs');
+      for (const instance of instances) {
+        if (instance.type !== 'INSTANCE' || !isInDocument(instance)) throw new Error(`instance ${instance.id} detached or unavailable`);
+      }
+      return [...instanceIds];
+    };
+    const nativeInstances = await component.getInstancesAsync();
+    const before = membership(nativeInstances);
+    const instances = [...nativeInstances];
+    for (const instance of instances) {
+      const main = await instance.getMainComponentAsync();
+      if (!main || main.type !== 'COMPONENT' || main.id !== owner.id || main.remote || !isInDocument(main)) {
+        throw new Error(`instance ${instance.id} main component unavailable or different`);
+      }
+    }
+    // Final native enumeration follows all main-link awaits. Recheck attachment
+    // and owner identity after this last await, including earlier instance handles.
+    const after = membership(await component.getInstancesAsync());
+    if (!ownerUnchanged() || stable(before) !== stable(after)
+      || instances.some(instance => !isInDocument(instance))) throw new Error('component instance membership changed during read');
+    // Membership digest only: this does not audit instance contents or overrides.
+    const snapshot = `instance-membership-v1:sha256:${snapshotDigest(stable({ ...owner, instanceIds }))}`;
+    return { complete: true, count: instanceIds.length, instanceIds, snapshot };
+  } catch (error) {
+    const reason = describeError(error);
+    (result.warnings ??= []).push(`instance inventory incomplete on ${component.id}: ${reason}`);
+    return { complete: false, instanceIds, reason };
+  }
 }
 
 async function readComponentDefinitions(current: BaseNode, properties: Record<string, unknown>, result: NodeTree) {

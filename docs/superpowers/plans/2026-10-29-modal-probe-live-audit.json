@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-29",
+  "timezone": "Europe/Moscow",
+  "fileName": "SD Enterprice",
+  "stableFileKeyAvailable": false,
+  "pageId": "933:24166",
+  "operationId": "modal-structure-probe-20261029-v1",
+  "status": "draft_created_cases_failed_user_stopped_title_work",
+  "containerId": "16149:110138",
+  "createdNodeIds": ["16149:110138","16149:110139","16149:110140","16149:110141","16149:110142","16149:110143","16149:110144","16149:110145","16149:110146"],
+  "casesRun": 2,
+  "latestResult": {
+    "status": "applied",
+    "capabilityOnly": true,
+    "recoveryAttempt": 1,
+    "originalFailurePreserved": true,
+    "cases": [
+      {"id":"outside-optional","passed":false,"failure":"FRAME did not become linked SLOT"},
+      {"id":"legacy-reparent","passed":false,"failure":"FRAME did not become linked SLOT"},
+      {"id":"custom-title","passed":false,"notExecutedReason":"Proposed master unavailable after first case failure"}
+    ],
+    "failureCauseEstablished": false,
+    "frameTreeReadBack": true,
+    "pngVisualAcceptance": false,
+    "continuedAfterUserStop": false
+  },
+  "nativeFailure": {
+    "code": "FIGMA_API_ERROR",
+    "message": "in createPage: The Starter plan only comes with 3 pages. Upgrade to Professional for unlimited pages: https://www.figma.com/pricing"
+  },
+  "sameIdReadOnlyInspection": "OPERATION_INCOMPLETE; no pageId, createdNodeIds empty; original receipt preserved",
+  "earlierPrewriteGuardResults": ["SOURCE_CHANGED before-font", "SOURCE_CHANGED before-font"],
+  "sourceContextNote": "Selection changed from16135:104955 to empty during preparation. Guards prevented writes; fresh immediate preview/apply reached createPage.",
+  "nativeMembership": {
+    "source": {"componentId":"2046:48406","complete":true,"count":65,"snapshot":"instance-membership-v1:sha256:d6a675aec2a580878b340baa5d1223d8d3658fe860452269bf501a84222ee561"},
+    "target": {"componentId":"4745:44256","complete":true,"count":7,"snapshot":"instance-membership-v1:sha256:dea7f8ae96112a25922f8aba28c64cc01fff32e643dbfc0b823203ed0f711945"},
+    "unchangedBeforeAfterInstanceReads": true,
+    "nativeOverridesAvailable": 72,
+    "nativeOverrideRecords": 651,
+    "contentsCaptureAtomic": false,
+    "semanticCustomTitleCasesUnresolved": 39,
+    "sanitizedCaptureSha256": "929576aa07f8e6f05f10f5d534f59fed2a70ad8c208d99a086587362783ebd06"
+  },
+  "productionNodesChanged": false,
+  "oldModalAlignmentReceiptChanged": false,
+  "oldModalAlignmentRecoveryLimit": "3/3; unchanged",
+  "nextStep": "User stopped Title diagnostics and requested selected light modal composition instead. Preserve this draft and receipts; do not retry/repair/delete automatically. See2026-10-29-selected-light-modal-composition.md; standalone FRAME choice is pending.",
+  "visualAcceptance": false
+}

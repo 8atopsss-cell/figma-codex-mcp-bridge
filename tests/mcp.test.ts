@@ -2,6 +2,21 @@ import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
 import { describe, expect, it } from 'vitest';
 import { createBridgeServer } from '../src/bridge/mcp.js';
 
+it('exposes an isolated scratch probe with pinned calls and capability-only results', async () => {
+  const calls: Array<{ method: string; args: unknown }> = [];
+  const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); }, pinCurrentFile: () => ({ call: async (method, args) => {
+    calls.push({ method, args }); return { status: 'applied', capabilityOnly: true, pageId: 'new-draft', cases: [{ id: 'outside-optional', passed: false }] };
+  } }) });
+  const client = new Client({ name: 'modal-probe-test', version: '1.0.0' }); const [a, b] = InMemoryTransport.createLinkedPair();
+  try {
+    await Promise.all([server.connect(b), client.connect(a)]);
+    expect((await client.listTools()).tools.find(t => t.name === 'probe_modal_slot_structure')?.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: false });
+    const r = await client.callTool({ name: 'probe_modal_slot_structure', arguments: { operationId: 'probe-1' } });
+    expect(r.isError).not.toBe(true); expect(calls[0]).toEqual({ method: 'component.modal.probe', args: { operationId: 'probe-1', dryRun: true } });
+    expect(JSON.parse((r.content[0] as any).text)).toMatchObject({ capabilityOnly: true, cases: [{ passed: false }] });
+  } finally { await client.close(); await server.close(); }
+});
+
 it('exposes reference repair with pinned apply and structured partial errors', async () => {
   const calls: Array<{ method: string; args: unknown }> = [];
   const server = createBridgeServer({ call: async () => { throw new Error('Unpinned call'); }, pinCurrentFile: () => ({ call: async (method, args) => {
@@ -115,7 +130,7 @@ describe('MCP bridge', () => {
     } finally { await client.close(); await server.close(); }
   });
 
-  it.each(['create_component_variants', 'duplicate_node', 'copy_theme_component', 'align_component_schema', 'repair_component_reference'])('captures the active file before %s waits behind another write', async (tool) => {
+  it.each(['create_component_variants', 'duplicate_node', 'copy_theme_component', 'align_component_schema', 'repair_component_reference', 'probe_modal_slot_structure'])('captures the active file before %s waits behind another write', async (tool) => {
     let active = 'file-a';
     let release!: () => void;
     let started!: () => void;
@@ -145,6 +160,8 @@ describe('MCP bridge', () => {
         sourceComponentId: 'dark', targetComponentId: 'light', operationId: 'op', bindings: [{ sourcePropertyId: 'title#d', targetNodeIds: ['light-title'] }],
       } : tool === 'repair_component_reference' ? {
         instanceId: 'icon', expectedMainComponentId: 'orphan', replacementComponentId: 'wrapper', operationId: 'repair-1',
+      } : tool === 'probe_modal_slot_structure' ? {
+        operationId: 'probe-1',
       } : {
         componentSetId: 'set', operationId: 'op', variants: [{ sourceComponentId: 'source', properties: { theme: 'light' }, position: { x: 75, y: 64 } }],
       } });

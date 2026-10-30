@@ -46,6 +46,8 @@ Approval applies only to the agreed objects and changes. If the user has already
 
 ## Align an approved component schema
 
+- To investigate the native restriction on BOOLEAN references inside Title SLOT, use the fixed draft-only `probe_modal_slot_structure`. Preview/apply creates a new owned page; inspect every case's `passed` value. It never authorizes library migration. Read [Modal probe and read-only inventory](references/modal-probe.md) for replay, limits, native overrides and complete membership checks.
+
 - Use `align_component_schema` only for exact agreed source/target masters, bindings, supported fields and affected instance scope. It edits an existing finished COMPONENT in place; it is not an automatic repair inside theme planning. Source stays unchanged; target starts with an empty schema. Copy only complete live BOOLEAN/SLOT definitions to exact target descendant IDs; existing FRAME-to-SLOT conversion must preserve IDs/children.
 - Preview first, inspect exact changes and complete `instanceImpact`, then apply the same approved request with its `expectedState`. Reuse existing exact approval. Keep user-deleted properties absent. Fonts, unsupported states, drift and limits fail closed; never detach, swap mains, delete existing nodes or copy paint colors to bypass alignment.
 - Inspect incomplete/modified receipts rather than repeating with a new operationId. Report exact changed nodes/properties and cleanup errors. Read back source, target schema/propertyMap, refs/types, IDs, light style/main identities and affected instances, then rerun compatibility. See [component alignment](references/component-alignment.md).

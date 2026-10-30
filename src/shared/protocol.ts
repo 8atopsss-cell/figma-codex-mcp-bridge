@@ -3,6 +3,7 @@ import { listComponentsSchema, themePlanSchema } from './theme-conversion.js';
 import { themeCopySchema } from './theme-copy.js';
 import { componentAlignmentSchema } from './component-alignment.js';
 import { componentReferenceRepairSchema } from './component-reference-repair.js';
+import { modalProbeSchema } from './modal-probe.js';
 
 const id = z.string().min(1).max(128);
 const name = z.string().min(1).max(200);
@@ -217,6 +218,7 @@ export const pluginRequestSchema = z.discriminatedUnion('method', [
   call('theme.copy', themeCopySchema),
   call('component.schema.align', componentAlignmentSchema),
   call('component.reference.repair', componentReferenceRepairSchema),
+  call('component.modal.probe', modalProbeSchema),
   call('page.create', z.object({ name }).strict()),
   call('screen.create', screenSpecSchema),
   call('node.update', updateNodeSchema),
